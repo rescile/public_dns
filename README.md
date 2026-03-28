@@ -60,7 +60,7 @@ flowchart dns
     class E1,E2,E3 edge;
     class P1,P2 onprem;
     class CP control;
-    ```
+```
 
 ## Control plane vs. data plane separation
 
