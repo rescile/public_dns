@@ -10,7 +10,7 @@ rescile_version = ">=0.1.106"
 [dependencies]
 graphviewer = "https://github.com/rescile/graphviewer"
 graml-module =  "https://github.com/rescile/graphml-module"
-rescile-ccm-lite-module = "https://github.com/rescile/rescile-ccm-lite-module"
+module-simple-editor = "https://github.com/rescile/module-simple-editor"
 rescile-graphiql-module = "https://github.com/rescile/rescile-graphiql-module/releases/download/v0.0.3/graphiql-module-offline.zip"
 
 [params.operator]
@@ -24,6 +24,6 @@ required = true
 default = "hybridDNS"
 allowed_values = ["hybridDNS", "publicDNS", "privateDNS"]
 
-[assets."domain.csv"]
-resource_type = "domain"
+[assets."zone.csv"]
+resource_type = "zone"
 description = "The main asset file defining the zone file entries."
