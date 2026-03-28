@@ -1,0 +1,5 @@
+origin_resource = "resident"
+
+[[link_resources]]
+with = "domain"
+create_relation = { type = "USE_SERVICE" }

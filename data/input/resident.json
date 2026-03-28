@@ -1,0 +1,20 @@
+{
+  "rescile": {
+    "name": "Rescile",
+    "address": "street,postcode,city",
+    "commercial_contact": "commercial@resident.com",
+    "technical_contact": "technical@resident.com"
+  },
+  "clienta": {
+    "name": "Rescile",
+    "address": "street,postcode,city",
+    "commercial_contact": "commercial@resident.com",
+    "technical_contact": "technical@resident.com"
+  },
+  "clientb": {
+    "name": "Rescile",
+    "address": "street,postcode,city",
+    "commercial_contact": "commercial@resident.com",
+    "technical_contact": "technical@resident.com"
+  }
+}

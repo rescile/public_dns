@@ -1,0 +1,19 @@
+# Sets a subscription object as central root.
+
+# Command line paramter
+solution = "{{- blueprint | default(value='finnova') -}}"
+
+# External input
+solutions = { "json!" = "solution.json" }
+
+[[create_resource]]
+resource_type = "subscription"
+name = " {{- solutions[solution].resident | lower -}}_{{- solutions[solution].name | lower -}}_{{- solutions[solution].stage | lower -}}"
+[create_resource.properties]
+function = "{{- solutions[solution].name | lower -}}"
+description = "This subscription defines the cloud environment for the resident rescile and captures the dependencies for the finnova deployment."
+public = "{{- solutions[solution].public -}}"
+cost_center = "{{- solutions[solution].cost_center -}}"
+stage = "{{- solutions[solution].stage | lower -}}"
+availability_domain = "{{- solutions[solution].availability_domain -}}"
+created = "{{- now(utc=true) | date(format='%Y-%m-%dT%H:%M:%SZ') -}}"

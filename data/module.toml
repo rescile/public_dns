@@ -1,0 +1,34 @@
+[module]
+name = "rescile-sandbox"
+url = "https://github.com/rescile/rescile-sandbox"
+version = "0.9.0"
+description = "The rescile-sandbox reference implementation."
+rescile_version = ">=0.1.106"
+
+# dependencies: Optional list of other modules this module depends on.
+# These can be local paths (relative to this module) or Git URLs.
+[dependencies]
+graphviewer = "https://github.com/rescile/graphviewer"
+graml-module =  "https://github.com/rescile/graphml-module"
+rescile-ccm-lite-module = "https://github.com/rescile/rescile-ccm-lite-module"
+rescile-graphiql-module = "https://github.com/rescile/rescile-graphiql-module/releases/download/v0.0.3/graphiql-module-offline.zip"
+
+[params.tenant]
+description = "The organization owning the environment."
+default = "rescile"
+required = true
+
+[params.blueprint]
+description = "The blueprint descirbes the solution footprint."
+required = true
+default = "finnova"
+allowed_values = ["finnova", "avaloq"]
+
+[params.vlan]
+description = "tenant vlan tag for virtual network deployments."
+default = 0
+required = true
+
+[assets."database.csv"]
+resource_type = "instance"
+description = "The main asset file defining the databases."

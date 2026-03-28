@@ -1,0 +1,10 @@
+{
+  "finnova": {
+    "name": "Finnova",
+    "resident": "rescile",
+    "stage": "dev",
+    "public": true,
+    "cost_center": "12345",
+    "availability_domain": 1
+  }
+}
