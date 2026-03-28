@@ -1,14 +1,14 @@
-# Dual-plane DNS (cloud-edge + on-prem authoritative)
+# Dual-Plane DNS (Cloud-Edge + On-Prem)
 
-A hybrid DNS configurationcombines globally distributed, anycast-based authoritative DNS nodes (cloud-hosted) wuth on-premises authoritative DNS servers (e.g., BIND) integrated into the same zone authority, to deliver resilient, low-latency, and sovereign DNS resolution.
+A hybrid DNS configurationcombines globally distributed, anycast-based authoritative DNS nodes (cloud-hosted) with on-premises authoritative DNS servers (e.g., BIND) integrated into the same zone authority, to deliver resilient, low-latency, and sovereign DNS resolution.
 
-## Multi-tier authoritative DNS
-
-A globally distributed edge layer provides anycast routing for low-latency resolution and high DDoS absorption capacity, while the on-premises layer provides local control over zone data and integration with internal systems and governance controls
-
-## Shared zone authority (multi-provider DNS)
-
-Both cloud and on-prem servers are authoritative for the same zones. Zone data is synchronized via AXFR/IXFR transfers, or API-driven propagation pipelines
+## Key Properties
+* **Resilience**: Eliminates single-provider dependency (provider-level fault isolation)
+* **Latency optimization**: Anycast edge handles most queries close to clients
+* **Data sovereignty / compliance**: On-prem nodes retain authoritative capability
+* **Operational flexibility**: Independent scaling of cloud and on-prem layers
+* **Failover symmetry**: Either layer can serve the full zone if the other fails
+* **Alternative Naming Options (Vendor-neutral)**
 
 ```mermaid
 flowchart
@@ -34,9 +34,9 @@ subgraph CONTROL["DNS Control Plane"]
 end
 
 %% Zone Distribution
-CP -->|Zone Updates | E1
-CP -->|Zone Updates | E2
-CP -->|Zone Updates | E3
+CP -->|Zone Updates| E1
+CP -->|Zone Updates| E2
+CP -->|Zone Updates| E3
 CP -->|AXFR / IXFR| P1
 P1 -->|Zone Transfer| P2
 
@@ -44,8 +44,8 @@ P1 -->|Zone Transfer| P2
 C -->|DNS Query| E1
 C -->|DNS Query| E2
 C -->|DNS Query| E3
-C -->|DNS Query | P1
-C -->|DNS Query | P2
+C -->|DNS Query| P1
+C -->|DNS Query| P2
 
 %% Logical Relationship
 E1 -. Authoritative for Zone .- P1
@@ -62,15 +62,15 @@ class P1,P2 onprem;
 class CP control;
 ```
 
-## Control plane vs. data plane separation
+## Control Plane vs. Data Plane Separation
 
 * **Control plane**: zone management, updates, policy enforcement (can be centralized or dual-managed)
 * **Data plane**: distributed query answering across cloud and on-prem endpoints
 
-## Key Properties
-* **Resilience**: Eliminates single-provider dependency (provider-level fault isolation)
-* **Latency optimization**: Anycast edge handles most queries close to clients
-* **Data sovereignty / compliance**: On-prem nodes retain authoritative capability
-* **Operational flexibility**: Independent scaling of cloud and on-prem layers
-* **Failover symmetry**: Either layer can serve the full zone if the other fails
-* **Alternative Naming Options (Vendor-neutral)**
+### Multi-Tier Authoritative DNS
+
+The globally distributed edge layer provides anycast routing for low-latency resolution and high DDoS absorption capacity, while the on-premises layer provides local control over zone data and integration with internal systems and governance controls
+
+### Shared Zone Authority (Multi-Provider DNS)
+
+Both cloud and on-prem servers are authoritative for the same zones. Zone data is synchronized via AXFR/IXFR transfers, or API-driven propagation pipelines
