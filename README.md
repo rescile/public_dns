@@ -11,6 +11,7 @@ A globally distributed edge layer provides anycast routing for low-latency resol
 Both cloud and on-prem servers are authoritative for the same zones. Zone data is synchronized via AXFR/IXFR transfers, or API-driven propagation pipelines
 
 ```mermaid
+flowchart
 %% Clients
 C[Internet Clients]
 
