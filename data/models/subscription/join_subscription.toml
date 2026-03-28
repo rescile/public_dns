@@ -1,9 +1,0 @@
-origin_resource = "subscription"
-
-[[link_resources]]
-with = "domain"
-create_relation = { type = "BASELINE_TEMPLATE" }
-
-[[link_resources]]
-with = "system"
-create_relation = { type = "BASELINE_TEMPLATE" }

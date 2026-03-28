@@ -1,0 +1,8 @@
+{
+  "rescile": {
+    "name": "Rescile",
+    "address": "street,postcode,city",
+    "commercial_contact": "commercial@operator.com",
+    "technical_contact": "technical@operator.com"
+  }
+}

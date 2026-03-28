@@ -1,10 +1,10 @@
 {
-  "finnova": {
-    "name": "Finnova",
-    "resident": "rescile",
+  "hybridDNS": {
+    "name": "hybridDNS",
+    "operator": "rescile",
     "stage": "dev",
     "public": true,
     "cost_center": "12345",
-    "availability_domain": 1
+    "availability_zone": 1
   }
 }

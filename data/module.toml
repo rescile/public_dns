@@ -1,8 +1,8 @@
 [module]
-name = "rescile-sandbox"
-url = "https://github.com/rescile/rescile-sandbox"
-version = "0.9.0"
-description = "The rescile-sandbox reference implementation."
+name = "hybridDNS"
+url = "https://github.com/rescile/public_dns"
+version = "0.0.1"
+description = "A hybrid authoritative DNS architecture with split control-plane and distributed data-plane characteristics."
 rescile_version = ">=0.1.106"
 
 # dependencies: Optional list of other modules this module depends on.
@@ -13,22 +13,17 @@ graml-module =  "https://github.com/rescile/graphml-module"
 rescile-ccm-lite-module = "https://github.com/rescile/rescile-ccm-lite-module"
 rescile-graphiql-module = "https://github.com/rescile/rescile-graphiql-module/releases/download/v0.0.3/graphiql-module-offline.zip"
 
-[params.tenant]
+[params.operator]
 description = "The organization owning the environment."
 default = "rescile"
 required = true
 
-[params.blueprint]
-description = "The blueprint descirbes the solution footprint."
+[params.scope]
+description = "The scope describes the solution footprint."
 required = true
-default = "finnova"
-allowed_values = ["finnova", "avaloq"]
+default = "hybridDNS"
+allowed_values = ["hybridDNS", "publicDNS", "privateDNS"]
 
-[params.vlan]
-description = "tenant vlan tag for virtual network deployments."
-default = 0
-required = true
-
-[assets."database.csv"]
-resource_type = "instance"
-description = "The main asset file defining the databases."
+[assets."domain.csv"]
+resource_type = "domain"
+description = "The main asset file defining the zone file entries."

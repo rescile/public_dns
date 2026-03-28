@@ -1,93 +1,24 @@
 {
-  "oracle": {
-    "function": "infrastructure",
-    "domain": "core",
-    "terms": "https://www.oracle.com/nl/cloud/sla/",
-    "services": ["system"],
-    "database": ["exadata", "autonomous", "database", "heatwave", "postgresql"],
-    "brokers": ["mqseries", "kafka"],
-    "region": ["ZRH", "FRA"],
-    "api": "https://service-name.region.oci.oraclecloud.com",
-    "cidr": "192.168.0.0/16",
-    "kms": "https://vaults.us-ashburn-1.oci.oraclecloud.com",
-    "clearance": "BAFIN,MARS"
-  },
-  "megaport": {
-    "function": "network",
-    "domain": "backbone",
-    "terms": "https://www.megaport.com/wp-content/uploads/2021/07/160404-Global-Services-Agreement.pdf",
-    "services": ["SDWAN", "SSFN"],
-    "database": [],
-    "brokers": [],
-    "region": ["LON", "ZRH", "FRA", "MIL"],
-    "api": "https://api.megaport.com/v2/connections",
-    "cidr": "10.0.0.0/8",
-    "kms": "https://vaults.us-ashburn-1.oci.oraclecloud.com",
-    "clearance": "BAFIN,MARS"
-  },
-  "aws": {
-    "function": "platform",
-    "domain": "access",
-    "terms": "https://aws.amazon.com/legal/service-level-agreements/",
-    "services": ["kubernetes", "container"],
-    "database": ["redshift", "dynamodb"],
-    "brokers": ["amq", "kafka"],
-    "region": ["LON", "ZRH", "FRA"],
-    "api": "https://service-code.region-code.amazonaws.com",
-    "cidr": "192.168.0.0/16",
-    "kms": "https://iam.amazonaws.com",
-    "clearance": "BAFIN,MARS"
-  },
-  "google": {
-    "function": "platform",
-    "domain": "access",
-    "terms": "https://cloud.google.com/terms/sla",
-    "services": ["kubernetes", "container"],
-    "database": ["oracle", "mysql", "postgresql", "mongodb", "elasticsearch"],
-    "brokers": ["queue", "stream"],
-    "region": ["LON", "ZRH", "FRA"],
-    "api": "https://service-name.googleapis.com",
-    "cidr": "192.168.0.0/16",
-    "kms": "https://secretmanager.googleapis.com/v1/",
-    "clearance": "BAFIN,MARS"
-  },
   "cloudflare": {
     "function": "network",
     "domain": "edge",
     "terms": "https://www.cloudflare.com/enterprise-support-sla/",
     "services": ["dns", "cdn"],
-    "database": [],
-    "brokers": [],
     "region": ["LON", "ZRH", "FRA"],
     "api": "https://api.cloudflare.com/client/v4/accounts/account_id/tunnels",
     "cidr": "10.0.0.0/8",
     "kms": "https://acme-v02.api.letsencrypt.org/directory",
     "clearance": "BAFIN,MARS"
   },
-  "twilio": {
-    "function": "service",
-    "domain": "internet",
-    "terms": "https://www.twilio.com/en-us/legal/service-level-agreement",
-    "services": ["communication"],
-    "database": [],
-    "brokers": [],
-    "region": ["ANY"],
-    "api": "https://api.twilio.com/",
-    "cidr": "",
+  "akamai": {
+    "function": "network",
+    "domain": "edge",
+    "terms": "https://www.akamai.com/legal/terms-of-service/",
+    "services": ["dns", "cdn"],
+    "region": ["LON", "ZRH", "FRA"],
+    "api": "https://api.akamai.com/",
+    "cidr": "10.0.0.0/8",
     "kms": "https://acme-v02.api.letsencrypt.org/directory",
-    "clearance": "FINMA,BAFIN,MARS"
-  },
-  "slack": {
-    "function": "service",
-    "domain": "internet",
-    "terms": "https://slack.com/terms/service-level-agreement",
-    "services": ["collaboration"],
-    "database": [],
-    "brokers": [],
-    "region": ["ANY"],
-    "api": "https://slack.com/api",
-    "cidr": "",
-    "kms": "https://acme-v02.api.letsencrypt.org/directory",
-    "clearance": "FINMA,BAFIN,MARS"
+    "clearance": "BAFIN,MARS"
   }
 }

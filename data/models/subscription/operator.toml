@@ -1,0 +1,20 @@
+# The resident is a top level node that represents the owner of a subscription in the graph
+# Specify the source type
+origin_resource = "subscription"
+
+# Add external input for subscription data
+operators = { "json!" = "operator.json" }
+
+# Command line paramter
+resident = "{{- operator | default(value='rescile') -}}"
+
+# Create resource type
+[[create_resource]]
+resource_type = "operator"
+relation_type = "DEFINED_BY"
+name = "{{- operators[resident].name | lower -}}"
+[create_resource.properties]
+commercial_admin = "{{- operators[resident].commercial_contact -}}"
+technical_admin = "{{- operators[resident].technical_contact -}}"
+description = "The operator {{- operators[resident].name | capitalize -}} is an organization that has private, secure access to the dedicated set of computing resources and services within the cloud infrastructure. Essentially, it is the technical term for the customer's dedicated partition where their data, applications, and virtual machines reside, isolated from other cloud customers."
+created = "{{- now(utc=true) | date(format='%Y-%m-%dT%H:%M:%SZ') -}}"
