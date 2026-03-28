@@ -1,4 +1,6 @@
 # Sets a subscription object as central root.
+# Specify the source type
+origin_resource = "operator"
 
 # External input
 solutions = { "json!" = "solution.json" }
@@ -11,6 +13,7 @@ resource_type = "subscription"
 name = " {{- solutions[solution].operator | lower -}}_{{- solutions[solution].name | lower -}}_{{- solutions[solution].stage | lower -}}"
 [create_resource.properties]
 function = "{{- solutions[solution].name | lower -}}"
+operator = "{{- origin_resource.name | lower -}}"
 description = "This subscription defines the cloud environment for the resident rescile and captures the dependencies for the {{ solutions[solution].name }} deployment."
 public = "{{- solutions[solution].public -}}"
 cost_center = "{{- solutions[solution].cost_center -}}"
