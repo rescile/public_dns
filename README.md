@@ -71,6 +71,6 @@ class CP control;
 
 The globally distributed edge layer provides anycast routing for low-latency resolution and high DDoS absorption capacity, while the on-premises layer provides local control over zone data and integration with internal systems and governance controls
 
-### Shared Zone Authority (Multi-Provider DNS)
+### Shared Zone Authority
 
 Both cloud and on-prem servers are authoritative for the same zones. Zone data is synchronized via AXFR/IXFR transfers, or API-driven propagation pipelines
