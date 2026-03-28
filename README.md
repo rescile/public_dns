@@ -10,6 +10,58 @@ A globally distributed edge layer provides anycast routing for low-latency resol
 
 Both cloud and on-prem servers are authoritative for the same zones. Zone data is synchronized via AXFR/IXFR transfers, or API-driven propagation pipelines
 
+```mermaid
+flowchart dns
+    %% Clients
+    C[Internet Clients]
+
+    %% Anycast / Cloud Edge Layer
+    subgraph EDGE["Global Anycast DNS Layer"]
+        E1[Anycast DNS Node 1]
+        E2[Anycast DNS Node 2]
+        E3[Anycast DNS Node N]
+    end
+
+    %% On-Prem Layer
+    subgraph ONPREM["On-Prem Authoritative DNS (BIND)"]
+        P1[Primary DNS]
+        P2[Secondary DNS]
+    end
+
+    %% Control Plane
+    subgraph CONTROL["DNS Control Plane"]
+        CP[Zone Management / API / CI-CD Pipeline]
+    end
+
+    %% Zone Distribution
+    CP -->|Zone Updates (API / GitOps)| E1
+    CP -->|Zone Updates (API / GitOps)| E2
+    CP -->|Zone Updates (API / GitOps)| E3
+    CP -->|AXFR / IXFR| P1
+    P1 -->|Zone Transfer| P2
+
+    %% Client Resolution Path
+    C -->|DNS Query| E1
+    C -->|DNS Query| E2
+    C -->|DNS Query| E3
+    C -->|DNS Query (fallback / geo)| P1
+    C -->|DNS Query (fallback / geo)| P2
+
+    %% Logical Relationship
+    E1 -. Authoritative for Zone .- P1
+    E2 -. Authoritative for Zone .- P1
+    E3 -. Authoritative for Zone .- P2
+
+    %% Styling
+    classDef edge fill:#1f77b4,stroke:#333,stroke-width:1px,color:#fff;
+    classDef onprem fill:#2ca02c,stroke:#333,stroke-width:1px,color:#fff;
+    classDef control fill:#9467bd,stroke:#333,stroke-width:1px,color:#fff;
+
+    class E1,E2,E3 edge;
+    class P1,P2 onprem;
+    class CP control;
+    ```
+
 ## Control plane vs. data plane separation
 
 * **Control plane**: zone management, updates, policy enforcement (can be centralized or dual-managed)
