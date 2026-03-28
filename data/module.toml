@@ -2,7 +2,7 @@
 name = "hybridDNS"
 url = "https://github.com/rescile/public_dns"
 version = "0.0.1"
-description = "A hybrid authoritative DNS architecture with split control-plane and distributed data-plane characteristics."
+description = "A hybrid authoritative DNS architecture combining globally distributed anycast nodes with on-premises authoritative servers under a shared zone authority."
 rescile_version = ">=0.1.106"
 
 # dependencies: Optional list of other modules this module depends on.
