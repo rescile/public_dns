@@ -11,13 +11,13 @@ regions = {
 resource_type = "zone"
 filename = "zone.txt"
 mimetype = "application/txt"
-name = "base/zone.txt"
+name = "base/db.example.com.txt"
 jsonnet = '''
 // Define zone variables
 local domain = "example.com";
 local ttl = 3600;
 
-// Define your records
+// Define records
 local records = [
   { name: "@", type: "A", value: "192.0.2.1" },
   { name: "www", type: "CNAME", value: "example.com" },
