@@ -8,7 +8,7 @@ regions = {
 }
 
 [[output]]
-resource_type = "zone"
+resource_type = "zone_file"
 filename = "zone.txt"
 mimetype = "application/txt"
 name = "base/db.example.com.txt"

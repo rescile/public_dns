@@ -23,7 +23,3 @@ description = "The scope describes the solution footprint."
 required = true
 default = "hybridDNS"
 allowed_values = ["hybridDNS", "publicDNS", "privateDNS"]
-
-[assets."zone.csv"]
-resource_type = "zone"
-description = "The main asset file defining the zone file entries."
