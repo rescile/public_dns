@@ -1,0 +1,11 @@
+# Sets a subscription object as central root.
+# Specify the source type
+origin_resource = "auth"
+
+[[create_resource]]
+resource_type = "zone"
+name = " {{- origin_resource.name | lower -}}"
+[create_resource.properties]
+auth = "{{- origin_resource.name -}}"
+description = "The {{ origin_resource.name | lower }} DNS zone is a distinct administrative portion of the domain name space that is managed by a specific organization or administrator. It acts as a container for all the DNS records (like A, MX, or CNAME) belonging to a domain and its subdomains, allowing for granular control over how that specific traffic is routed."
+created = "{{- now(utc=true) | date(format='%Y-%m-%dT%H:%M:%SZ') -}}"

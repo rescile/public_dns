@@ -1,5 +1,0 @@
-"name","type","value"
-"www","CNAME","example.com"
-"mail","A","192.0.2.2"
-"api","A","10.0.0.5"
-"blog","A","192.0.2.3"

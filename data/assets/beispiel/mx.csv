@@ -1,0 +1,2 @@
+type,zone,name,priority,ttl,disabled
+name,beispiel.de,mail.beispiel.de,10,3600,False

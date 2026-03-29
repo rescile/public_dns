@@ -1,4 +1,4 @@
-origin_resource = "subscription"
+origin_resource = "zone"
 
 regions = {
   FRA = "eu-central-1",

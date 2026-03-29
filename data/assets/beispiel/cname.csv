@@ -1,0 +1,2 @@
+type,name,canonical,ttl,comment,disabled,zone
+cname,shop.beispiel.de,external.vendor.com,3600,,False,beispiel.de

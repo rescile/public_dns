@@ -3,13 +3,13 @@
 origin_resource = "operator"
 
 # Command line paramter
-solution = "{{- scope | default(value='hybridDNS') -}}"
+subscription = "{{- scope | default(value='hybridDNS') -}}"
 stage = "{{- lifecycle | default(value='DEV') -}}"
 resident = "{{- tenant | default(value='test') -}}"
 
 [[create_resource]]
 resource_type = "subscription"
-name = " {{- solution | lower -}}_{{- resident | lower -}}_{{- stage | lower -}}"
+name = " {{- subscription | lower -}}_{{- resident | lower -}}_{{- stage | lower -}}"
 [create_resource.properties]
 function = "dns"
 operator = "{{- origin_resource.name | lower -}}"
