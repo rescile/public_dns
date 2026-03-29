@@ -2,21 +2,20 @@
 # Specify the source type
 origin_resource = "operator"
 
-# External input
-solutions = { "json!" = "solution.json" }
-
 # Command line paramter
 solution = "{{- scope | default(value='hybridDNS') -}}"
+stage = "{{- lifecycle | default(value='DEV') -}}"
+resident = "{{- tenant | default(value='test') -}}"
 
 [[create_resource]]
 resource_type = "subscription"
-name = " {{- solutions[solution].operator | lower -}}_{{- solutions[solution].name | lower -}}_{{- solutions[solution].stage | lower -}}"
+name = " {{- solution | lower -}}_{{- resident | lower -}}_{{- stage | lower -}}"
 [create_resource.properties]
-function = "{{- solutions[solution].name | lower -}}"
+function = "dns"
 operator = "{{- origin_resource.name | lower -}}"
-description = "This subscription defines the cloud environment for the resident rescile and captures the dependencies for the {{ solutions[solution].name }} deployment."
-public = "{{- solutions[solution].public -}}"
-cost_center = "{{- solutions[solution].cost_center -}}"
-stage = "{{- solutions[solution].stage | lower -}}"
-availability_zone = "{{- solutions[solution].availability_zone -}}"
+tenant = "{{- resident | lower -}}"
+description = "This subscription defines the cloud environment for the resident rescile and captures the dependencies for the solution deployment."
+#cost_center = "{{- solutions[solution].cost_center -}}"
+stage = "{{- stage | lower -}}"
+#availability_zone = "{{- solutions[solution].availability_zone -}}"
 created = "{{- now(utc=true) | date(format='%Y-%m-%dT%H:%M:%SZ') -}}"

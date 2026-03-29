@@ -22,4 +22,14 @@ required = true
 description = "The scope describes the solution footprint."
 required = true
 default = "hybridDNS"
-allowed_values = ["hybridDNS", "publicDNS", "privateDNS"]
+
+[params.lifecycle]
+description = "The lifecycle stage of the solution."
+required = true
+default = "DEV"
+allowed_values = ["DEV", "TEST", "PROD"]
+
+[params.tenant]
+description = "The tenant name identifiers the organization that uses the service."
+required = true
+default = "clienta"
