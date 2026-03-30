@@ -1,0 +1,81 @@
+origin_resource = "zone"
+
+regions = {
+  FRA = "eu-central-1",
+  LON = "eu-west-2",
+  ZRH = "eu-central-2",
+  MIL = "eu-south-1"
+}
+
+[[output]]
+resource_type = "cloudflare_py"
+filename = "cloudflare.py"
+mimetype = "application/txt"
+name = "base/cloudflare.py"
+template = '''
+import requests
+import io
+
+# --- Configuration ---
+API_TOKEN = "your_api_token_here"
+ZONE_ID = "your_zone_id_here"
+DOMAIN = "example.com"
+
+# --- Define your DNS Records ---
+# You can easily load this from a JSON file or keep it as a list
+records = [
+    {"name": "@", "type": "A", "value": "1.2.3.4"},
+    {"name": "www", "type": "CNAME", "value": "example.com"},
+    {"name": "api", "type": "A", "value": "1.2.3.5"},
+]
+
+def generate_bind_content(domain, records):
+    """Formats records into a BIND-compatible string."""
+    lines = [
+        f"; Zone file for {domain}",
+        f"$ORIGIN {domain}.",
+        "$TTL 3600",
+        ""
+    ]
+    for r in records:
+        # Standard BIND format: name  ttl  class  type  value
+        lines.append(f"{r['name']:15} 3600  IN  {r['type']:5} {r['value']}")
+
+    return "\n".join(lines)
+
+def upload_to_cloudflare(zone_id, token, bind_string):
+    """Uploads the BIND string to Cloudflare via the Import API."""
+    url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/import"
+
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+
+    # We use io.BytesIO to treat the string as a file in-memory
+    # This avoids having to write a physical .txt file to the disk
+    files = {
+        'file': ('db.txt', io.BytesIO(bind_string.encode('utf-8')), 'text/plain')
+    }
+
+    # Optional: Set proxied=true if you want Cloudflare's orange cloud enabled
+    data = {
+        'proxied': 'true'
+    }
+
+    print(f"Uploading zone file to Cloudflare for Zone: {zone_id}...")
+    response = requests.post(url, headers=headers, files=files, data=data)
+
+    if response.status_code == 200:
+        result = response.json()
+        print("Successfully imported records!")
+        print(f"Total Added: {result['result']['recs_added']}")
+    else:
+        print(f"Error {response.status_code}: {response.text}")
+
+if __name__ == "__main__":
+    # 1. Generate the file content
+    zone_content = generate_bind_content(DOMAIN, records)
+
+    # 2. Upload it
+    upload_to_cloudflare(ZONE_ID, API_TOKEN, zone_content)
+'''
