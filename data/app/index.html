@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNS Zone Administration</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <style>
+        :root, :root[data-theme="light"] {
+            --bg: #f3f4f6; --fg: #1f2937; --card: #ffffff; --border: #e5e7eb;
+            --hover-bg: #f9fafb; --primary: #2563eb; --link: #0d9488;
+            --danger: #dc2626; --danger-bg: #fef2f2;
+            --overlay-bg: rgba(17, 24, 39, 0.5); --info: #0ea5e9;
+            --text-strong: #111827; --text-light: #6b7280;
+        }
+        :root[data-theme="dark"] {
+            --bg: #0f172a; --fg: #f8fafc; --card: #1e293b; --border: #334155;
+            --hover-bg: rgba(45, 212, 191, 0.1); --primary: #3b82f6; --link: #2dd4bf;
+            --danger: #f87171; --danger-bg: #450a0a;
+            --overlay-bg: rgba(15, 23, 42, 0.75); --info: #38bdf8;
+            --text-strong: #f8fafc; --text-light: #94a3b8;
+        }
+        body { font-family: "Inter", system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--fg); margin: 0; padding: 2rem 5%; min-height: 100vh; transition: background-color 0.3s, color 0.3s; line-height: 1.5; }
+        .header-container { display: flex; justify-content: space-between; align-items: center; min-height: 44px; margin-bottom: 2rem; padding-top: 1rem; }
+        h1, h2, h3 { font-weight: 600; letter-spacing: -0.025em; color: var(--fg); margin: 0; }
+        h1 a { color: var(--text-strong); text-decoration: none; display: flex; align-items: center; gap: 0.75rem; font-size: 1.5rem; transition: color 0.2s; }
+        h1 a:hover { color: var(--primary); }
+        h2 { margin: 1rem 0 1.5rem; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem; font-size: 1.25rem; }
+        
+        .header-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); padding: 1.5rem 2rem; margin-bottom: 2rem; }
+        .overview-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
+
+        .top-nav { display: flex; gap: 0.5rem; align-items: center; }
+        .nav-item { position: relative; }
+        .nav-item::after { content: attr(data-tooltip); position: absolute; bottom: -38px; left: 50%; transform: translateX(-50%) translateY(10px); background: var(--text-strong); color: var(--bg); padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; opacity: 0; pointer-events: none; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); white-space: nowrap; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); z-index: 100; }
+        .nav-item:hover::after { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        .theme-toggle { background: transparent; border: none; width: 44px; height: 44px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--fg); transition: all 0.2s ease; padding: 0; }
+        .theme-toggle:hover { color: var(--primary); background: var(--hover-bg); }
+
+        .button {
+            background: var(--card); color: var(--text-strong); border: 1px solid var(--border);
+            padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.875rem; font-weight: 500; display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .button:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); background: var(--hover-bg); transform: translateY(-1px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        .button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+        .button.is-primary { background: var(--primary); color: #ffffff; border-color: var(--primary); box-shadow: 0 1px 3px 0 rgba(37, 99, 235, 0.3); }
+        .button.is-primary:hover:not(:disabled) { background: var(--primary); opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.4); }
+        
+        .input, select {
+            width: 100%; background: var(--card); border: 1px solid var(--border); color: var(--fg);
+            padding: 0.625rem 0.75rem; border-radius: 8px; font-size: 0.875rem; outline: none; transition: all 0.2s ease; box-sizing: border-box; font-family: inherit;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
+        select { cursor: pointer; }
+        
+        .table-container {
+            width: 100%; overflow-x: auto; background: var(--card);
+            border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .table { width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; font-size: 0.875rem; }
+        .table th, .table td { border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; word-break: break-all; vertical-align: middle; }
+        .table th { background: var(--card); font-weight: 600; position: sticky; top: 0; z-index: 2; color: var(--text-light); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; }
+        .table th::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; border-bottom: 1px solid var(--border); z-index: 3; }
+        .table tr:last-child td { border-bottom: none; }
+        .table tr:hover td { background-color: var(--hover-bg); }
+
+        a { color: var(--primary); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .hidden { display: none !important; }
+
+        .badge { padding: 0.125rem 0.625rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; display: inline-block; white-space: nowrap; text-align: center; border: 1px solid transparent; letter-spacing: 0.025em; }
+        .badge-type { background-color: var(--hover-bg); color: var(--text-strong); border-color: var(--border); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .badge-true { background-color: rgba(16, 185, 129, 0.1); color: #059669; border-color: rgba(16, 185, 129, 0.2); }
+        .badge-false { background-color: var(--danger-bg); color: var(--danger); border-color: rgba(239, 68, 68, 0.2); }
+        :root[data-theme="dark"] .badge-true { color: #34d399; }
+
+        .download-links { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .download-links a { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.5rem 0.875rem; border-radius: 8px; background-color: var(--card); color: var(--text-strong); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); font-size: 0.875rem; font-weight: 500; text-decoration: none; border: 1px solid var(--border); box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+        .download-links a:hover { background-color: var(--hover-bg); color: var(--primary); border-color: var(--primary); text-decoration: none; transform: translateY(-1px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        .modal { display: none; position: fixed; inset: 0; background: var(--overlay-bg); backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 1000; }
+        .modal.active { display: flex; }
+        .modal-content { background: var(--card); padding: 2rem; border-radius: 16px; border: 1px solid var(--border); width: 100%; max-width: 500px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); max-height: 90vh; overflow-y: auto; position: relative; }
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem; color: var(--text-strong); }
+        .btn-group { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1.5rem; }
+
+        .action-btn {
+            border-radius: 8px; padding: 0.35rem; width: 34px; height: 34px;
+            display: inline-flex; align-items: center; justify-content: center;
+            background: transparent; color: var(--text-light);
+            border: 1px solid transparent; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .action-btn:hover { color: var(--primary); background: var(--hover-bg); transform: scale(1.05); }
+        .action-btn.delete:hover { background: var(--danger-bg); color: var(--danger); }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <h1 style="margin: 0">
+            <a href="/" style="border-bottom: none">
+                <span class="material-symbols-outlined" style="font-size: 2rem; color: var(--primary);">dns</span>
+                DNS Zone Administration
+            </a>
+        </h1>
+        <div class="top-nav">
+            <div class="nav-item" data-tooltip="Appearance">
+                <button onclick="toggleTheme()" class="theme-toggle" id="theme-btn">
+                    <span class="material-symbols-outlined" id="theme-icon">light_mode</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <div class="header-box">
+            <h2>Zone Overview</h2>
+            <div class="overview-header">
+                <div class="select-wrapper" style="flex: 1; min-width: 250px;">
+                    <label for="zoneSelect" style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.05em;">Select Zone</label>
+                    <select id="zoneSelect">
+                        <option value="">-- Choose a DNS zone --</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                    <div id="zoneArtifacts" class="download-links hidden">
+                        <!-- Zone file and scripts buttons will be populated here -->
+                    </div>
+                    <button class="button is-primary" id="addRecordBtn" onclick="openModal()" style="display: none;">
+                        <span class="material-symbols-outlined" style="font-size: 1.2rem;">add</span> Add Record
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="recordsContainer" class="hidden table-container">
+            <table class="table" id="recordsTable">
+                <thead>
+                    <tr>
+                        <th style="width: 80px;">Type</th>
+                        <th style="width: 25%;">Name</th>
+                        <th>Content / Value</th>
+                        <th style="width: 80px;">TTL</th>
+                        <th style="width: 100px;">Status</th>
+                        <th style="width: 100px; text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </main>
+
+    <div id="recordModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle" style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.5rem;">Add DNS Record</h3>
+            <form id="recordForm" onsubmit="saveRecord(event)">
+                <input type="hidden" id="recOriginalValue">
+                
+                <div class="form-group">
+                    <label>Record Type</label>
+                    <select id="recType" onchange="handleTypeChange()" required>
+                        <option value="a">A</option>
+                        <option value="aaaa">AAAA</option>
+                        <option value="cname">CNAME</option>
+                        <option value="txt">TXT</option>
+                        <option value="mx">MX</option>
+                        <option value="srv">SRV</option>
+                        <option value="ptr">PTR</option>
+                        <option value="caa">CAA</option>
+                        <option value="ns">NS</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="recName" class="input" required placeholder="www">
+                </div>
+                
+                <div id="mxFields" class="hidden">
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <input type="number" id="recPriority" class="input" value="10">
+                    </div>
+                </div>
+
+                <div id="srvFields" class="hidden" style="display: flex; gap: 1rem;">
+                    <div class="form-group" style="flex: 1;">
+                        <label>Weight</label>
+                        <input type="number" id="recWeight" class="input" value="10">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>Port</label>
+                        <input type="number" id="recPort" class="input">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label id="valueLabel">Value / Target</label>
+                    <input type="text" id="recValue" class="input" required>
+                </div>
+
+                <div class="form-group">
+                    <label>TTL</label>
+                    <input type="number" id="recTtl" class="input" value="3600" required>
+                </div>
+
+                <div class="form-group" style="display:flex; align-items:center; gap:0.75rem; margin-top: 1.5rem; padding: 1rem; background: var(--hover-bg); border-radius: 8px; border: 1px solid var(--border);">
+                    <input type="checkbox" id="recDisabled" style="width:1.25rem; height:1.25rem; cursor:pointer; accent-color: var(--primary);">
+                    <label for="recDisabled" style="margin:0; cursor:pointer; font-weight: 500;">Record Disabled</label>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="button" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="button is-primary">Save Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let zonesData = {};
+
+        async function init() {
+            const query = `
+                query {
+                    zone {
+                        name
+                    }
+                }
+            `;
+
+            try {
+                const response = await fetch('/graphql', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query })
+                });
+                
+                const { data } = await response.json();
+                if (!data || !data.zone) return;
+                
+                zonesData = {};
+                const select = document.getElementById('zoneSelect');
+                
+                // Clear existing options except the first
+                while (select.options.length > 1) select.remove(1);
+
+                data.zone.sort((a, b) => a.name.localeCompare(b.name)).forEach(z => {
+                    zonesData[z.name] = {
+                        name: z.name
+                    };
+                    const option = document.createElement('option');
+                    option.value = z.name;
+                    option.textContent = z.name;
+                    select.appendChild(option);
+                });
+                
+                const savedZone = sessionStorage.getItem('selectedZone');
+                if (savedZone && zonesData[savedZone]) {
+                    select.value = savedZone;
+                }
+                
+                select.addEventListener('change', handleZoneSelection);
+                
+                if (select.value) {
+                    select.dispatchEvent(new Event('change'));
+                }
+            } catch (err) {
+                console.error('Failed to fetch DNS zones:', err);
+            }
+        }
+
+        function extractRecords(zoneNode) {
+            let records = [];
+
+            const pushRecords = (nodes, type, valField) => {
+                if (!nodes) return;
+                nodes.forEach(edge => {
+                    const n = edge.node;
+                    let value = n[valField] || '';
+                    if (type === 'MX') value = n.mail_exchanger;
+                    if (type === 'SRV') value = n.target;
+                    
+                    const disabled = n.disabled === 'True' || n.disabled === true || n.disabled === 'true';
+
+                    records.push({
+                        type: type,
+                        name: n.name,
+                        value: value,
+                        ttl: n.ttl || '3600',
+                        disabled: disabled,
+                        priority: n.priority || '',
+                        weight: n.weight || '',
+                        port: n.port || '',
+                        raw: n
+                    });
+                });
+            };
+
+            pushRecords(zoneNode.has_a_record, 'A', 'address');
+            pushRecords(zoneNode.has_aaaa_record, 'AAAA', 'address');
+            pushRecords(zoneNode.has_cname_record, 'CNAME', 'canonical');
+            pushRecords(zoneNode.has_txt_record, 'TXT', 'text');
+            pushRecords(zoneNode.has_mx_record, 'MX', 'mail_exchanger');
+            pushRecords(zoneNode.has_srv_record, 'SRV', 'target');
+            pushRecords(zoneNode.has_ptr_record, 'PTR', 'content');
+            pushRecords(zoneNode.has_caa_record, 'CAA', 'content');
+            pushRecords(zoneNode.has_ns_record, 'NS', 'content');
+
+            return records.sort((a, b) => {
+                if(a.type !== b.type) return a.type.localeCompare(b.type);
+                return a.name.localeCompare(b.name);
+            });
+        }
+
+        async function handleZoneSelection(e) {
+            const zoneName = e.target.value;
+            sessionStorage.setItem('selectedZone', zoneName);
+            
+            const container = document.getElementById('recordsContainer');
+            const tbody = document.querySelector('#recordsTable tbody');
+            const addBtn = document.getElementById('addRecordBtn');
+            const artifactsDiv = document.getElementById('zoneArtifacts');
+            
+            if (!zoneName) {
+                container.classList.add('hidden');
+                addBtn.style.display = 'none';
+                artifactsDiv.classList.add('hidden');
+                return;
+            }
+
+            const query = `
+                query {
+                    zone (filter:  { name:  { eq: "${zoneName}" }}) {
+                        name
+                        described_by {
+                            node {
+                                __typename
+                                ... on cloudflare_curl { name filename }
+                                ... on cloudflare_py { name filename }
+                                ... on zone_file { name filename }
+                            }
+                        }
+                        has_a_record { node { name address ttl disabled } }
+                        has_aaaa_record { node { name address ttl disabled } }
+                        has_cname_record { node { name canonical ttl disabled } }
+                        has_txt_record { node { name text ttl disabled } }
+                        has_mx_record { node { name mail_exchanger priority ttl disabled } }
+                        has_srv_record { node { name target port priority weight ttl disabled } }
+                        has_ptr_record { node { name content ttl disabled } }
+                        has_caa_record { node { name content ttl disabled } }
+                        has_ns_record { node { name content ttl disabled } }
+                    }
+                }
+            `;
+
+            try {
+                const response = await fetch('/graphql', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query })
+                });
+                
+                const { data } = await response.json();
+                if (!data || !data.zone || data.zone.length === 0) return;
+                
+                const z = data.zone[0];
+                zonesData[zoneName] = {
+                    name: z.name,
+                    artifacts: z.described_by || [],
+                    records: extractRecords(z)
+                };
+            } catch (err) {
+                console.error('Failed to fetch zone details:', err);
+                return;
+            }
+            
+            const zone = zonesData[zoneName];
+            container.classList.remove('hidden');
+            addBtn.style.display = 'inline-flex';
+            tbody.innerHTML = '';
+            
+            // Render Artifacts
+            artifactsDiv.innerHTML = '';
+            if (zone.artifacts.length > 0) {
+                artifactsDiv.classList.remove('hidden');
+                zone.artifacts.forEach(edge => {
+                    const out = edge.node;
+                    if (out.name && out.filename) {
+                        let icon = 'download';
+                        if(out.__typename === 'cloudflare_curl') icon = 'terminal';
+                        if(out.__typename === 'cloudflare_py') icon = 'code';
+                        if(out.__typename === 'zone_file') icon = 'description';
+
+                        const url = `/api/outputs/${out.__typename}/${out.name}/${out.filename}/download`;
+                        artifactsDiv.innerHTML += `
+                            <a href="${url}" title="Download ${out.filename}">
+                                <span class="material-symbols-outlined" style="font-size: 1.1rem;">${icon}</span>
+                                ${out.filename.split('.').pop().toUpperCase()}
+                            </a>
+                        `;
+                    }
+                });
+            } else {
+                artifactsDiv.classList.add('hidden');
+            }
+
+            // Render Records
+            zone.records.forEach((rec, idx) => {
+                const tr = document.createElement('tr');
+                
+                const statusBadge = rec.disabled 
+                    ? '<span class="badge badge-false">Disabled</span>' 
+                    : '<span class="badge badge-true">Active</span>';
+                
+                let displayValue = rec.value;
+                if (rec.type === 'MX') displayValue = `[${rec.priority}] ${rec.value}`;
+                if (rec.type === 'SRV') displayValue = `[${rec.priority} ${rec.weight} ${rec.port}] ${rec.value}`;
+                if (rec.type === 'TXT') displayValue = `<span style="opacity:0.8; font-family:monospace;">${rec.value}</span>`;
+
+                tr.innerHTML = `
+                    <td><span class="badge badge-type">${rec.type}</span></td>
+                    <td><strong>${rec.name}</strong></td>
+                    <td>${displayValue}</td>
+                    <td><span style="color: var(--text-light); font-variant-numeric: tabular-nums;">${rec.ttl}</span></td>
+                    <td>${statusBadge}</td>
+                    <td style="text-align: right; white-space: nowrap;">
+                        <button class="action-btn" title="Edit" onclick="editRecord('${zoneName}', ${idx})">
+                            <span class="material-symbols-outlined" style="font-size: 1.25rem;">edit</span>
+                        </button>
+                        <button class="action-btn delete" title="Delete" onclick="deleteRecord('${zoneName}', ${idx})">
+                            <span class="material-symbols-outlined" style="font-size: 1.25rem;">delete</span>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function handleTypeChange() {
+            const type = document.getElementById('recType').value;
+            const mxFields = document.getElementById('mxFields');
+            const srvFields = document.getElementById('srvFields');
+            const valLabel = document.getElementById('valueLabel');
+
+            mxFields.classList.add('hidden');
+            srvFields.classList.add('hidden');
+            document.getElementById('recPriority').required = false;
+            document.getElementById('recWeight').required = false;
+            document.getElementById('recPort').required = false;
+
+            if (type === 'mx') {
+                mxFields.classList.remove('hidden');
+                document.getElementById('recPriority').required = true;
+                valLabel.textContent = 'Mail Exchanger';
+            } else if (type === 'srv') {
+                mxFields.classList.remove('hidden');
+                srvFields.classList.remove('hidden');
+                document.getElementById('recPriority').required = true;
+                document.getElementById('recWeight').required = true;
+                document.getElementById('recPort').required = true;
+                valLabel.textContent = 'Target';
+            } else if (type === 'a' || type === 'aaaa') {
+                valLabel.textContent = 'IP Address';
+            } else if (type === 'cname') {
+                valLabel.textContent = 'Canonical Name';
+            } else if (type === 'txt') {
+                valLabel.textContent = 'Text Content';
+            } else {
+                valLabel.textContent = 'Content / Value';
+            }
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById("theme-icon");
+            const isDark = html.getAttribute("data-theme") === "dark";
+
+            const next = isDark ? "light" : "dark";
+            html.setAttribute("data-theme", next);
+            icon.innerText = next === "dark" ? "light_mode" : "dark_mode";
+        }
+
+        function openModal() {
+            document.getElementById('modalTitle').textContent = 'Add DNS Record';
+            document.getElementById('recordForm').reset();
+            document.getElementById('recOriginalValue').value = '';
+            document.getElementById('recType').disabled = false;
+            handleTypeChange();
+            document.getElementById('recordModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('recordModal').classList.remove('active');
+        }
+
+        function editRecord(zoneName, idx) {
+            const rec = zonesData[zoneName].records[idx];
+            if (!rec) return;
+
+            document.getElementById('modalTitle').textContent = 'Edit DNS Record';
+            
+            const typeSelect = document.getElementById('recType');
+            typeSelect.value = rec.type.toLowerCase();
+            typeSelect.disabled = true; // Don't allow changing type on edit
+            
+            document.getElementById('recName').value = rec.name;
+            document.getElementById('recValue').value = rec.value.replace(/^"|"$/g, ''); // strip quotes for UI
+            document.getElementById('recOriginalValue').value = rec.value;
+            document.getElementById('recTtl').value = rec.ttl;
+            document.getElementById('recDisabled').checked = rec.disabled;
+            
+            if (rec.type === 'MX' || rec.type === 'SRV') {
+                document.getElementById('recPriority').value = rec.priority;
+            }
+            if (rec.type === 'SRV') {
+                document.getElementById('recWeight').value = rec.weight;
+                document.getElementById('recPort').value = rec.port;
+            }
+
+            handleTypeChange();
+            document.getElementById('recordModal').classList.add('active');
+        }
+
+        function buildCsvRow(type, name, value, ttl, disabled, zone, priority, weight, port) {
+            const t = type.toLowerCase();
+            const d = disabled ? 'True' : 'False';
+            // Safe escape quotes for TXT
+            const v = t === 'txt' ? `"${value.replace(/"/g, '""')}"` : value;
+            
+            if (t === 'a' || t === 'aaaa') return `type,name,address,ttl,comment,disabled,zone\n${t},${name},${v},${ttl},,${d},${zone}`;
+            if (t === 'cname') return `type,name,canonical,ttl,comment,disabled,zone\n${t},${name},${v},${ttl},,${d},${zone}`;
+            if (t === 'txt') return `type,name,text,ttl,comment,disabled,zone\n${t},${name},${v},${ttl},,${d},${zone}`;
+            if (t === 'mx') return `type,zone,name,mail_exchanger,priority,ttl,disabled\n${t},${zone},${name},${v},${priority},${ttl},${d}`;
+            if (t === 'srv') return `type,name,target,port,priority,weight,ttl,disabled,zone\n${t},${name},${v},${port},${priority},${weight},${ttl},${d},${zone}`;
+            
+            // ns, ptr, caa, etc.
+            return `type,name,content,ttl,disabled,zone\n${t},${name},${v},${ttl},${d},${zone}`;
+        }
+
+        function getRemoveCsvRow(type, name, zone, originalValue) {
+            const t = type.toLowerCase();
+            // Best effort removal by matching name and zone, maybe value too if we have it
+            if (t === 'a' || t === 'aaaa') return `type,name,address,zone\n${t},${name},${originalValue},${zone}`;
+            if (t === 'cname') return `type,name,canonical,zone\n${t},${name},${originalValue},${zone}`;
+            if (t === 'txt') return `type,name,text,zone\n${t},${name},"${originalValue.replace(/"/g, '""')}",${zone}`;
+            if (t === 'mx') return `type,name,mail_exchanger,zone\n${t},${name},${originalValue},${zone}`;
+            if (t === 'srv') return `type,name,target,zone\n${t},${name},${originalValue},${zone}`;
+            return `type,name,content,zone\n${t},${name},${originalValue},${zone}`;
+        }
+
+        async function saveRecord(e) {
+            e.preventDefault();
+
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Saving...';
+            submitBtn.disabled = true;
+
+            const zone = document.getElementById('zoneSelect').value;
+            const type = document.getElementById('recType').value;
+            const name = document.getElementById('recName').value;
+            const value = document.getElementById('recValue').value;
+            const ttl = document.getElementById('recTtl').value;
+            const disabled = document.getElementById('recDisabled').checked;
+            
+            const priority = document.getElementById('recPriority').value || '';
+            const weight = document.getElementById('recWeight').value || '';
+            const port = document.getElementById('recPort').value || '';
+
+            const csvData = buildCsvRow(type, name, value, ttl, disabled, zone, priority, weight, port);
+            const formData = new FormData();
+            formData.append('update', csvData);
+
+            try {
+                await fetch(`/api/assets/${type}.csv`, { method: 'POST', body: formData });
+                // Simple sleep before reload to allow backend process
+                await new Promise(r => setTimeout(r, 1500)); 
+                closeModal();
+                await init();
+            } catch (err) {
+                console.error(err);
+                alert('Failed to save DNS record');
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        async function deleteRecord(zoneName, idx) {
+            const rec = zonesData[zoneName].records[idx];
+            if (!confirm(`Are you sure you want to delete the ${rec.type} record for ${rec.name}?`)) return;
+
+            const csvData = getRemoveCsvRow(rec.type, rec.name, zoneName, rec.value);
+            const formData = new FormData();
+            formData.append('remove', csvData);
+
+            try {
+                await fetch(`/api/assets/${rec.type.toLowerCase()}.csv`, { method: 'POST', body: formData });
+                await new Promise(r => setTimeout(r, 1500));
+                await init();
+            } catch (err) {
+                console.error(err);
+                alert('Failed to delete DNS record');
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

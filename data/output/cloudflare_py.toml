@@ -2,73 +2,67 @@ origin_resource = "zone"
 
 [[output]]
 resource_type = "cloudflare_py"
-filename = "cloudflare.py"
+filename = "cloudflare-{{ origin_resource.name }}.py"
 mimetype = "application/txt"
-name = "base/cloudflare.py"
-template = '''
-import requests
-import io
+name = "base/cloudflare-{{ origin_resource.name }}.py"
+jsonnet = '''
+local origin = std.extVar("origin_resource");
+local domain = origin.name;
 
-# --- Configuration ---
-API_TOKEN = "api_token"
-ZONE_ID = "zone_id"
-DOMAIN = "{{ origin_resource.name }}"
+local absolute(d) = if std.endsWith(d, ".") then d else d + ".";
 
-# --- Define your DNS Records ---
-# You can easily load this from a JSON file or keep it as a list
-records = [
-    {"name": "@", "type": "A", "value": "1.2.3.4"},
-    {"name": "www", "type": "CNAME", "value": "example.com"},
-    {"name": "api", "type": "A", "value": "1.2.3.5"},
-]
+local formatRecord(name, ttl, type, value) =
+  local safeTtl = if ttl == null || std.toString(ttl) == "" then "3600" else std.toString(ttl);
+  std.format("%-30s %-7s IN %-7s %s", [absolute(name), safeTtl, type, value]);
 
-def generate_bind_content(domain, records):
-    """Formats records into a BIND-compatible string."""
-    lines = [
-        f"; Zone file for {domain}",
-        f"$ORIGIN {domain}.",
-        "$TTL 3600",
-        ""
-    ]
-    for r in records:
-        # Standard BIND format: name  ttl  class  type  value
-        lines.append(f"{r['name']:15} 3600  IN  {r['type']:5} {r['value']}")
+local a_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "A", r.address) for r in std.get(origin, "has_a_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local aaaa_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "AAAA", r.address) for r in std.get(origin, "has_aaaa_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local cname_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "CNAME", absolute(r.canonical)) for r in std.get(origin, "has_cname_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local txt_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "TXT", r.text) for r in std.get(origin, "has_txt_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local mx_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "MX", std.toString(r.priority) + " " + absolute(r.mail_exchanger)) for r in std.get(origin, "has_mx_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local srv_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "SRV", std.toString(r.priority) + " " + std.toString(r.weight) + " " + std.toString(r.port) + " " + absolute(r.target)) for r in std.get(origin, "has_srv_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local ptr_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "PTR", absolute(r.content)) for r in std.get(origin, "has_ptr_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local caa_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "CAA", r.content) for r in std.get(origin, "has_caa_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local ns_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "NS", absolute(r.content)) for r in std.get(origin, "has_ns_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
 
-    return "\n".join(lines)
+local records = a_recs + aaaa_recs + cname_recs + txt_recs + mx_recs + srv_recs + ptr_recs + caa_recs + ns_recs;
 
-def upload_to_cloudflare(zone_id, token, bind_string):
-    """Uploads the BIND string to Cloudflare via the Import API."""
-    url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/import"
+local zone_content = std.join("\n", [
+  "; Zone file for " + domain,
+  "$ORIGIN " + absolute(domain),
+  "$TTL 3600",
+  "",
+] + records) + "\n";
 
-    headers = {
-        "Authorization": f"Bearer {token}"
-    }
+local py_template = |||
+  import requests
+  import io
+  
+  # --- Configuration ---
+  API_TOKEN = "api_token"
+  ZONE_ID = "zone_id"
+  
+  zone_content = """\
+  %s"""
+  
+  def upload_to_cloudflare(zone_id, token, bind_string):
+      """Uploads the BIND string to Cloudflare via the Import API."""
+      url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/import"
+      headers = { "Authorization": f"Bearer {token}" }
+      files = { 'file': ('db.txt', bind_string, 'text/plain') }
+      data = { 'proxied': 'true' }
+      print(f"Uploading zone file to Cloudflare for Zone: {zone_id}...")
+      response = requests.post(url, headers=headers, files=files, data=data)
+      if response.status_code == 200:
+          result = response.json()
+          print("Successfully imported records!")
+          print(f"Total Added: {result['result']['recs_added']}")
+      else:
+          print(f"Error {response.status_code}: {response.text}")
+  
+  if __name__ == "__main__":
+      upload_to_cloudflare(ZONE_ID, API_TOKEN, zone_content)
+|||;
 
-    # We use io.BytesIO to treat the string as a file in-memory
-    # This avoids having to write a physical .txt file to the disk
-    files = {
-        'file': ('db.txt', io.BytesIO(bind_string.encode('utf-8')), 'text/plain')
-    }
-
-    # Optional: Set proxied=true if you want Cloudflare's orange cloud enabled
-    data = {
-        'proxied': 'true'
-    }
-
-    print(f"Uploading zone file to Cloudflare for Zone: {zone_id}...")
-    response = requests.post(url, headers=headers, files=files, data=data)
-
-    if response.status_code == 200:
-        result = response.json()
-        print("Successfully imported records!")
-        print(f"Total Added: {result['result']['recs_added']}")
-    else:
-        print(f"Error {response.status_code}: {response.text}")
-
-if __name__ == "__main__":
-    # 1. Generate the file content
-    zone_content = generate_bind_content(DOMAIN, records)
-
-    # 2. Upload it
-    upload_to_cloudflare(ZONE_ID, API_TOKEN, zone_content)
+std.format(py_template, [zone_content])
 '''
