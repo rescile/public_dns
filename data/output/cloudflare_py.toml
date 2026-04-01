@@ -1,12 +1,5 @@
 origin_resource = "zone"
 
-regions = {
-  FRA = "eu-central-1",
-  LON = "eu-west-2",
-  ZRH = "eu-central-2",
-  MIL = "eu-south-1"
-}
-
 [[output]]
 resource_type = "cloudflare_py"
 filename = "cloudflare.py"
@@ -17,9 +10,9 @@ import requests
 import io
 
 # --- Configuration ---
-API_TOKEN = "your_api_token_here"
-ZONE_ID = "your_zone_id_here"
-DOMAIN = "example.com"
+API_TOKEN = "api_token"
+ZONE_ID = "zone_id"
+DOMAIN = "{{ origin_resource.name }}"
 
 # --- Define your DNS Records ---
 # You can easily load this from a JSON file or keep it as a list

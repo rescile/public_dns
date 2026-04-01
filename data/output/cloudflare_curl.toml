@@ -1,21 +1,17 @@
 origin_resource = "zone"
 
-regions = {
-  FRA = "eu-central-1",
-  LON = "eu-west-2",
-  ZRH = "eu-central-2",
-  MIL = "eu-south-1"
-}
-
 [[output]]
 resource_type = "cloudflare_curl"
 filename = "cloudflare.sh"
 mimetype = "application/txt"
 name = "base/cloudflare.sh"
 jsonnet = '''
-local zone_id = "your_zone_id_here";
-local api_token = "your_api_token_here";
-local domain = "example.com";
+// Define zone variables
+local origin = std.extVar("origin_resource");
+
+local zone_id = "zone_id";
+local api_token = "api_token";
+local domain = origin.name;
 
 // We must define this so the format call has something to reference!
 local bind_content = "$ORIGIN " + domain + ".\n@ 3600 IN A 1.1.1.1";
