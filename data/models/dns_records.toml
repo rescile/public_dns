@@ -44,3 +44,8 @@ create_relation = { type = "HAS_CAA_RECORD" }
 with = "ns"
 join = { local = "auth", remote = "zone" }
 create_relation = { type = "HAS_NS_RECORD" }
+
+[[link_resources]]
+with = "sshfp"
+join = { local = "auth", remote = "zone" }
+create_relation = { type = "HAS_SSHFP_RECORD" }

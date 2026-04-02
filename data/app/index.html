@@ -171,6 +171,7 @@
                         <option value="ptr">PTR</option>
                         <option value="caa">CAA</option>
                         <option value="ns">NS</option>
+                        <option value="sshfp">SSHFP</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -308,6 +309,7 @@
             pushRecords(zoneNode.has_ptr_record, 'PTR', 'content');
             pushRecords(zoneNode.has_caa_record, 'CAA', 'content');
             pushRecords(zoneNode.has_ns_record, 'NS', 'content');
+            pushRecords(zoneNode.has_sshfp_record, 'SSHFP', 'content');
 
             return records.sort((a, b) => {
                 if(a.type !== b.type) return a.type.localeCompare(b.type);
@@ -352,6 +354,7 @@
                         has_ptr_record { node { name content ttl disabled } }
                         has_caa_record { node { name content ttl disabled } }
                         has_ns_record { node { name content ttl disabled } }
+                        has_sshfp_record { node { name content ttl disabled } }
                     }
                 }
             `;

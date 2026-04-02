@@ -25,8 +25,9 @@ local srv_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "SRV", std.toS
 local ptr_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "PTR", absolute(r.content)) for r in std.get(origin, "has_ptr_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
 local caa_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "CAA", r.content) for r in std.get(origin, "has_caa_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
 local ns_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "NS", absolute(r.content)) for r in std.get(origin, "has_ns_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local sshfp_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "SSHFP", r.content) for r in std.get(origin, "has_sshfp_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
 
-local records = a_recs + aaaa_recs + cname_recs + txt_recs + mx_recs + srv_recs + ptr_recs + caa_recs + ns_recs;
+local records = a_recs + aaaa_recs + cname_recs + txt_recs + mx_recs + srv_recs + ptr_recs + caa_recs + ns_recs + sshfp_recs;
 
 local soa_record = std.format("@ IN SOA ns3.ixcloud.ch. hostmaster.%s ( 2026030401 7200 3600 1209600 3600 )", [absolute(domain)]);
 local ns1 = "@ IN NS ns3.ixcloud.ch.";

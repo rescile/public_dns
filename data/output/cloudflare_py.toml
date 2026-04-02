@@ -9,60 +9,160 @@ jsonnet = '''
 local origin = std.extVar("origin_resource");
 local domain = origin.name;
 
-local absolute(d) = if std.endsWith(d, ".") then d else d + ".";
-
-local formatRecord(name, ttl, type, value) =
-  local safeTtl = if ttl == null || std.toString(ttl) == "" then "3600" else std.toString(ttl);
-  std.format("%-30s %-7s IN %-7s %s", [absolute(name), safeTtl, type, value]);
-
-local a_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "A", r.address) for r in std.get(origin, "has_a_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
-local aaaa_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "AAAA", r.address) for r in std.get(origin, "has_aaaa_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
-local cname_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "CNAME", absolute(r.canonical)) for r in std.get(origin, "has_cname_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
-local txt_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "TXT", r.text) for r in std.get(origin, "has_txt_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
-local mx_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "MX", std.toString(r.priority) + " " + absolute(r.mail_exchanger)) for r in std.get(origin, "has_mx_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
-local srv_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "SRV", std.toString(r.priority) + " " + std.toString(r.weight) + " " + std.toString(r.port) + " " + absolute(r.target)) for r in std.get(origin, "has_srv_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
-local ptr_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "PTR", absolute(r.content)) for r in std.get(origin, "has_ptr_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
-local caa_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "CAA", r.content) for r in std.get(origin, "has_caa_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
-local ns_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "NS", absolute(r.content)) for r in std.get(origin, "has_ns_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
-
-local records = a_recs + aaaa_recs + cname_recs + txt_recs + mx_recs + srv_recs + ptr_recs + caa_recs + ns_recs;
-
-local zone_content = std.join("\n", [
-  "; Zone file for " + domain,
-  "$ORIGIN " + absolute(domain),
-  "$TTL 3600",
-  "",
-] + records) + "\n";
+local zone_data = std.filter(function(x) std.objectHas(x, "filename") && std.startsWith(x.filename, "db."), std.get(origin, "described_by", []));
+local zone_content = if std.length(zone_data) > 0 then zone_data[0].content else "";
 
 local py_template = |||
+  import os
+  import sys
   import requests
   import io
   
   # --- Configuration ---
-  API_TOKEN = "api_token"
-  ZONE_ID = "zone_id"
+  API_TOKEN = os.getenv("CLOUDFLARE_API_TOKEN")
+  ACCOUNT_ID = os.getenv("CLOUDFLARE_ACCOUNT_ID")
+  if not API_TOKEN or not ACCOUNT_ID:
+      sys.exit("Error: CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID environment variables must be set.")
+  ZONE_NAME = "%s"
   
   zone_content = """\
   %s"""
   
-  def upload_to_cloudflare(zone_id, token, bind_string):
-      """Uploads the BIND string to Cloudflare via the Import API."""
-      url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/import"
-      headers = { "Authorization": f"Bearer {token}" }
-      files = { 'file': ('db.txt', bind_string, 'text/plain') }
-      data = { 'proxied': 'true' }
-      print(f"Uploading zone file to Cloudflare for Zone: {zone_id}...")
-      response = requests.post(url, headers=headers, files=files, data=data)
-      if response.status_code == 200:
-          result = response.json()
-          print("Successfully imported records!")
-          print(f"Total Added: {result['result']['recs_added']}")
+  def parse_zone_data(content):
+      records = []
+      for line in content.splitlines():
+          line = line.strip()
+          if not line or line.startswith(';') or line.startswith('$'):
+              continue
+          parts = line.split()
+          if len(parts) >= 5 and parts[2] == 'IN':
+              records.append({
+                  'name': parts[0].rstrip('.'),
+                  'ttl': int(parts[1]),
+                  'type': parts[3],
+                  'content': " ".join(parts[4:]).rstrip('.')
+              })
+      return records
+  
+  def get_zone_id(zone_name, account_id, headers):
+      url = f"https://api.cloudflare.com/client/v4/zones?name={zone_name}&account.id={account_id}"
+      response = requests.get(url, headers=headers).json()
+      if not response.get('success') or not response.get('result'):
+          raise Exception(f"Zone {zone_name} not found.")
+      return response['result'][0]['id']
+  
+  def get_existing_records(zone_id, headers):
+      records = []
+      url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
+      page = 1
+      while True:
+          response = requests.get(url, headers=headers, params={'per_page': 100, 'page': page}).json()
+          if not response.get('success'):
+              raise Exception(f"Failed to fetch records: {response.get('errors')}")
+          records.extend(response['result'])
+          if response['result_info']['page'] >= response['result_info']['total_pages']:
+              break
+          page += 1
+      return records
+  
+  def sync_records(zone_name, account_id, token, bind_string):
+      headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+      
+      print("1. Getting zone ID...")
+      zone_id = get_zone_id(zone_name, account_id, headers)
+      
+      existing_records = []
+      if zone_id:
+          print(f"Zone ID: {zone_id}")
+          print("2. Fetching existing records...")
+          existing_records = get_existing_records(zone_id, headers)
       else:
-          print(f"Error {response.status_code}: {response.text}")
+          print(f"Zone {zone_name} not found. Will be created.")
+          print("2. Skipping record fetch for new zone.")
+      
+      print("3. Comparing records...")
+      defined_records = parse_zone_data(bind_string)
+      
+      existing_map = {(r['name'], r['type']): r for r in existing_records}
+      defined_map = {(r['name'], r['type']): r for r in defined_records}
+      
+      to_add, to_update, to_remove = [], [], []
+      
+      for key, d_rec in defined_map.items():
+          if key not in existing_map:
+              to_add.append(d_rec)
+          else:
+              e_rec = existing_map[key]
+              if e_rec['content'].lower() != d_rec['content'].lower() or e_rec['ttl'] != d_rec['ttl']:
+                  to_update.append((e_rec['id'], d_rec))
+                  
+      for key, e_rec in existing_map.items():
+          if key not in defined_map and e_rec['type'] not in ['SOA', 'NS']:
+              to_remove.append(e_rec)
+  
+      print("\n4. Diff:")
+      if not zone_id:
+          print(f"+ Create Zone: {zone_name} (Enterprise Plan)")
+      if zone_id and not to_add and not to_update and not to_remove:
+          print(" No changes required.")
+          return
+      for r in to_remove:
+          print(f"- Remove: {r['name']} IN {r['type']} {r['content']}")
+      for r in to_add:
+          print(f"+ Add: {r['name']} IN {r['type']} {r['content']}")
+      for eid, r in to_update:
+          print(f"~ Update: {r['name']} IN {r['type']} {r['content']}")
+          
+      confirm = input("\nDo you want to apply these changes? (y/N): ")
+      if confirm.lower() != 'y':
+          print("Aborted.")
+          return
+
+      print("\n5. Applying changes...")
+      if not zone_id:
+          create_url = "https://api.cloudflare.com/client/v4/zones"
+          payload = {
+              "name": zone_name,
+              "account": {"id": account_id},
+              "plan": {"id": "enterprise"}
+          }
+          create_resp = requests.post(create_url, headers=headers, json=payload).json()
+          if not create_resp.get('success'):
+              raise Exception(f"Failed to create zone: {create_resp.get('errors')}")
+          zone_id = create_resp['result']['id']
+          print(f"Created zone {zone_name} with ID {zone_id}")
+      for r in to_remove:
+          requests.delete(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{r['id']}", headers=headers)
+          print(f"Removed {r['name']}")
+      for r in to_add:
+          payload = dict(r)
+          if payload['type'] == 'SSHFP':
+              parts = payload['content'].split()
+              payload['data'] = {
+                  'algorithm': int(parts[0]),
+                  'type': int(parts[1]),
+                  'fingerprint': parts[2]
+              }
+              payload.pop('content', None)
+          requests.post(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records", headers=headers, json=payload)
+          print(f"Added {r['name']}")
+      for eid, r in to_update:
+          payload = dict(r)
+          if payload['type'] == 'SSHFP':
+              parts = payload['content'].split()
+              payload['data'] = {
+                  'algorithm': int(parts[0]),
+                  'type': int(parts[1]),
+                  'fingerprint': parts[2]
+              }
+              payload.pop('content', None)
+          requests.put(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{eid}", headers=headers, json=payload)
+          print(f"Updated {r['name']}")
+      print("Done!")
   
   if __name__ == "__main__":
-      upload_to_cloudflare(ZONE_ID, API_TOKEN, zone_content)
+      sync_records(ZONE_NAME, ACCOUNT_ID, API_TOKEN, zone_content)
 |||;
 
-std.format(py_template, [zone_content])
+std.format(py_template, [domain, zone_content])
 '''
