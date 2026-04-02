@@ -96,6 +96,15 @@
         }
         .action-btn:hover { color: var(--primary); background: var(--hover-bg); transform: scale(1.05); }
         .action-btn.delete:hover { background: var(--danger-bg); color: var(--danger); }
+
+        .notification-toast {
+            position: fixed; bottom: 20px; right: 20px;
+            background: var(--primary); color: #ffffff;
+            padding: 1rem 2rem; border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            z-index: 9999; transition: opacity 0.3s ease;
+            font-weight: 500; font-size: 0.875rem;
+        }
     </style>
 </head>
 <body>
@@ -129,6 +138,9 @@
                     <div id="zoneArtifacts" class="download-links hidden">
                         <!-- Zone file and scripts buttons will be populated here -->
                     </div>
+                    <button class="button" id="zoneSettingsBtn" onclick="openZoneSettingsModal()" style="display: none;">
+                        <span class="material-symbols-outlined" style="font-size: 1.2rem;">settings</span> Zone Settings
+                    </button>
                     <button class="button is-primary" id="addRecordBtn" onclick="openModal()" style="display: none;">
                         <span class="material-symbols-outlined" style="font-size: 1.2rem;">add</span> Add Record
                     </button>
@@ -217,6 +229,45 @@
                     <button type="submit" class="button is-primary">Save Record</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <div id="zoneSettingsModal" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.5rem;">Zone Settings</h3>
+            <form id="zoneSettingsForm" onsubmit="saveZoneSettings(event)">
+                <div class="form-group">
+                    <label>Plan</label>
+                    <select id="zsPlan" class="input">
+                        <option value="enterprise">Enterprise</option>
+                        <option value="business">Business</option>
+                        <option value="pro">Pro</option>
+                        <option value="free">Free</option>
+                    </select>
+                </div>
+                <div class="form-group" style="display:flex; align-items:center; gap:0.75rem; padding: 1rem; background: var(--hover-bg); border-radius: 8px; border: 1px solid var(--border);">
+                    <input type="checkbox" id="zsMultisigner" style="width:1.25rem; height:1.25rem; cursor:pointer; accent-color: var(--primary);">
+                    <label for="zsMultisigner" style="margin:0; cursor:pointer; font-weight: 500;">Enable Multi-Signer DNSSEC</label>
+                </div>
+                <div class="form-group" style="margin-top: 1rem;">
+                    <label>Vanity Name Servers (comma-separated)</label>
+                    <input type="text" id="zsVanity" class="input" placeholder="ns1.example.com, ns2.example.com">
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="button" onclick="closeZoneSettingsModal()">Cancel</button>
+                    <button type="submit" class="button is-primary">Save Settings</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="buildProgressModal" class="modal">
+        <div class="modal-content" style="max-width: 1200px;">
+            <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.5rem;">Building Graph...</h3>
+            <div id="buildLogs" style="background: var(--bg); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem; height: 300px; overflow-y: auto; white-space: pre-wrap; color: var(--fg);"></div>
+            <div class="btn-group">
+                <button type="button" class="button is-primary" id="buildCloseBtn" onclick="closeBuildProgress()" disabled>Building...</button>
+            </div>
         </div>
     </div>
 
@@ -323,11 +374,13 @@
             
             const container = document.getElementById('recordsContainer');
             const tbody = document.querySelector('#recordsTable tbody');
+            const zsBtn = document.getElementById('zoneSettingsBtn');
             const addBtn = document.getElementById('addRecordBtn');
             const artifactsDiv = document.getElementById('zoneArtifacts');
             
             if (!zoneName) {
                 container.classList.add('hidden');
+                zsBtn.style.display = 'none';
                 addBtn.style.display = 'none';
                 artifactsDiv.classList.add('hidden');
                 return;
@@ -337,7 +390,14 @@
                 query {
                     zone (filter:  { name:  { eq: "${zoneName}" }}) {
                         name
-                        described_by {
+                        plan
+                        multisigner
+                        vanity_name_server
+                        view
+                        zone_format
+                        disabled
+                        dnssec
+                        DESCRIBED_BY {
                             node {
                                 __typename
                                 ... on cloudflare_curl { name filename }
@@ -372,6 +432,13 @@
                 const z = data.zone[0];
                 zonesData[zoneName] = {
                     name: z.name,
+                    plan: z.plan,
+                    multisigner: z.multisigner,
+                    vanity_name_server: z.vanity_name_server,
+                    view: z.view,
+                    zone_format: z.zone_format,
+                    disabled: z.disabled,
+                    dnssec: z.dnssec,
                     artifacts: z.described_by || [],
                     records: extractRecords(z)
                 };
@@ -382,6 +449,7 @@
             
             const zone = zonesData[zoneName];
             container.classList.remove('hidden');
+            zsBtn.style.display = 'inline-flex';
             addBtn.style.display = 'inline-flex';
             tbody.innerHTML = '';
             
@@ -499,6 +567,101 @@
             document.getElementById('recordModal').classList.remove('active');
         }
 
+        function openZoneSettingsModal() {
+            const zoneName = document.getElementById('zoneSelect').value;
+            const z = zonesData[zoneName];
+            document.getElementById('zsPlan').value = z.plan || 'enterprise';
+            document.getElementById('zsMultisigner').checked = z.multisigner === 'True' || z.multisigner === 'true' || z.multisigner === true;
+            document.getElementById('zsVanity').value = z.vanity_name_server || '';
+            document.getElementById('zoneSettingsModal').classList.add('active');
+        }
+
+        function closeZoneSettingsModal() {
+            document.getElementById('zoneSettingsModal').classList.remove('active');
+        }
+
+        function showNotification(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'notification-toast';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+        }
+
+        let buildEventSource = null;
+
+        function showBuildProgress() {
+            const logsEl = document.getElementById('buildLogs');
+            logsEl.innerHTML = '';
+            document.getElementById('buildCloseBtn').disabled = true;
+            document.getElementById('buildCloseBtn').textContent = 'Building...';
+            document.getElementById('buildProgressModal').classList.add('active');
+
+            if (buildEventSource) buildEventSource.close();
+            buildEventSource = new EventSource('/api/build/stream');
+            buildEventSource.onmessage = async function(event) {
+                const msg = event.data;
+                if (msg === 'BUILD_COMPLETE') {
+                    buildEventSource.close();
+                    document.getElementById('buildCloseBtn').disabled = false;
+                    document.getElementById('buildCloseBtn').textContent = 'Close';
+                    showNotification('New graph is available!');
+                    await init();
+                } else {
+                    logsEl.appendChild(document.createTextNode(msg + '\n'));
+                    logsEl.scrollTop = logsEl.scrollHeight;
+                }
+            };
+            buildEventSource.onerror = function() {
+                buildEventSource.close();
+                document.getElementById('buildCloseBtn').disabled = false;
+                document.getElementById('buildCloseBtn').textContent = 'Close (Error)';
+            };
+        }
+
+        function closeBuildProgress() {
+            document.getElementById('buildProgressModal').classList.remove('active');
+        }
+
+        async function saveZoneSettings(e) {
+            e.preventDefault();
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Saving...';
+            submitBtn.disabled = true;
+
+            const zoneName = document.getElementById('zoneSelect').value;
+            const z = zonesData[zoneName];
+            const plan = document.getElementById('zsPlan').value;
+            const multisigner = document.getElementById('zsMultisigner').checked ? 'True' : 'False';
+            const vanity = document.getElementById('zsVanity').value.replace(/"/g, '""');
+            
+            const view = z.view || 'default';
+            const zone_format = z.zone_format || 'FORWARD';
+            const disabled = z.disabled || 'False';
+            const dnssec = z.dnssec || 'False';
+
+            const csvData = `type,name,view,zone_format,disabled,dnssec,plan,multisigner,vanity_name_server\nauth,${zoneName},${view},${zone_format},${disabled},${dnssec},${plan},${multisigner},"${vanity}"`;
+            
+            const formData = new FormData();
+            formData.append('update', csvData);
+
+            try {
+                await fetch(`/api/assets/auth.csv`, { method: 'POST', body: formData });
+                closeZoneSettingsModal();
+                showBuildProgress();
+            } catch (err) {
+                console.error(err);
+                alert('Failed to save Zone Settings');
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
         function editRecord(zoneName, idx) {
             const rec = zonesData[zoneName].records[idx];
             if (!rec) return;
@@ -579,10 +742,8 @@
 
             try {
                 await fetch(`/api/assets/${type}.csv`, { method: 'POST', body: formData });
-                // Simple sleep before reload to allow backend process
-                await new Promise(r => setTimeout(r, 1500)); 
                 closeModal();
-                await init();
+                showBuildProgress();
             } catch (err) {
                 console.error(err);
                 alert('Failed to save DNS record');
@@ -602,8 +763,7 @@
 
             try {
                 await fetch(`/api/assets/${rec.type.toLowerCase()}.csv`, { method: 'POST', body: formData });
-                await new Promise(r => setTimeout(r, 1500));
-                await init();
+                showBuildProgress();
             } catch (err) {
                 console.error(err);
                 alert('Failed to delete DNS record');

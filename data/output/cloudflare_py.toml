@@ -9,8 +9,12 @@ jsonnet = '''
 local origin = std.extVar("origin_resource");
 local domain = origin.name;
 
-local zone_data = std.filter(function(x) std.objectHas(x, "filename") && std.startsWith(x.filename, "db."), std.get(origin, "described_by", []));
+local zone_data = std.filter(function(x) std.objectHas(x, "filename") && std.startsWith(x.filename, "db."), std.get(origin, "DESCRIBED_BY", []));
 local zone_content = if std.length(zone_data) > 0 then zone_data[0].content else "";
+
+local plan = std.get(origin, "plan", "enterprise");
+local multisigner = std.get(origin, "multisigner", "False");
+local vanity_name_server = std.get(origin, "vanity_name_server", "");
 
 local py_template = |||
   import os
@@ -24,6 +28,9 @@ local py_template = |||
   if not API_TOKEN or not ACCOUNT_ID:
       sys.exit("Error: CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID environment variables must be set.")
   ZONE_NAME = "%s"
+  PLAN = "%s"
+  MULTISIGNER = "%s".lower() == "true"
+  VANITY_NAME_SERVERS = "%s"
   
   zone_content = """\
   %s"""
@@ -101,11 +108,23 @@ local py_template = |||
               to_remove.append(e_rec)
   
       print("\n4. Diff:")
+      vns_list = [ns.strip() for ns in VANITY_NAME_SERVERS.split(",") if ns.strip() and ns.strip().lower() != "null"]
+      settings_patch = MULTISIGNER or vns_list or PLAN
+    
       if not zone_id:
           print(f"+ Create Zone: {zone_name} (Enterprise Plan)")
-      if zone_id and not to_add and not to_update and not to_remove:
+      if zone_id and not to_add and not to_update and not to_remove and not settings_patch:
           print(" No changes required.")
           return
+
+      if zone_id:
+          if PLAN:
+              print(f"~ Update: Plan to {PLAN}")
+          if MULTISIGNER:
+              print("~ Update: Multi-Signer DNSSEC to active")
+          if vns_list:
+              print(f"~ Update: Vanity Name Servers to {vns_list}")
+
       for r in to_remove:
           print(f"- Remove: {r['name']} IN {r['type']} {r['content']}")
       for r in to_add:
@@ -124,13 +143,27 @@ local py_template = |||
           payload = {
               "name": zone_name,
               "account": {"id": account_id},
-              "plan": {"id": "enterprise"}
+              "plan": {"id": PLAN}
           }
           create_resp = requests.post(create_url, headers=headers, json=payload).json()
           if not create_resp.get('success'):
               raise Exception(f"Failed to create zone: {create_resp.get('errors')}")
           zone_id = create_resp['result']['id']
           print(f"Created zone {zone_name} with ID {zone_id}")
+
+      print("6. Configuring Zone Settings...")
+      if PLAN:
+          requests.patch(f"https://api.cloudflare.com/client/v4/zones/{zone_id}", headers=headers, json={"plan": {"id": PLAN}})
+          print(f"Set Zone Plan to {PLAN}")
+      if MULTISIGNER:
+          requests.patch(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dnssec", headers=headers, json={"status": "active"})
+          requests.patch(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dnssec", headers=headers, json={"dnssec_multi_signer": True})
+          print("Enabled Multi-Signer DNSSEC")
+          
+      if vns_list:
+          requests.patch(f"https://api.cloudflare.com/client/v4/zones/{zone_id}", headers=headers, json={"vanity_name_servers": vns_list})
+          print(f"Set Vanity Name Servers to {vns_list}")
+
       for r in to_remove:
           requests.delete(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{r['id']}", headers=headers)
           print(f"Removed {r['name']}")
@@ -164,5 +197,5 @@ local py_template = |||
       sync_records(ZONE_NAME, ACCOUNT_ID, API_TOKEN, zone_content)
 |||;
 
-std.format(py_template, [domain, zone_content])
+std.format(py_template, [domain, plan, multisigner, vanity_name_server, zone_content])
 '''
