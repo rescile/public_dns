@@ -57,7 +57,7 @@ class CP control;
 
 ## Key Features
 
-With this project we aim to make cloud services more reliable and protect operational souvereignty.
+With this project, we aim to make cloud services more reliable and protect operational sovereignty by bridging the gap between global scale and local control. At its core, we utilize a Universal Configuration Server to provide a unified, schema-driven source of truth that orchestrates complex infrastructure seamlessly across diverse environments. This approach ensures that whether our services sit at the anycast edge or on-premises, they remain consistent, resilient, and fully under a central governance.
 
 | Feature | Global Anycast Only | On-Premises Only | Hybrid Integration |
 | :--- | :--- | :--- | :--- |
