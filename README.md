@@ -1,14 +1,15 @@
-# Dual-Plane DNS (Cloud-Edge + On-Prem)
+# Hybrid DNS
 
-A hybrid DNS configurationcombines globally distributed, anycast-based authoritative DNS nodes (cloud-hosted) with on-premises authoritative DNS servers (e.g., BIND) integrated into the same zone authority, to deliver resilient, low-latency, and sovereign DNS resolution.
+A hybrid DNS configuration combines globally distributed, anycast-based authoritative DNS nodes with on-premises authoritative DNS servers integrated into the same zone authority, to deliver resilient, low-latency, and sovereign DNS resolution.
 
-## Key Properties
-* **Resilience**: Eliminates single-provider dependency (provider-level fault isolation)
-* **Latency optimization**: Anycast edge handles most queries close to clients
-* **Data sovereignty / compliance**: On-prem nodes retain authoritative capability
-* **Operational flexibility**: Independent scaling of cloud and on-prem layers
-* **Failover symmetry**: Either layer can serve the full zone if the other fails
-* **Alternative Naming Options (Vendor-neutral)**
+## Control Plane vs. Data Plane Separation
+
+* **Control plane**: zone management, updates, policy enforcement (can be centralized or dual-managed)
+* **Data plane**: distributed query answering across cloud and on-prem endpoints
+
+### Multi-Tier Authoritative DNS
+
+The globally distributed edge layer provides anycast routing for low-latency resolution and high DDoS absorption capacity, while the on-premises layer provides local control over zone data and integration with internal systems and governance controls
 
 ```mermaid
 flowchart
@@ -62,14 +63,17 @@ class P1,P2 onprem;
 class CP control;
 ```
 
-## Control Plane vs. Data Plane Separation
+## Eliminating single-provider dependency
+Integrating Anycast with on-premises bind instances eliminates the "single point of failure" inherent in relying solely on a cloud provider or a single data center. In a DDoS attack, Anycast Protection spreads the load across dozens of global nodes, effectively "absorbing" the traffic. If the global provider suffers a massive routing leak or a regional fiber cut, on-premises Fallback nodes continue to serve local traffic. This ensures that internal operations remain functional even if the "outside world" is struggling.
 
-* **Control plane**: zone management, updates, policy enforcement (can be centralized or dual-managed)
-* **Data plane**: distributed query answering across cloud and on-prem endpoints
+## Key Properties
+* **Latency optimization**: Anycast edge handles most queries close to clients
+* **Data sovereignty / compliance**: On-prem nodes retain authoritative capability
+* **Operational flexibility**: Independent scaling of cloud and on-prem layers
+* **Failover symmetry**: Either layer can serve the full zone if the other fails
+* **Alternative Naming Options (Vendor-neutral)**
 
-### Multi-Tier Authoritative DNS
 
-The globally distributed edge layer provides anycast routing for low-latency resolution and high DDoS absorption capacity, while the on-premises layer provides local control over zone data and integration with internal systems and governance controls
 
 ### Shared Zone Authority
 
