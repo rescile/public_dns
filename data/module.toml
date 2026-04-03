@@ -33,3 +33,275 @@ allowed_values = ["DEV", "TEST", "PROD"]
 description = "The tenant name identifiers the organization that uses the service."
 required = true
 default = "clienta"
+
+# auth
+[requirements.auth]
+properties = ["name", "plan"]
+description = "The module expects authoritative DNS zone definitions."
+
+[assets."auth.csv"]
+description = "Defines the authoritative DNS zones."
+bootstrap = '''
+type,name,view,zone_format,disabled,dnssec,plan,multisigner,vanity_name_server
+auth,rescile.com,default,FORWARD,False,False,enterprise,False,
+auth,10.0.252.145.in-addr.arpa,default,FORWARD,False,False,enterprise,False,
+'''
+[assets."auth.csv".columns]
+type = { type = "string", required = true }
+name = { type = "string", required = true }
+view = { type = "string" }
+zone_format = { type = "string" }
+disabled = { type = "boolean" }
+dnssec = { type = "boolean" }
+plan = { type = "string" }
+multisigner = { type = "boolean" }
+vanity_name_server = { type = "array_of_string" }
+
+# a
+[requirements.a]
+properties = ["name", "type", "address", "zone"]
+
+[assets."a.csv"]
+description = "A records for the DNS zones."
+bootstrap = '''
+"type","name","address","ttl","comment","disabled","zone"
+"a","www.rescile.com","10.1.4.3","3600","","False","rescile.com"
+'''
+[assets."a.csv".columns]
+type = { type = "string", required = true }
+name = { type = "string", required = true }
+address = { type = "string", required = true }
+ttl = { type = "integer" }
+comment = { type = "string" }
+disabled = { type = "boolean" }
+zone = { type = "string", required = true }
+
+# aaaa
+[requirements.aaaa]
+properties = ["name", "type", "address", "zone"]
+
+[assets."aaaa.csv"]
+description = "AAAA records for the DNS zones."
+bootstrap = '''
+"type","name","address","ttl","comment","disabled","zone"
+"aaaa","www.rescile.com","fdff:ff55:55ff::119","3600","","False","rescile.com"
+'''
+[assets."aaaa.csv".columns]
+type = { type = "string", required = true }
+name = { type = "string", required = true }
+address = { type = "string", required = true }
+ttl = { type = "integer" }
+comment = { type = "string" }
+disabled = { type = "boolean" }
+zone = { type = "string", required = true }
+
+# caa
+[requirements.caa]
+properties = ["name", "type", "content", "zone"]
+
+[assets."caa.csv"]
+description = "CAA records for the DNS zones."
+bootstrap = '''
+"type","name","content","ttl","disabled","zone"
+"caa","rescile.com","0 issue ""letsencrypt.org""","3600","False","rescile.com"
+'''
+[assets."caa.csv".columns]
+type = { type = "string", required = true }
+name = { type = "string", required = true }
+content = { type = "string", required = true }
+ttl = { type = "integer" }
+disabled = { type = "boolean" }
+zone = { type = "string", required = true }
+
+# cname
+[requirements.cname]
+properties = ["name", "type", "canonical", "zone"]
+
+[assets."cname.csv"]
+description = "CNAME records for the DNS zones."
+bootstrap = '''
+"type","name","canonical","ttl","comment","disabled","zone"
+"cname","rescile.com","www.rescile.com","3600","","False","rescile.com"
+'''
+[assets."cname.csv".columns]
+type = { type = "string", required = true }
+name = { type = "string", required = true }
+canonical = { type = "string", required = true }
+ttl = { type = "integer" }
+comment = { type = "string" }
+disabled = { type = "boolean" }
+zone = { type = "string", required = true }
+
+# mx
+[requirements.mx]
+properties = ["name", "type", "mail_exchanger", "priority", "zone"]
+
+[assets."mx.csv"]
+description = "MX records for the DNS zones."
+bootstrap = '''
+"type","zone","name","mail_exchanger","priority","ttl","disabled"
+"mx","rescile.com","rescile.com","mx.rescile.com","10","300","False"
+'''
+[assets."mx.csv".columns]
+type = { type = "string", required = true }
+zone = { type = "string", required = true }
+name = { type = "string", required = true }
+mail_exchanger = { type = "string", required = true }
+priority = { type = "integer", required = true }
+ttl = { type = "integer" }
+disabled = { type = "boolean" }
+
+# ns
+[requirements.ns]
+properties = ["name", "type", "content", "zone"]
+
+[assets."ns.csv"]
+description = "NS records for the DNS zones."
+bootstrap = '''
+"type","name","content","ttl","disabled","zone"
+"ns","sub.rescile.com","ns1.rescile.com","3600","False","rescile.com"
+'''
+[assets."ns.csv".columns]
+type = { type = "string", required = true }
+name = { type = "string", required = true }
+content = { type = "string", required = true }
+ttl = { type = "integer" }
+disabled = { type = "boolean" }
+zone = { type = "string", required = true }
+
+# ptr
+[requirements.ptr]
+properties = ["name", "type", "content", "zone"]
+
+[assets."ptr.csv"]
+description = "PTR records for the DNS zones."
+bootstrap = '''
+"type","name","content","ttl","disabled","zone"
+"ptr","10.0.252.145.in-addr.arpa","rescile.com","3600","False","0.252.10.in-addr.arpa"
+'''
+[assets."ptr.csv".columns]
+type = { type = "string", required = true }
+name = { type = "string", required = true }
+content = { type = "string", required = true }
+ttl = { type = "integer" }
+disabled = { type = "boolean" }
+zone = { type = "string", required = true }
+
+# srv
+[requirements.srv]
+properties = ["name", "type", "target", "port", "priority", "weight", "zone"]
+
+[assets."srv.csv"]
+description = "SRV records for the DNS zones."
+bootstrap = '''
+"type","name","target","port","priority","weight","ttl","disabled","zone"
+"srv","_sipfederationtls._tcp.rescile.com","sipfed.online.lync.com","5061","100","1","3600","False","rescile.com"
+'''
+[assets."srv.csv".columns]
+type = { type = "string", required = true }
+name = { type = "string", required = true }
+target = { type = "string", required = true }
+port = { type = "integer", required = true }
+priority = { type = "integer", required = true }
+weight = { type = "integer", required = true }
+ttl = { type = "integer" }
+disabled = { type = "boolean" }
+zone = { type = "string", required = true }
+
+# sshfp
+[requirements.sshfp]
+properties = ["name", "type", "content", "zone"]
+
+[assets."sshfp.csv"]
+description = "SSHFP records for the DNS zones."
+bootstrap = '''
+"type","name","content","ttl","disabled","zone"
+"sshfp","test-sshfp.rescile.com","114 211 042D1CEDC4643E2811E5343E23B9BE9B4DC4","3600","False","rescile.com"
+'''
+[assets."sshfp.csv".columns]
+type = { type = "string", required = true }
+name = { type = "string", required = true }
+content = { type = "string", required = true }
+ttl = { type = "integer" }
+disabled = { type = "boolean" }
+zone = { type = "string", required = true }
+
+# txt
+[requirements.txt]
+properties = ["name", "type", "text", "zone"]
+
+[assets."txt.csv"]
+description = "TXT records for the DNS zones."
+bootstrap = '''
+"type","name","text","ttl","comment","disabled","zone"
+"txt","rescile.com","""v=spf1 -all""","3600","","False","rescile.com"
+'''
+[assets."txt.csv".columns]
+type = { type = "string", required = true }
+name = { type = "string", required = true }
+text = { type = "string", required = true }
+ttl = { type = "integer" }
+comment = { type = "string" }
+disabled = { type = "boolean" }
+zone = { type = "string", required = true }
+
+# operator.json
+[inputs."operator.json"]
+description = "Operator definitions."
+format = "object_of_objects"
+bootstrap = '''
+{
+  "rescile": {
+    "name": "Rescile",
+    "address": "street,postcode,city",
+    "commercial_contact": "commercial@operator.com",
+    "technical_contact": "technical@operator.com"
+  }
+}
+'''
+[inputs."operator.json".fields]
+name = { type = "string", required = true }
+address = { type = "string" }
+commercial_contact = { type = "string" }
+technical_contact = { type = "string" }
+
+# provider.json
+[inputs."provider.json"]
+description = "Provider definitions."
+format = "object_of_objects"
+bootstrap = '''
+{
+  "cloudflare": {
+    "function": "network",
+    "domain": "edge",
+    "terms": "https://www.cloudflare.com/enterprise-support-sla/",
+    "services": ["dns", "cdn"],
+    "region": ["LON", "ZRH", "FRA"],
+    "api": "https://api.cloudflare.com/client/v4/accounts/account_id/tunnels",
+    "cidr": "10.0.0.0/8",
+    "kms": "https://acme-v02.api.letsencrypt.org/directory",
+    "clearance": "BAFIN,MARS"
+  },
+  "akamai": {
+    "function": "network",
+    "domain": "edge",
+    "terms": "https://www.akamai.com/legal/terms-of-service/",
+    "services": ["dns", "cdn"],
+    "region": ["LON", "ZRH", "FRA"],
+    "api": "https://api.akamai.com/",
+    "cidr": "10.0.0.0/8",
+    "kms": "https://acme-v02.api.letsencrypt.org/directory",
+    "clearance": "BAFIN,MARS"
+  }
+}
+'''
+[inputs."provider.json".fields]
+function = { type = "string" }
+domain = { type = "string" }
+terms = { type = "string" }
+services = { type = "array_of_string" }
+region = { type = "array_of_string" }
+api = { type = "string" }
+cidr = { type = "string" }
+kms = { type = "string" }
+clearance = { type = "string" }
