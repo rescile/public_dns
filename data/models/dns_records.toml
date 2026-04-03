@@ -1,0 +1,51 @@
+origin_resource = "zone"
+
+[[link_resources]]
+with = "a"
+join = { local = "auth", remote = "zone" }
+create_relation = { type = "has_a_record" }
+
+[[link_resources]]
+with = "aaaa"
+join = { local = "auth", remote = "zone" }
+create_relation = { type = "has_aaaa_record" }
+
+[[link_resources]]
+with = "cname"
+join = { local = "auth", remote = "zone" }
+create_relation = { type = "has_cname_record" }
+
+[[link_resources]]
+with = "txt"
+join = { local = "auth", remote = "zone" }
+create_relation = { type = "has_txt_record" }
+
+[[link_resources]]
+with = "mx"
+join = { local = "auth", remote = "zone" }
+create_relation = { type = "has_mx_record" }
+
+[[link_resources]]
+with = "srv"
+join = { local = "auth", remote = "zone" }
+create_relation = { type = "has_srv_record" }
+
+[[link_resources]]
+with = "ptr"
+join = { local = "auth", remote = "zone" }
+create_relation = { type = "has_ptr_record" }
+
+[[link_resources]]
+with = "caa"
+join = { local = "auth", remote = "zone" }
+create_relation = { type = "has_caa_record" }
+
+[[link_resources]]
+with = "ns"
+join = { local = "auth", remote = "zone" }
+create_relation = { type = "has_ns_record" }
+
+[[link_resources]]
+with = "sshfp"
+join = { local = "auth", remote = "zone" }
+create_relation = { type = "has_sshfp_record" }

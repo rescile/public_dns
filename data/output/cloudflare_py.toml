@@ -2,73 +2,217 @@ origin_resource = "zone"
 
 [[output]]
 resource_type = "cloudflare_py"
-filename = "cloudflare.py"
+filename = "cloudflare-{{ origin_resource.name }}.py"
 mimetype = "application/txt"
-name = "base/cloudflare.py"
-template = '''
-import requests
-import io
+name = "base/cloudflare-{{ origin_resource.name }}.py"
+jsonnet = '''
+local origin = std.extVar("origin_resource");
+local domain = origin.name;
 
-# --- Configuration ---
-API_TOKEN = "api_token"
-ZONE_ID = "zone_id"
-DOMAIN = "{{ origin_resource.name }}"
+local zone_data = std.filter(function(x) std.objectHas(x, "filename") && std.startsWith(x.filename, "db."), std.get(origin, "DESCRIBED_BY", []));
+local zone_content = if std.length(zone_data) > 0 then zone_data[0].content else "";
 
-# --- Define your DNS Records ---
-# You can easily load this from a JSON file or keep it as a list
-records = [
-    {"name": "@", "type": "A", "value": "1.2.3.4"},
-    {"name": "www", "type": "CNAME", "value": "example.com"},
-    {"name": "api", "type": "A", "value": "1.2.3.5"},
-]
+local plan = std.get(origin, "plan", "enterprise");
+local multisigner = std.get(origin, "multisigner", "False");
+local vanity_name_server = std.get(origin, "vanity_name_server", "");
 
-def generate_bind_content(domain, records):
-    """Formats records into a BIND-compatible string."""
-    lines = [
-        f"; Zone file for {domain}",
-        f"$ORIGIN {domain}.",
-        "$TTL 3600",
-        ""
-    ]
-    for r in records:
-        # Standard BIND format: name  ttl  class  type  value
-        lines.append(f"{r['name']:15} 3600  IN  {r['type']:5} {r['value']}")
+local py_template = |||
+  import os
+  import sys
+  import requests
+  import io
+  
+  # --- Configuration ---
+  API_TOKEN = os.getenv("CLOUDFLARE_API_TOKEN")
+  ACCOUNT_ID = os.getenv("CLOUDFLARE_ACCOUNT_ID")
+  if not API_TOKEN or not ACCOUNT_ID:
+      sys.exit("Error: CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID environment variables must be set.")
+  ZONE_NAME = "%s"
+  PLAN = "%s"
+  MULTISIGNER = "%s".lower() == "true"
+  VANITY_NAME_SERVERS = %s
+  
+  zone_content = """\
+  %s"""
+  
+  def parse_zone_data(content):
+      records = []
+      for line in content.splitlines():
+          line = line.strip()
+          if not line or line.startswith(';') or line.startswith('$'):
+              continue
+          parts = line.split()
+          if len(parts) >= 5 and parts[2] == 'IN':
+              records.append({
+                  'name': parts[0].rstrip('.'),
+                  'ttl': int(parts[1]),
+                  'type': parts[3],
+                  'content': " ".join(parts[4:]).rstrip('.')
+              })
+      return records
+  
+  def get_zone_info(zone_name, account_id, headers):
+      url = f"https://api.cloudflare.com/client/v4/zones?name={zone_name}&account.id={account_id}"
+      response = requests.get(url, headers=headers).json()
+      if not response.get('success') or not response.get('result'):
+          return None
+      return response['result'][0]
+  
+  def get_existing_records(zone_id, headers):
+      records = []
+      url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
+      page = 1
+      while True:
+          response = requests.get(url, headers=headers, params={'per_page': 100, 'page': page}).json()
+          if not response.get('success'):
+              raise Exception(f"Failed to fetch records: {response.get('errors')}")
+          records.extend(response['result'])
+          if response['result_info']['page'] >= response['result_info']['total_pages']:
+              break
+          page += 1
+      return records
+  
+  def sync_records(zone_name, account_id, token, bind_string):
+      headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+      
+      print("1. Getting zone info...")
+      zone_info = get_zone_info(zone_name, account_id, headers)
+      zone_id = zone_info['id'] if zone_info else None
+      
+      existing_records = []
+      if zone_id:
+          print(f"Zone ID: {zone_id}")
+          print("2. Fetching existing records...")
+          existing_records = get_existing_records(zone_id, headers)
+      else:
+          print(f"Zone {zone_name} not found. Will be created.")
+          print("2. Skipping record fetch for new zone.")
+      
+      print("3. Comparing records...")
+      defined_records = parse_zone_data(bind_string)
+      
+      existing_map = {(r['name'], r['type']): r for r in existing_records}
+      defined_map = {(r['name'], r['type']): r for r in defined_records}
+      
+      to_add, to_update, to_remove = [], [], []
+      
+      for key, d_rec in defined_map.items():
+          if key not in existing_map:
+              to_add.append(d_rec)
+          else:
+              e_rec = existing_map[key]
+              if e_rec['content'].lower() != d_rec['content'].lower() or e_rec['ttl'] != d_rec['ttl']:
+                  to_update.append((e_rec['id'], d_rec))
+                  
+      for key, e_rec in existing_map.items():
+          if key not in defined_map and e_rec['type'] not in ['SOA', 'NS']:
+              to_remove.append(e_rec)
+  
+      print("\n4. Diff:")
+      vns_raw = VANITY_NAME_SERVERS.split(",") if isinstance(VANITY_NAME_SERVERS, str) else VANITY_NAME_SERVERS
+      vns_list = [ns.strip() for ns in vns_raw if ns.strip() and ns.strip().lower() != "null"]
+      update_plan = bool(PLAN)
+      update_vns = bool(vns_list)
+  
+      if zone_info:
+          current_plan = zone_info.get('plan', {}).get('legacy_id') or zone_info.get('plan', {}).get('id')
+          if PLAN and current_plan == PLAN:
+              update_plan = False
+              
+          current_vns = zone_info.get('vanity_name_servers') or []
+          if vns_list and set(current_vns) == set(vns_list):
+              update_vns = False
+  
+      settings_patch = MULTISIGNER or update_vns or update_plan
+    
+      if not zone_id:
+          print(f"+ Create Zone: {zone_name} (Enterprise Plan)")
+      if zone_id and not to_add and not to_update and not to_remove and not settings_patch:
+          print(" No changes required.")
+          return
 
-    return "\n".join(lines)
+      if zone_id:
+          if update_plan:
+              print(f"~ Update: Plan to {PLAN}")
+          if MULTISIGNER:
+              print("~ Update: Multi-Signer DNSSEC to active")
+          if update_vns:
+              print(f"~ Update: Vanity Name Servers to {vns_list}")
 
-def upload_to_cloudflare(zone_id, token, bind_string):
-    """Uploads the BIND string to Cloudflare via the Import API."""
-    url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/import"
+      for r in to_remove:
+          print(f"- Remove: {r['name']} IN {r['type']} {r['content']}")
+      for r in to_add:
+          print(f"+ Add: {r['name']} IN {r['type']} {r['content']}")
+      for eid, r in to_update:
+          print(f"~ Update: {r['name']} IN {r['type']} {r['content']}")
+          
+      confirm = input("\nDo you want to apply these changes? (y/N): ")
+      if confirm.lower() != 'y':
+          print("Aborted.")
+          return
 
-    headers = {
-        "Authorization": f"Bearer {token}"
-    }
+      print("\n5. Applying changes...")
+      if not zone_id:
+          create_url = "https://api.cloudflare.com/client/v4/zones"
+          payload = {
+              "name": zone_name,
+              "account": {"id": account_id}
+          }
+          create_resp = requests.post(create_url, headers=headers, json=payload).json()
+          if not create_resp.get('success'):
+              raise Exception(f"Failed to create zone: {create_resp.get('errors')}")
+          zone_id = create_resp['result']['id']
+          print(f"Created zone {zone_name} with ID {zone_id}")
 
-    # We use io.BytesIO to treat the string as a file in-memory
-    # This avoids having to write a physical .txt file to the disk
-    files = {
-        'file': ('db.txt', io.BytesIO(bind_string.encode('utf-8')), 'text/plain')
-    }
+      print("6. Configuring Zone Settings...")
+      if update_plan or update_vns:
+          payload = {}
+          if update_plan:
+              payload["plan"] = {"id": PLAN}
+          if update_vns:
+              payload["vanity_name_servers"] = vns_list
+          requests.patch(f"https://api.cloudflare.com/client/v4/zones/{zone_id}", headers=headers, json=payload)
+          if update_plan:
+              print(f"Set Zone Plan to {PLAN}")
+          if update_vns:
+              print(f"Set Vanity Name Servers to {vns_list}")
+      if MULTISIGNER:
+          requests.patch(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dnssec", headers=headers, json={"status": "active"})
+          requests.patch(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dnssec", headers=headers, json={"dnssec_multi_signer": True})
+          print("Enabled Multi-Signer DNSSEC")
+          
+      for r in to_remove:
+          requests.delete(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{r['id']}", headers=headers)
+          print(f"Removed {r['name']}")
+      for r in to_add:
+          payload = dict(r)
+          if payload['type'] == 'SSHFP':
+              parts = payload['content'].split()
+              payload['data'] = {
+                  'algorithm': int(parts[0]),
+                  'type': int(parts[1]),
+                  'fingerprint': parts[2]
+              }
+              payload.pop('content', None)
+          requests.post(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records", headers=headers, json=payload)
+          print(f"Added {r['name']}")
+      for eid, r in to_update:
+          payload = dict(r)
+          if payload['type'] == 'SSHFP':
+              parts = payload['content'].split()
+              payload['data'] = {
+                  'algorithm': int(parts[0]),
+                  'type': int(parts[1]),
+                  'fingerprint': parts[2]
+              }
+              payload.pop('content', None)
+          requests.put(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{eid}", headers=headers, json=payload)
+          print(f"Updated {r['name']}")
+      print("Done!")
+  
+  if __name__ == "__main__":
+      sync_records(ZONE_NAME, ACCOUNT_ID, API_TOKEN, zone_content)
+|||;
 
-    # Optional: Set proxied=true if you want Cloudflare's orange cloud enabled
-    data = {
-        'proxied': 'true'
-    }
-
-    print(f"Uploading zone file to Cloudflare for Zone: {zone_id}...")
-    response = requests.post(url, headers=headers, files=files, data=data)
-
-    if response.status_code == 200:
-        result = response.json()
-        print("Successfully imported records!")
-        print(f"Total Added: {result['result']['recs_added']}")
-    else:
-        print(f"Error {response.status_code}: {response.text}")
-
-if __name__ == "__main__":
-    # 1. Generate the file content
-    zone_content = generate_bind_content(DOMAIN, records)
-
-    # 2. Upload it
-    upload_to_cloudflare(ZONE_ID, API_TOKEN, zone_content)
+std.format(py_template, [domain, plan, multisigner, vanity_name_server, zone_content])
 '''
