@@ -78,7 +78,19 @@ In an era of increasing data localization laws like GDPR or specialized financia
 ### Operational Consistency and Simplified Troubleshooting
 Integrating multiple instance into the same zone authority rather than having separate internal and external views simplifies management. Maintaining a single zone authority makes it easier to manage DNSSEC signing keys. Operators don't have to worry about desynchronization between "Internal" and "External" views that often lead to validation failures. Engineers don't have to guess which "version" of a record is being hit. The hybrid approach ensures that whether a query hits a cloud node or a local server, the answer is cryptographically identical and consistent. 
 
-## Additional Properties
+### Additional Properties
 * **Operational flexibility**: Independent scaling of cloud and on-prem layers
 * **Failover symmetry**: Either layer can serve the full zone if the other fails
 * **Alternative Naming Options (Vendor-neutral)**
+
+## Contributing & Rules of Engagement
+
+We love community input! Whether you're fixing a bug, improving documentation, or suggesting a new feature, your contributions help make this project better for everyone. To keep things running smoothly, please follow these guidelines:
+
+* **Check for Issues:** Before starting work, please check the [Issues](link-to-your-issues) tab to see if someone else is already tackling the task or to open a new discussion.
+* **Branching Strategy:** Please submit all pull requests (PRs) against the `develop` branch rather than `main`.
+* **Atomic Commits:** Keep your PRs focused. It’s much easier to review three small, specific PRs than one giant "fix-everything" update.
+* **Code of Conduct:** Be kind and respectful to fellow contributors. We’re all here to learn and build cool things together.
+* **Stay in Touch:** If you’re planning a major architectural change, please open a "RFC" (Request for Comments) issue first so we can align on the direction.
+
+**Ready to jump in?** Fork the repo, make your changes, and send over a PR. We can't wait to see what you build!
