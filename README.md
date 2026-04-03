@@ -57,6 +57,8 @@ class CP control;
 
 ## Key Features
 
+With this project we aim to make cloud services more reliable and protect operational souvereignty.
+
 | Feature | Global Anycast Only | On-Premises Only | Hybrid Integration |
 | :--- | :--- | :--- | :--- |
 | **DDoS Mitigation** | Excellent (Global absorption) | Poor (Limited by pipe size) | **Superior (Multi-layered)** |
