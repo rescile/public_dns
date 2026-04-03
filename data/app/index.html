@@ -129,7 +129,6 @@
             <h2>Zone Overview</h2>
             <div class="overview-header">
                 <div class="select-wrapper" style="flex: 1; min-width: 250px;">
-                    <label for="zoneSelect" style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.05em;">Select Zone</label>
                     <select id="zoneSelect">
                         <option value="">-- Choose a DNS zone --</option>
                     </select>
@@ -138,6 +137,9 @@
                     <div id="zoneArtifacts" class="download-links hidden">
                         <!-- Zone file and scripts buttons will be populated here -->
                     </div>
+                    <button class="button" id="addZoneBtn" onclick="openAddZoneModal()">
+                        <span class="material-symbols-outlined" style="font-size: 1.2rem;">add_circle</span> Add Zone
+                    </button>
                     <button class="button" id="zoneSettingsBtn" onclick="openZoneSettingsModal()" style="display: none;">
                         <span class="material-symbols-outlined" style="font-size: 1.2rem;">settings</span> Zone Settings
                     </button>
@@ -227,6 +229,39 @@
                 <div class="btn-group">
                     <button type="button" class="button" onclick="closeModal()">Cancel</button>
                     <button type="submit" class="button is-primary">Save Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="addZoneModal" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.5rem;">Add New Zone</h3>
+            <form id="addZoneForm" onsubmit="saveNewZone(event)">
+                <div class="form-group">
+                    <label>Zone Name</label>
+                    <input type="text" id="azName" class="input" required placeholder="example.com">
+                </div>
+                <div class="form-group">
+                    <label>Plan</label>
+                    <select id="azPlan" class="input">
+                        <option value="enterprise">Enterprise</option>
+                        <option value="business">Business</option>
+                        <option value="pro">Pro</option>
+                        <option value="free">Free</option>
+                    </select>
+                </div>
+                <div class="form-group" style="display:flex; align-items:center; gap:0.75rem; padding: 1rem; background: var(--hover-bg); border-radius: 8px; border: 1px solid var(--border);">
+                    <input type="checkbox" id="azMultisigner" style="width:1.25rem; height:1.25rem; cursor:pointer; accent-color: var(--primary);">
+                    <label for="azMultisigner" style="margin:0; cursor:pointer; font-weight: 500;">Enable Multi-Signer DNSSEC</label>
+                </div>
+                <div class="form-group" style="margin-top: 1rem;">
+                    <label>Vanity Name Servers (comma-separated)</label>
+                    <input type="text" id="azVanity" class="input" placeholder="ns1.example.com, ns2.example.com">
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="button" onclick="closeAddZoneModal()">Cancel</button>
+                    <button type="submit" class="button is-primary">Add Zone</button>
                 </div>
             </form>
         </div>
@@ -439,7 +474,7 @@
                     zone_format: z.zone_format,
                     disabled: z.disabled,
                     dnssec: z.dnssec,
-                    artifacts: z.described_by || [],
+                    artifacts: z.DESCRIBED_BY || [],
                     records: extractRecords(z)
                 };
             } catch (err) {
@@ -567,6 +602,15 @@
             document.getElementById('recordModal').classList.remove('active');
         }
 
+        function openAddZoneModal() {
+            document.getElementById('addZoneForm').reset();
+            document.getElementById('addZoneModal').classList.add('active');
+        }
+
+        function closeAddZoneModal() {
+            document.getElementById('addZoneModal').classList.remove('active');
+        }
+
         function openZoneSettingsModal() {
             const zoneName = document.getElementById('zoneSelect').value;
             const z = zonesData[zoneName];
@@ -624,6 +668,42 @@
 
         function closeBuildProgress() {
             document.getElementById('buildProgressModal').classList.remove('active');
+        }
+
+        async function saveNewZone(e) {
+            e.preventDefault();
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Saving...';
+            submitBtn.disabled = true;
+
+            const zoneName = document.getElementById('azName').value.trim();
+            const plan = document.getElementById('azPlan').value;
+            const multisigner = document.getElementById('azMultisigner').checked ? 'True' : 'False';
+            const vanity = document.getElementById('azVanity').value.replace(/"/g, '""');
+
+            const view = 'default';
+            const zone_format = 'FORWARD';
+            const disabled = 'False';
+            const dnssec = 'False';
+
+            const csvData = `type,name,view,zone_format,disabled,dnssec,plan,multisigner,vanity_name_server\nauth,${zoneName},${view},${zone_format},${disabled},${dnssec},${plan},${multisigner},"${vanity}"`;
+
+            const formData = new FormData();
+            formData.append('update', csvData);
+
+            try {
+                await fetch(`/api/assets/auth.csv`, { method: 'POST', body: formData });
+                closeAddZoneModal();
+                sessionStorage.setItem('selectedZone', zoneName);
+                showBuildProgress();
+            } catch (err) {
+                console.error(err);
+                alert('Failed to add new zone');
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
         }
 
         async function saveZoneSettings(e) {

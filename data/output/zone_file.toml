@@ -11,10 +11,16 @@ local origin = std.extVar("origin_resource");
 
 local domain = origin.name;
 local absolute(d) = if std.endsWith(d, ".") then d else d + ".";
+local fqdn(d) = 
+  if std.endsWith(d, ".") then d 
+  else if d == "@" then domain + "."
+  else if d == domain then d + "."
+  else if std.endsWith(d, "." + domain) then d + "." 
+  else d + "." + domain + ".";
 
 local formatRecord(name, ttl, type, value) =
   local safeTtl = if ttl == null || std.toString(ttl) == "" then "3600" else std.toString(ttl);
-  std.format("%-30s %-7s IN %-7s %s", [absolute(name), safeTtl, type, value]);
+  std.format("%-30s %-7s IN %-7s %s", [fqdn(name), safeTtl, type, value]);
 
 local a_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "A", r.address) for r in std.get(origin, "has_a_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
 local aaaa_recs = [formatRecord(r.name, std.get(r, "ttl", "3600"), "AAAA", r.address) for r in std.get(origin, "has_aaaa_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
