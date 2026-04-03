@@ -78,23 +78,17 @@ In an era of increasing data localization laws like GDPR or specialized financia
 ### Operational Consistency and Simplified Troubleshooting
 Integrating multiple instance into the same zone authority rather than having separate internal and external views simplifies management. Maintaining a single zone authority makes it easier to manage DNSSEC signing keys. Operators don't have to worry about desynchronization between "Internal" and "External" views that often lead to validation failures. Engineers don't have to guess which "version" of a record is being hit. The hybrid approach ensures that whether a query hits a cloud node or a local server, the answer is cryptographically identical and consistent. 
 
-### Additional Properties
-* **Operational flexibility**: Independent scaling of cloud and on-prem layers
-* **Failover symmetry**: Either layer can serve the full zone if the other fails
-* **Alternative Naming Options (Vendor-neutral)**
-
-
-### Contributing & Schema Governance
+## Contributing & Schema Governance
 
 We welcome contributions that improve our automation or expand our hybrid DNS patterns. Because this project manages critical resources via the **rescile Universal Configuration Server**, we maintain a high bar for stability and consistency.
 
-#### How to Get Started
+### How to Get Started
 1. **Fork** the repository.
 2. Create a **feature branch** (`git checkout -b feature/schema-update-xyz`).
 3. **Commit** your changes with descriptive messages.
 4. Open a **Pull Request** and tag a maintainer for review.
 
-#### Rules of Engagement
+### Rules of Engagement
 
 * **Schema Consistency:** If your PR introduces new resource types or modifies existing definitions, you **must** update the corresponding `.rescile` schema files. Ensure all new fields include clear descriptions for the auto-generated documentation.
 * **Backward Compatibility:** Schema updates should be additive whenever possible. If a breaking change is necessary (e.g., removing a field or changing a type), please flag it clearly in your PR description as a `BREAKING CHANGE`.
