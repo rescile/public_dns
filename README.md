@@ -98,4 +98,4 @@ We welcome contributions that improve our automation or expand our hybrid DNS pa
 * **Idempotency is King:** Ensure that your code changes do not cause unnecessary resource destruction or "drift" on subsequent runs.
 * **Security First:** Never commit secrets, API keys, or sensitive environment variables. Use placeholders or reference our supported secret management integration.
 
-**Let’s build a more resilient, schema-driven infrastructure together!**
+Let’s build a hybrid cloud together!
