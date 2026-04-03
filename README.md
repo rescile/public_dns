@@ -85,7 +85,7 @@ Integrating multiple instance into the same zone authority rather than having se
 We welcome contributions that improve our automation or expand our hybrid DNS patterns. Because this project manages critical resources via a **Universal Configuration Server**, we maintain a high bar for stability and consistency.
 
 ### How to Get Started
-1. **Fork** the repository.
+1. **Fork** the [rescile bootstrap repository](https://github.com/rescile/rescile-ce-bootstrap).
 2. Create a **feature branch** (`git checkout -b feature/schema-update-xyz`).
 3. **Commit** your changes with descriptive messages.
 4. Open a **Pull Request** and tag a maintainer for review.
