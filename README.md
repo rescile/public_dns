@@ -22,7 +22,7 @@ subgraph ONPREM["On-Prem Authoritative DNS"]
 end
 
 %% Control Plane
-subgraph CONTROL["DNS Control Plane"]
+subgraph CONTROL["rescile configuration engine"]
     CP[Zone Management / API / CI-CD Pipeline]
 end
 
