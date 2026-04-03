@@ -57,7 +57,7 @@ class CP control;
 
 ## Key Features
 
-The project aims to make a Public DNS more reliable and to protect operational sovereignty by bridging the gap between global scale and local control. At its core, we utilize the free [rescile](https://www.rescile.com) to provide a unified, schema-driven source of truth that orchestrates complex infrastructure seamlessly across diverse environments. This approach ensures that whether our services sit at the anycast edge or on-premises, they remain consistent, resilient, and fully under a central governance.
+The project aims to make a Public DNS more reliable and to protect operational sovereignty by bridging the gap between global scale and local control. At its core, we utilize [rescile's free configuration server](https://www.rescile.com) to provide a unified, schema-driven source of truth that orchestrates complex infrastructure seamlessly across diverse environments. This approach ensures that whether our services sit at the anycast edge or on-premises, they remain consistent, resilient, and fully under a central governance.
 
 | Feature | Global Anycast Only | On-Premises Only | Hybrid Integration |
 | :--- | :--- | :--- | :--- |
