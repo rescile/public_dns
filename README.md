@@ -1,6 +1,6 @@
 # Hybrid DNS
 
-A hybrid DNS configuration combines globally distributed, anycast-based authoritative DNS nodes with on-premises authoritative DNS servers integrated into the same zone authority, to deliver resilient, low-latency, and sovereign DNS resolution. The hybrid DNS model functions by decoupling the **control plane**—where zone management, policy enforcement, and record updates are centralized—from a highly resilient **data plane**. This data plane utilizes a multi-tier authoritative structure where a globally distributed anycast edge layer handles massive query volumes and absorbs DDoS attacks, while an on-premises layer provides ultra-low latency and sovereign control for local infrastructure. By maintaining a **shared zone authority**, both the cloud and on-prem tiers serve as the source of truth for the same zones, ensuring data consistency across all endpoints via synchronized transfer protocols like AXFR/IXFR or automated API-driven pipelines.
+A hybrid DNS configuration combines globally distributed, anycast-based authoritative DNS nodes with on-premises authoritative DNS servers integrated into the same zone authority, to deliver resilient, low-latency, and sovereign DNS resolution. The model decouples the control plane, where zone management, policy enforcement, and record updates are centralized, from a highly resilient data plane. This data plane utilizes a multi-tier authoritative structure where a globally distributed anycast edge layer handles massive query volumes and absorbs DDoS attacks, while an on-premises layer provides ultra-low latency and sovereign control for local infrastructure. By maintaining a shared zone authority, both the cloud and on-prem tiers serve as the source of truth for the same zones, ensuring data consistency across all endpoints via synchronized transfer protocols like AXFR/IXFR or automated API-driven pipelines.
 
 
 ```mermaid
@@ -57,7 +57,7 @@ class CP control;
 
 ## Key Features
 
-With this project, we aim to make cloud services more reliable and protect operational sovereignty by bridging the gap between global scale and local control. At its core, we utilize a Universal Configuration Server to provide a unified, schema-driven source of truth that orchestrates complex infrastructure seamlessly across diverse environments. This approach ensures that whether our services sit at the anycast edge or on-premises, they remain consistent, resilient, and fully under a central governance.
+The project aims to make a Public DNS more reliable and to protect operational sovereignty by bridging the gap between global scale and local control. At its core, we utilize the free (rescile)[[https://www.rescile.com/]] to provide a unified, schema-driven source of truth that orchestrates complex infrastructure seamlessly across diverse environments. This approach ensures that whether our services sit at the anycast edge or on-premises, they remain consistent, resilient, and fully under a central governance.
 
 | Feature | Global Anycast Only | On-Premises Only | Hybrid Integration |
 | :--- | :--- | :--- | :--- |
@@ -82,7 +82,7 @@ Integrating multiple instance into the same zone authority rather than having se
 
 ## Contributing & Schema Governance
 
-We welcome contributions that improve our automation or expand our hybrid DNS patterns. Because this project manages critical resources via the **rescile Universal Configuration Server**, we maintain a high bar for stability and consistency.
+We welcome contributions that improve our automation or expand our hybrid DNS patterns. Because this project manages critical resources via a **Universal Configuration Server**, we maintain a high bar for stability and consistency.
 
 ### How to Get Started
 1. **Fork** the repository.
