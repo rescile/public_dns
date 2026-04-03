@@ -83,14 +83,23 @@ Integrating multiple instance into the same zone authority rather than having se
 * **Failover symmetry**: Either layer can serve the full zone if the other fails
 * **Alternative Naming Options (Vendor-neutral)**
 
-### Contributing & Rules of Engagement
 
-We love community input! Whether you're fixing a bug, improving documentation, or suggesting a new feature, your contributions help make this project better for everyone. To keep things running smoothly, please follow these guidelines:
+### Contributing & Schema Governance
 
-* **Check for Issues:** Before starting work, please check the [Issues]([link-to-your-issues](https://github.com/rescile/public_dns/issues)) tab to see if someone else is already tackling the task or to open a new discussion.
-* **Branching Strategy:** Please submit all pull requests (PRs) against the `develop` branch rather than `main`.
-* **Atomic Commits:** Keep your PRs focused. It’s much easier to review three small, specific PRs than one giant "fix-everything" update.
-* **Code of Conduct:** Be kind and respectful to fellow contributors. We’re all here to learn and build cool things together.
-* **Stay in Touch:** If you’re planning a major architectural change, please open a "RFC" (Request for Comments) issue first so we can align on the direction.
+We welcome contributions that improve our automation or expand our hybrid DNS patterns. Because this project manages critical resources via the **rescile Universal Configuration Server**, we maintain a high bar for stability and consistency.
 
-**Ready to jump in?** Fork the repo, make your changes, and send over a PR. We can't wait to see what you build!
+#### How to Get Started
+1. **Fork** the repository.
+2. Create a **feature branch** (`git checkout -b feature/schema-update-xyz`).
+3. **Commit** your changes with descriptive messages.
+4. Open a **Pull Request** and tag a maintainer for review.
+
+#### Rules of Engagement
+
+* **Schema Consistency:** If your PR introduces new resource types or modifies existing definitions, you **must** update the corresponding `.rescile` schema files. Ensure all new fields include clear descriptions for the auto-generated documentation.
+* **Backward Compatibility:** Schema updates should be additive whenever possible. If a breaking change is necessary (e.g., removing a field or changing a type), please flag it clearly in your PR description as a `BREAKING CHANGE`.
+* **Validate Before You Push:** All configurations must be validated against the updated schema. Please ensure your YAML/JSON passes local `rescile-cli lint` (or equivalent) before submitting.
+* **Idempotency is King:** Ensure that your code changes do not cause unnecessary resource destruction or "drift" on subsequent runs.
+* **Security First:** Never commit secrets, API keys, or sensitive environment variables. Use placeholders or reference our supported secret management integration.
+
+**Let’s build a more resilient, schema-driven infrastructure together!**
