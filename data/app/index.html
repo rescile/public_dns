@@ -94,8 +94,9 @@
             background: transparent; color: var(--text-light);
             border: 1px solid transparent; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .action-btn:hover { color: var(--primary); background: var(--hover-bg); transform: scale(1.05); }
-        .action-btn.delete:hover { background: var(--danger-bg); color: var(--danger); }
+        .action-btn:hover:not(:disabled) { color: var(--primary); background: var(--hover-bg); transform: scale(1.05); }
+        .action-btn.delete:hover:not(:disabled) { background: var(--danger-bg); color: var(--danger); }
+        .action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .notification-toast {
             position: fixed; bottom: 20px; right: 20px;
@@ -125,6 +126,10 @@
     </div>
 
     <main class="main-content">
+        <div id="readOnlyNotice" class="hidden" style="background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem; font-weight: 500;">
+            <span class="material-symbols-outlined">info</span>
+            This application is currently in read only mode because of missing enterprise features.
+        </div>
         <div class="header-box">
             <h2>Zone Overview</h2>
             <div class="overview-header">
@@ -308,8 +313,23 @@
 
     <script>
         let zonesData = {};
+        let isReadOnly = false;
 
         async function init() {
+            try {
+                const featRes = await fetch('/api/features');
+                const features = await featRes.json();
+                if (!features.includes('admin_assets')) {
+                    isReadOnly = true;
+                    document.getElementById('addZoneBtn').style.display = 'none';
+                    document.getElementById('readOnlyNotice').classList.remove('hidden');
+                    document.getElementById('addRecordBtn').disabled = true;
+                    document.querySelector('#zoneSettingsForm button[type="submit"]').disabled = true;
+                }
+            } catch (err) {
+                console.error('Failed to fetch features:', err);
+            }
+
             const query = `
                 query {
                     zone {
@@ -526,20 +546,24 @@
                 if (rec.type === 'SRV') displayValue = `[${rec.priority} ${rec.weight} ${rec.port}] ${rec.value}`;
                 if (rec.type === 'TXT') displayValue = `<span style="opacity:0.8; font-family:monospace;">${rec.value}</span>`;
 
+                const actionCell = `
+                    <td style="text-align: right; white-space: nowrap;">
+                        <button class="action-btn" title="Edit" onclick="editRecord('${zoneName}', ${idx})" ${isReadOnly ? 'disabled' : ''}>
+                            <span class="material-symbols-outlined" style="font-size: 1.25rem;">edit</span>
+                        </button>
+                        <button class="action-btn delete" title="Delete" onclick="deleteRecord('${zoneName}', ${idx})" ${isReadOnly ? 'disabled' : ''}>
+                            <span class="material-symbols-outlined" style="font-size: 1.25rem;">delete</span>
+                        </button>
+                    </td>
+                `;
+
                 tr.innerHTML = `
                     <td><span class="badge badge-type">${rec.type}</span></td>
                     <td><strong>${rec.name}</strong></td>
                     <td>${displayValue}</td>
                     <td><span style="color: var(--text-light); font-variant-numeric: tabular-nums;">${rec.ttl}</span></td>
                     <td>${statusBadge}</td>
-                    <td style="text-align: right; white-space: nowrap;">
-                        <button class="action-btn" title="Edit" onclick="editRecord('${zoneName}', ${idx})">
-                            <span class="material-symbols-outlined" style="font-size: 1.25rem;">edit</span>
-                        </button>
-                        <button class="action-btn delete" title="Delete" onclick="deleteRecord('${zoneName}', ${idx})">
-                            <span class="material-symbols-outlined" style="font-size: 1.25rem;">delete</span>
-                        </button>
-                    </td>
+                    ${actionCell}
                 `;
                 tbody.appendChild(tr);
             });
