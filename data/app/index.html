@@ -394,7 +394,7 @@
 
                     records.push({
                         type: type,
-                        name: n.name,
+                        name: n.original_name || n.name,
                         value: value,
                         ttl: n.ttl || '3600',
                         disabled: disabled,
@@ -460,16 +460,16 @@
                                 ... on zone_file { name filename }
                             }
                         }
-                        has_a_record { node { name address ttl disabled } }
-                        has_aaaa_record { node { name address ttl disabled } }
-                        has_cname_record { node { name canonical ttl disabled } }
-                        has_txt_record { node { name text ttl disabled } }
-                        has_mx_record { node { name mail_exchanger priority ttl disabled } }
-                        has_srv_record { node { name target port priority weight ttl disabled } }
-                        has_ptr_record { node { name content ttl disabled } }
-                        has_caa_record { node { name content ttl disabled } }
-                        has_ns_record { node { name content ttl disabled } }
-                        has_sshfp_record { node { name content ttl disabled } }
+                        has_a_record { node { name original_name address ttl disabled } }
+                        has_aaaa_record { node { name original_name address ttl disabled } }
+                        has_cname_record { node { name original_name canonical ttl disabled } }
+                        has_txt_record { node { name original_name text ttl disabled } }
+                        has_mx_record { node { name original_name mail_exchanger priority ttl disabled } }
+                        has_srv_record { node { name original_name target port priority weight ttl disabled } }
+                        has_ptr_record { node { name original_name content ttl disabled } }
+                        has_caa_record { node { name original_name content ttl disabled } }
+                        has_ns_record { node { name original_name content ttl disabled } }
+                        has_sshfp_record { node { name original_name content ttl disabled } }
                     }
                 }
             `;

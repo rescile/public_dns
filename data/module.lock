@@ -1,0 +1,21 @@
+version = 1
+
+[[module]]
+name = "graml-module"
+source = "https://github.com/rescile/graphml-module"
+commit = "899b4a84c71c89ead5f995715beb21eca07327d7"
+
+[[module]]
+name = "rescile-graphiql-module"
+source = "https://github.com/rescile/rescile-graphiql-module/releases/download/v0.0.4/graphiql-module-offline.zip"
+checksum = "sha256-2a805c350e8af4c0f6df9dd9200afa9f1b5f25472b23700728b9e4a18eba5b0b"
+
+[[module]]
+name = "graphviewer"
+source = "https://github.com/rescile/graphviewer"
+commit = "fc03f7a1d666f1158bf38762afc0ad4e61efc89f"
+
+[[module]]
+name = "module-simple-editor"
+source = "https://github.com/rescile/module-simple-editor"
+commit = "bb80904ce588ad514edc39dd744ba9a413edc280"

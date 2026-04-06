@@ -3,7 +3,7 @@ name = "hybridDNS"
 url = "https://github.com/rescile/public_dns"
 version = "0.0.1"
 description = "A hybrid authoritative DNS architecture combining globally distributed anycast nodes with on-premises authoritative servers under a shared zone authority."
-rescile_version = ">=0.1.106"
+rescile_version = ">=0.1.139"
 
 # dependencies: Optional list of other modules this module depends on.
 # These can be local paths (relative to this module) or Git URLs.
@@ -11,7 +11,7 @@ rescile_version = ">=0.1.106"
 graphviewer = "https://github.com/rescile/graphviewer"
 graml-module =  "https://github.com/rescile/graphml-module"
 module-simple-editor = "https://github.com/rescile/module-simple-editor"
-rescile-graphiql-module = "https://github.com/rescile/rescile-graphiql-module/releases/download/v0.0.3/graphiql-module-offline.zip"
+rescile-graphiql-module = "https://github.com/rescile/rescile-graphiql-module/releases/download/v{version}/graphiql-module-offline.zip"
 
 [params.operator]
 description = "The organization owning the environment."
@@ -63,6 +63,7 @@ properties = ["name", "type", "address", "zone"]
 
 [assets."a.csv"]
 description = "A records for the DNS zones."
+name_template = "_{{ name | replace(from='.', to='_') | lower }}_{{ type | lower }}_{{ [address] | json_encode | sha256 }}"
 bootstrap = '''
 "type","name","address","ttl","comment","disabled","zone"
 "a","www.rescile.com","10.1.4.3","3600","","False","rescile.com"
@@ -82,6 +83,7 @@ properties = ["name", "type", "address", "zone"]
 
 [assets."aaaa.csv"]
 description = "AAAA records for the DNS zones."
+name_template = "_{{ name | replace(from='.', to='_') | lower }}_{{ type | lower }}_{{ [address] | json_encode | sha256 }}"
 bootstrap = '''
 "type","name","address","ttl","comment","disabled","zone"
 "aaaa","www.rescile.com","fdff:ff55:55ff::119","3600","","False","rescile.com"
@@ -101,6 +103,7 @@ properties = ["name", "type", "content", "zone"]
 
 [assets."caa.csv"]
 description = "CAA records for the DNS zones."
+name_template = "_{{ name | replace(from='.', to='_') | lower }}_{{ type | lower }}_{{ [content] | json_encode | sha256 }}"
 bootstrap = '''
 "type","name","content","ttl","disabled","zone"
 "caa","rescile.com","0 issue ""letsencrypt.org""","3600","False","rescile.com"
@@ -119,6 +122,7 @@ properties = ["name", "type", "canonical", "zone"]
 
 [assets."cname.csv"]
 description = "CNAME records for the DNS zones."
+name_template = "_{{ name | replace(from='.', to='_') | lower }}_{{ type | lower }}_{{ [canonical] | json_encode | sha256 }}"
 bootstrap = '''
 "type","name","canonical","ttl","comment","disabled","zone"
 "cname","rescile.com","www.rescile.com","3600","","False","rescile.com"
@@ -138,6 +142,7 @@ properties = ["name", "type", "mail_exchanger", "priority", "zone"]
 
 [assets."mx.csv"]
 description = "MX records for the DNS zones."
+name_template = "_{{ name | replace(from='.', to='_') | lower }}_{{ type | lower }}_{{ [mail_exchanger, priority] | json_encode | sha256 }}"
 bootstrap = '''
 "type","zone","name","mail_exchanger","priority","ttl","disabled"
 "mx","rescile.com","rescile.com","mx.rescile.com","10","300","False"
@@ -157,6 +162,7 @@ properties = ["name", "type", "content", "zone"]
 
 [assets."ns.csv"]
 description = "NS records for the DNS zones."
+name_template = "_{{ name | replace(from='.', to='_') | lower }}_{{ type | lower }}_{{ [content] | json_encode | sha256 }}"
 bootstrap = '''
 "type","name","content","ttl","disabled","zone"
 "ns","sub.rescile.com","ns1.rescile.com","3600","False","rescile.com"
@@ -175,6 +181,7 @@ properties = ["name", "type", "content", "zone"]
 
 [assets."ptr.csv"]
 description = "PTR records for the DNS zones."
+name_template = "_{{ name | replace(from='.', to='_') | lower }}_{{ type | lower }}_{{ [content] | json_encode | sha256 }}"
 bootstrap = '''
 "type","name","content","ttl","disabled","zone"
 "ptr","10.0.252.145.in-addr.arpa","rescile.com","3600","False","0.252.10.in-addr.arpa"
@@ -193,6 +200,7 @@ properties = ["name", "type", "target", "port", "priority", "weight", "zone"]
 
 [assets."srv.csv"]
 description = "SRV records for the DNS zones."
+name_template = "_{{ name | replace(from='.', to='_') | lower }}_{{ type | lower }}_{{ [target, port, priority, weight] | json_encode | sha256 }}"
 bootstrap = '''
 "type","name","target","port","priority","weight","ttl","disabled","zone"
 "srv","_sipfederationtls._tcp.rescile.com","sipfed.online.lync.com","5061","100","1","3600","False","rescile.com"
@@ -214,6 +222,7 @@ properties = ["name", "type", "content", "zone"]
 
 [assets."sshfp.csv"]
 description = "SSHFP records for the DNS zones."
+name_template = "_{{ name | replace(from='.', to='_') | lower }}_{{ type | lower }}_{{ [content] | json_encode | sha256 }}"
 bootstrap = '''
 "type","name","content","ttl","disabled","zone"
 "sshfp","test-sshfp.rescile.com","114 211 042D1CEDC4643E2811E5343E23B9BE9B4DC4","3600","False","rescile.com"
@@ -232,6 +241,7 @@ properties = ["name", "type", "text", "zone"]
 
 [assets."txt.csv"]
 description = "TXT records for the DNS zones."
+name_template = "_{{ name | replace(from='.', to='_') | lower }}_{{ type | lower }}_{{ [text] | json_encode | sha256 }}"
 bootstrap = '''
 "type","name","text","ttl","comment","disabled","zone"
 "txt","rescile.com","""v=spf1 -all""","3600","","False","rescile.com"
