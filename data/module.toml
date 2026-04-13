@@ -36,15 +36,15 @@ default = "clienta"
 
 # auth
 [requirements.auth]
-properties = ["name", "plan"]
+properties = ["name"]
 description = "The module expects authoritative DNS zone definitions."
 
 [assets."auth.csv"]
 description = "Defines the authoritative DNS zones."
 bootstrap = '''
-type,name,view,zone_format,disabled,dnssec,plan,multisigner,vanity_name_server
-auth,rescile.com,default,FORWARD,False,False,enterprise,False,
-auth,10.0.252.145.in-addr.arpa,default,FORWARD,False,False,enterprise,False,
+type,name,view,zone_format,disabled,dnssec,vanity_name_server
+auth,rescile.com,default,FORWARD,False,False,
+auth,10.0.252.145.in-addr.arpa,default,FORWARD,False,False,
 '''
 [assets."auth.csv".columns]
 type = { type = "string", required = true }
@@ -53,9 +53,31 @@ view = { type = "string" }
 zone_format = { type = "string" }
 disabled = { type = "boolean" }
 dnssec = { type = "boolean" }
-plan = { type = "string" }
-multisigner = { type = "boolean" }
 vanity_name_server = { type = "array_of_string" }
+
+# vanity_ns.json
+[inputs."vanity_ns.json"]
+description = "Vanity nameservers mapped to providers and targets."
+format = "object_of_objects"
+bootstrap = '''
+{
+  "ns1.ixcloud.ch": {
+    "provider": "cloudflare",
+    "target": {
+      "ipv4": "162.159.6.226",
+      "ipv6": "2400:cb00:2049:1::a29f:6e2"
+    }
+  },
+  "ns3.ixcloud.ch": {
+    "target": {
+      "ipv4": "185.178.60.130"
+    }
+  }
+}
+'''
+[inputs."vanity_ns.json".fields]
+provider = { type = "string", required = false }
+target = { type = "object", required = true }
 
 # a
 [requirements.a]

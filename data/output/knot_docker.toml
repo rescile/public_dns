@@ -1,0 +1,64 @@
+origin_resource = "zone"
+vanity_ns_data = { "json!" = "vanity_ns.json" }
+
+[[output]]
+resource_type = "knot_docker"
+filename = "deploy-knot-{{ origin_resource.name }}.sh"
+mimetype = "text/x-shellscript"
+name = "knot_docker_{{ origin_resource.name }}"
+jsonnet = '''
+local origin = std.extVar("origin_resource");
+local vanity_ns_data = std.extVar("vanity_ns_data");
+local domain = origin.name;
+local multisigner = std.asciiLower(std.toString(std.get(origin, "multisigner", "false"))) == "true";
+local vanity_ns = std.get(origin, "vanity_name_server", []);
+
+local cf_ips = std.prune([
+  if std.objectHas(vanity_ns_data, ns) && std.get(vanity_ns_data[ns], "provider", "") == "cloudflare" then
+    std.get(std.get(vanity_ns_data[ns], "target", {}), "ipv4", null)
+  for ns in vanity_ns
+]);
+local cf_first_ip = if std.length(cf_ips) > 0 then cf_ips[0] else "10.0.1.1";
+
+local script = [
+  "#!/bin/bash",
+  "set -e",
+  "",
+  "DOMAIN=\"" + domain + "\"",
+  "STORAGE_DIR=\"/tmp/knot_storage_$DOMAIN\"",
+  "RUNDIR=\"/tmp/knot_rundir_$DOMAIN\"",
+  "CONF_FILE=\"$(pwd)/knot-$DOMAIN.conf\"",
+  "ZONE_FILE=\"$(pwd)/db.$DOMAIN.txt\"",
+  "",
+  "mkdir -p \"$STORAGE_DIR/zones\"",
+  "mkdir -p \"$STORAGE_DIR/keys\"",
+  "mkdir -p \"$RUNDIR\"",
+  "",
+  "if [ -f \"$ZONE_FILE\" ]; then",
+  "  cp \"$ZONE_FILE\" \"$STORAGE_DIR/zones/$DOMAIN.zone\"",
+  "else",
+  "  echo \"Warning: Zone file $ZONE_FILE not found!\"",
+  "fi",
+  "",
+  "echo 'Starting Knot DNS container...'",
+  "docker run --rm -v \"$STORAGE_DIR:/storage\" -v \"$CONF_FILE:/config/knot.conf\" -v \"$RUNDIR:/rundir\" --network host --name \"knot_$DOMAIN\" -d cznic/knot knotd -c /config/knot.conf",
+  "",
+  "sleep 2",
+  ""
+];
+
+local ms_script = if multisigner then [
+  "echo 'Generating keys for multi-signer setup...'",
+  "docker exec \"knot_$DOMAIN\" knotc -c /config/knot.conf zone-key-generate \"$DOMAIN\"",
+  "echo 'Exporting public key to upload to Cloudflare:'",
+  "docker exec \"knot_$DOMAIN\" knotc -c /config/knot.conf zone-keys \"$DOMAIN\"",
+  "",
+  "echo 'To complete the multi-signer setup:'",
+  "echo '1. Upload the exported key to Cloudflare.'",
+  "echo '2. Fetch Cloudflare public key: dig +short DNSKEY '$DOMAIN' @" + cf_first_ip + " > cf_keys.txt'",
+  "echo '3. Import Cloudflare keys into Knot: docker exec -i knot_$DOMAIN knotc -c /config/knot.conf zone-key-import '$DOMAIN' < cf_keys.txt'",
+  "echo '4. Trigger zone transfer: docker exec knot_$DOMAIN knotc -c /config/knot.conf zone-refresh '$DOMAIN''"
+] else [];
+
+std.join("\n", script + ms_script) + "\n"
+'''

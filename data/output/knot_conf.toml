@@ -1,0 +1,92 @@
+origin_resource = "zone"
+vanity_ns_data = { "json!" = "vanity_ns.json" }
+
+[[output]]
+resource_type = "knot_conf"
+filename = "knot-{{ origin_resource.name }}.conf"
+mimetype = "text/plain"
+name = "knot_conf_{{ origin_resource.name }}"
+jsonnet = '''
+local origin = std.extVar("origin_resource");
+local vanity_ns_data = std.extVar("vanity_ns_data");
+local domain = origin.name;
+local multisigner = std.asciiLower(std.toString(std.get(origin, "multisigner", "false"))) == "true";
+local dnssec = std.asciiLower(std.toString(std.get(origin, "dnssec", "false"))) == "true";
+local vanity_ns = std.get(origin, "vanity_name_server", []);
+
+local cf_ips = std.prune([
+  if std.objectHas(vanity_ns_data, ns) && std.get(vanity_ns_data[ns], "provider", "") == "cloudflare" then
+    std.get(std.get(vanity_ns_data[ns], "target", {}), "ipv4", null)
+  for ns in vanity_ns
+]);
+local cf_address_list = if std.length(cf_ips) > 0 then std.join(", ", cf_ips) else "10.0.1.1, 10.1.2.1";
+
+local conf = [
+  "server:",
+  "    listen: [ 0.0.0.0@53, ::@53 ]",
+  "    user: knot:knot",
+  "",
+  "log:",
+  "  - target: syslog",
+  "    any: info",
+  "",
+];
+
+local ms_conf = if multisigner then [
+  "remote:",
+  "  - id: cloudflare_primary",
+  "    address: [ " + cf_address_list + " ]",
+  "",
+  "acl:",
+  "  - id: allow_transfer_from_cf",
+  "    address: [ " + cf_address_list + " ]",
+  "    action: transfer",
+  "",
+  "keystore:",
+  "  - id: default",
+  "    backend: pem",
+  "    config: /storage/keys",
+  "",
+  "policy:",
+  "  - id: multi_signer_policy",
+  "    keystore: default",
+  "    algorithm: ecdsap256sha256",
+  "    ksk-lifetime: 0",
+  "    zsk-lifetime: 0",
+  "    offline-ksk: on ",
+  ""
+] else [
+  "keystore:",
+  "  - id: default",
+  "    backend: pem",
+  "    config: /storage/keys",
+  "",
+  "policy:",
+  "  - id: default_policy",
+  "    keystore: default",
+  "    algorithm: ecdsap256sha256",
+  ""
+];
+
+local tmpl = [
+  "template:",
+  "  - id: default",
+  "    storage: \"/storage/zones/\"",
+  "    file: \"%s.zone\"",
+  "",
+  "zone:",
+  "  - domain: " + domain,
+];
+
+local zone_conf = if multisigner then [
+  "    master: cloudflare_primary",
+  "    acl: allow_transfer_from_cf",
+  "    dnssec-signing: on",
+  "    dnssec-policy: multi_signer_policy"
+] else if dnssec then [
+  "    dnssec-signing: on",
+  "    dnssec-policy: default_policy"
+] else [];
+
+std.join("\n", conf + ms_conf + tmpl + zone_conf) + "\n"
+'''

@@ -35,17 +35,21 @@ local sshfp_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r,
 
 local records = a_recs + aaaa_recs + cname_recs + txt_recs + mx_recs + srv_recs + ptr_recs + caa_recs + ns_recs + sshfp_recs;
 
-local soa_record = std.format("@ IN SOA ns3.ixcloud.ch. hostmaster.%s ( 2026030401 7200 3600 1209600 3600 )", [absolute(domain)]);
-local ns1 = "@ IN NS ns3.ixcloud.ch.";
-local ns2 = "@ IN NS ns4.ixcloud.ch.";
+local vanity_ns = std.get(origin, "vanity_name_server", []);
+local generated_ns_recs = if std.length(vanity_ns) > 0 then
+  [std.format("@ IN NS %s.", [absolute(ns)]) for ns in vanity_ns]
+else
+  ["@ IN NS ns3.ixcloud.ch.", "@ IN NS ns4.ixcloud.ch."];
+
+local soa_primary = if std.length(vanity_ns) > 0 then absolute(vanity_ns[0]) else "ns3.ixcloud.ch.";
+local soa_record = std.format("@ IN SOA %s hostmaster.%s ( 2026030401 7200 3600 1209600 3600 )", [soa_primary, absolute(domain)]);
 
 std.join("\n", [
   "; Zone file for " + domain,
   "$ORIGIN " + absolute(domain),
   "$TTL 3600",
   soa_record,
-  ns1,
-  ns2,
+] + generated_ns_recs + [
   "",
 ] + records) + "\n"
 '''

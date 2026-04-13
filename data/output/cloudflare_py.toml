@@ -9,18 +9,80 @@ jsonnet = '''
 local origin = std.extVar("origin_resource");
 local domain = origin.name;
 
-local zone_data = std.filter(function(x) std.objectHas(x, "filename") && std.startsWith(x.filename, "db."), std.get(origin, "DESCRIBED_BY", []));
-local zone_content = if std.length(zone_data) > 0 then zone_data[0].content else "";
+local fqdn(d) = 
+  if std.endsWith(d, ".") then d 
+  else if d == "@" then domain 
+  else if d == domain then d 
+  else if std.endsWith(d, "." + domain) then d 
+  else d + "." + domain;
 
-local plan = std.get(origin, "plan", "enterprise");
+local strip(d) = if std.endsWith(d, ".") then std.substr(d, 0, std.length(d) - 1) else d;
+
+local strip_quotes(s) = 
+  if std.length(s) >= 2 && std.startsWith(s, '"') && std.endsWith(s, '"') then std.substr(s, 1, std.length(s) - 2) else s;
+
+local buildRec(r, type) = {
+  name: strip(fqdn(std.get(r, "original_name", r.name))),
+  type: type,
+  ttl: std.parseInt(std.toString(std.get(r, "ttl", "3600"))),
+};
+
+local a_recs = [ buildRec(r, "A") + { content: r.address } for r in std.get(origin, "has_a_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
+local aaaa_recs = [ buildRec(r, "AAAA") + { content: r.address } for r in std.get(origin, "has_aaaa_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
+local cname_recs = [ buildRec(r, "CNAME") + { content: strip(r.canonical) } for r in std.get(origin, "has_cname_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
+local txt_recs = [ buildRec(r, "TXT") + { content: strip_quotes(r.text) } for r in std.get(origin, "has_txt_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
+local mx_recs = [ buildRec(r, "MX") + { content: strip(r.mail_exchanger), priority: std.parseInt(std.toString(r.priority)) } for r in std.get(origin, "has_mx_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
+
+local srv_data(r) =
+  local f = strip(fqdn(std.get(r, "original_name", r.name)));
+  local dots = std.findSubstr(".", f);
+  {
+    target: strip(r.target),
+    port: std.parseInt(std.toString(r.port)),
+    priority: std.parseInt(std.toString(r.priority)),
+    weight: std.parseInt(std.toString(r.weight)),
+    service: std.substr(f, 0, dots[0]),
+    proto: std.substr(f, dots[0] + 1, dots[1] - dots[0] - 1),
+    name: std.substr(f, dots[1] + 1, std.length(f) - dots[1] - 1)
+  };
+
+local srv_recs = [ buildRec(r, "SRV") + { data: srv_data(r) } for r in std.get(origin, "has_srv_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
+
+local ptr_recs = [ buildRec(r, "PTR") + { content: strip(r.content) } for r in std.get(origin, "has_ptr_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
+
+local parse_caa(c) = 
+  local spaces = std.findSubstr(" ", c);
+  {
+    flags: std.parseInt(std.substr(c, 0, spaces[0])),
+    tag: std.substr(c, spaces[0] + 1, spaces[1] - spaces[0] - 1),
+    value: strip_quotes(std.substr(c, spaces[1] + 1, std.length(c) - spaces[1] - 1))
+  };
+
+local caa_recs = [ buildRec(r, "CAA") + { data: parse_caa(r.content) } for r in std.get(origin, "has_caa_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
+
+local ns_recs = [ buildRec(r, "NS") + { content: strip(r.content) } for r in std.get(origin, "has_ns_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
+
+local parse_sshfp(c) = 
+  local spaces = std.findSubstr(" ", c);
+  {
+    algorithm: std.parseInt(std.substr(c, 0, spaces[0])),
+    type: std.parseInt(std.substr(c, spaces[0] + 1, spaces[1] - spaces[0] - 1)),
+    fingerprint: std.substr(c, spaces[1] + 1, std.length(c) - spaces[1] - 1)
+  };
+
+local sshfp_recs = [ buildRec(r, "SSHFP") + { data: parse_sshfp(r.content) } for r in std.get(origin, "has_sshfp_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
+
+local all_records = a_recs + aaaa_recs + cname_recs + txt_recs + mx_recs + srv_recs + ptr_recs + caa_recs + ns_recs + sshfp_recs;
+local records_json = std.manifestJsonEx(all_records, "  ");
+
+local plan = "enterprise";
 local multisigner = std.get(origin, "multisigner", "False");
-local vanity_name_server = std.get(origin, "vanity_name_server", "");
 
 local py_template = |||
   import os
   import sys
   import requests
-  import io
+  import json
   
   # --- Configuration ---
   API_TOKEN = os.getenv("CLOUDFLARE_API_TOKEN")
@@ -32,24 +94,41 @@ local py_template = |||
   MULTISIGNER = "%s".lower() == "true"
   VANITY_NAME_SERVERS = %s
   
-  zone_content = """\
-  %s"""
-  
-  def parse_zone_data(content):
-      records = []
-      for line in content.splitlines():
-          line = line.strip()
-          if not line or line.startswith(';') or line.startswith('$'):
-              continue
-          parts = line.split()
-          if len(parts) >= 5 and parts[2] == 'IN':
-              records.append({
-                  'name': parts[0].rstrip('.'),
-                  'ttl': int(parts[1]),
-                  'type': parts[3],
-                  'content': " ".join(parts[4:]).rstrip('.')
-              })
-      return records
+  def normalize_record(r):
+      if r.get('type') == 'MX':
+          return f"{r.get('priority')} {r.get('content', '').rstrip('.')}"
+      elif r.get('type') == 'SRV':
+          d = r.get('data', {})
+          if d:
+              return f"{d.get('priority')} {d.get('weight')} {d.get('port')} {d.get('target', '').rstrip('.')}"
+          return r.get('content', '')
+      elif r.get('type') == 'CAA':
+          d = r.get('data', {})
+          if d:
+              val = d.get('value', '')
+              if val.startswith('"') and val.endswith('"'):
+                  val = val[1:-1]
+              return f"{d.get('flags')} {d.get('tag')} {val}"
+          c = r.get('content', '')
+          parts = c.split(' ', 2)
+          if len(parts) == 3:
+              val = parts[2]
+              if val.startswith('"') and val.endswith('"'):
+                  val = val[1:-1]
+              return f"{parts[0]} {parts[1]} {val}"
+          return c
+      elif r.get('type') == 'SSHFP':
+          d = r.get('data', {})
+          if d:
+              return f"{d.get('algorithm')} {d.get('type')} {d.get('fingerprint')}"
+          return r.get('content', '')
+      elif r.get('type') == 'TXT':
+          c = r.get('content', '')
+          if c.startswith('"') and c.endswith('"'):
+              c = c[1:-1]
+          return c
+      else:
+          return r.get('content', '').rstrip('.')
   
   def get_zone_info(zone_name, account_id, headers):
       url = f"https://api.cloudflare.com/client/v4/zones?name={zone_name}&account.id={account_id}"
@@ -72,7 +151,7 @@ local py_template = |||
           page += 1
       return records
   
-  def sync_records(zone_name, account_id, token, bind_string):
+  def sync_records(zone_name, account_id, token, defined_records):
       headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
       
       print("1. Getting zone info...")
@@ -89,10 +168,8 @@ local py_template = |||
           print("2. Skipping record fetch for new zone.")
       
       print("3. Comparing records...")
-      defined_records = parse_zone_data(bind_string)
-      
-      existing_map = {(r['name'], r['type']): r for r in existing_records}
-      defined_map = {(r['name'], r['type']): r for r in defined_records}
+      existing_map = {(r['name'], r['type'], normalize_record(r).lower()): r for r in existing_records}
+      defined_map = {(r['name'], r['type'], normalize_record(r).lower()): r for r in defined_records}
       
       to_add, to_update, to_remove = [], [], []
       
@@ -101,7 +178,7 @@ local py_template = |||
               to_add.append(d_rec)
           else:
               e_rec = existing_map[key]
-              if e_rec['content'].lower() != d_rec['content'].lower() or e_rec['ttl'] != d_rec['ttl']:
+              if e_rec['ttl'] != d_rec['ttl']:
                   to_update.append((e_rec['id'], d_rec))
                   
       for key, e_rec in existing_map.items():
@@ -140,11 +217,11 @@ local py_template = |||
               print(f"~ Update: Vanity Name Servers to {vns_list}")
 
       for r in to_remove:
-          print(f"- Remove: {r['name']} IN {r['type']} {r['content']}")
+          print(f"- Remove: {r['name']} IN {r['type']} {normalize_record(r)}")
       for r in to_add:
-          print(f"+ Add: {r['name']} IN {r['type']} {r['content']}")
+          print(f"+ Add: {r['name']} IN {r['type']} {normalize_record(r)}")
       for eid, r in to_update:
-          print(f"~ Update: {r['name']} IN {r['type']} {r['content']}")
+          print(f"~ Update: {r['name']} IN {r['type']} {normalize_record(r)}")
           
       confirm = input("\nDo you want to apply these changes? (y/N): ")
       if confirm.lower() != 'y':
@@ -185,34 +262,17 @@ local py_template = |||
           requests.delete(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{r['id']}", headers=headers)
           print(f"Removed {r['name']}")
       for r in to_add:
-          payload = dict(r)
-          if payload['type'] == 'SSHFP':
-              parts = payload['content'].split()
-              payload['data'] = {
-                  'algorithm': int(parts[0]),
-                  'type': int(parts[1]),
-                  'fingerprint': parts[2]
-              }
-              payload.pop('content', None)
-          requests.post(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records", headers=headers, json=payload)
+          requests.post(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records", headers=headers, json=r)
           print(f"Added {r['name']}")
       for eid, r in to_update:
-          payload = dict(r)
-          if payload['type'] == 'SSHFP':
-              parts = payload['content'].split()
-              payload['data'] = {
-                  'algorithm': int(parts[0]),
-                  'type': int(parts[1]),
-                  'fingerprint': parts[2]
-              }
-              payload.pop('content', None)
-          requests.put(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{eid}", headers=headers, json=payload)
+          requests.put(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{eid}", headers=headers, json=r)
           print(f"Updated {r['name']}")
       print("Done!")
   
   if __name__ == "__main__":
-      sync_records(ZONE_NAME, ACCOUNT_ID, API_TOKEN, zone_content)
+      defined_records = json.loads("""%s""")
+      sync_records(ZONE_NAME, ACCOUNT_ID, API_TOKEN, defined_records)
 |||;
 
-std.format(py_template, [domain, plan, multisigner, vanity_name_server, zone_content])
+std.format(py_template, [domain, plan, multisigner, std.manifestJsonEx(std.get(origin, "vanity_name_server", []), ""), records_json])
 '''

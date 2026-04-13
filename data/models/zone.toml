@@ -1,6 +1,20 @@
 # Sets a subscription object as central root.
 # Specify the source type
 origin_resource = "auth"
+vanity_ns = { "json!" = "vanity_ns.json" }
+is_multi_provider = '''
+{%- set_global unique_providers = [] -%}
+{%- for ns in origin_resource.vanity_name_server | default(value=[]) -%}
+  {%- set ns_clean = ns | trim -%}
+  {%- if vanity_ns[ns_clean] is defined and vanity_ns[ns_clean].provider is defined -%}
+    {%- set p = vanity_ns[ns_clean].provider -%}
+    {%- if p not in unique_providers -%}
+      {%- set_global unique_providers = unique_providers | concat(with=p) -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if unique_providers | length > 1 -%}True{%- else -%}False{%- endif -%}
+'''
 
 [[create_resource]]
 resource_type = "zone"
@@ -11,8 +25,8 @@ view = "{{- origin_resource.view | default(value='default') -}}"
 zone_format = "{{- origin_resource.zone_format | default(value='FORWARD') -}}"
 disabled = "{{- origin_resource.disabled | default(value='False') -}}"
 dnssec = "{{- origin_resource.dnssec | default(value='False') -}}"
-plan = "{{- origin_resource.plan | default(value='enterprise') -}}"
-multisigner = "{{- origin_resource.multisigner | default(value='False') -}}"
+multi_provider = "{{- is_multi_provider -}}"
+multisigner = "{% if origin_resource.dnssec | default(value='False') | as_str | lower == 'true' and is_multi_provider == 'True' %}True{% else %}False{% endif %}"
 vanity_name_server = "{{- origin_resource.vanity_name_server | default(value='') -}}"
 description = "The {{ origin_resource.name | lower }} DNS zone is a distinct administrative portion of the domain name space that is managed by a specific organization or administrator. It acts as a container for all the DNS records (like A, MX, or CNAME) belonging to a domain and its subdomains, allowing for granular control over how that specific traffic is routed."
 created = "{{- now(utc=true) | date(format='%Y-%m-%dT%H:%M:%SZ') -}}"

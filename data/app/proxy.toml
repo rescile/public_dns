@@ -1,0 +1,9 @@
+[[route]]
+path = "/api/cloudflare/account/${env.CLOUDFLARE_ACCOUNT_ID}"
+target = "https://api.cloudflare.com/client/v4"
+
+[[route]]
+path = "/api/cloudflare"
+target = "https://api.cloudflare.com/client/v4"
+forward_headers = ["Content-Type", "Accept"]
+inject_headers = { "Authorization" = "Bearer {{env.CLOUDFLARE_API_TOKEN}}" }

@@ -1,386 +1,311 @@
-"type","name","text","ttl","comment","disabled","zone"
-"txt","autonom-daheim.ch","""v=spf1 -all""","3600","","False","autonom-daheim.ch"
-"txt","autonom-daheim.ch","""swisssign-check=JGxOdX5HIRmNcKYeyGwG7RJyyt0""","3600","","False","autonom-daheim.ch"
-"txt","_dmarc.autonom-daheim.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","autonom-daheim.ch"
-"txt","www.autonom-daheim.ch","""swisssign-check=iGU6MRtxxEMnSOHcxe3pChIaILWlLxCVs2RMjrmCBN""","3600","","False","autonom-daheim.ch"
-"txt","autonome-chez-soi.ch","""v=spf1 -all""","3600","","False","autonome-chez-soi.ch"
-"txt","autonome-chez-soi.ch","""swisssign-check=6jyc6QF6E_WAjf1uak4XUhPv068""","3600","","False","autonome-chez-soi.ch"
-"txt","_dmarc.autonome-chez-soi.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","autonome-chez-soi.ch"
-"txt","www.autonome-chez-soi.ch","""swisssign-check=Pt1qIY3bQA9pgboBeXZttArrienATbtBtHXf3WNaRQ""","3600","","False","autonome-chez-soi.ch"
-"txt","autonomi-a-casa.ch","""v=spf1 -all""","3600","","False","autonomi-a-casa.ch"
-"txt","autonomi-a-casa.ch","""swisssign-check=wBT_OR5PPOu_INd4TLfP4ZuQqEc""","3600","","False","autonomi-a-casa.ch"
-"txt","_dmarc.autonomi-a-casa.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","autonomi-a-casa.ch"
-"txt","www.autonomi-a-casa.ch","""swisssign-check=mlemRz1qQ830Sly3HZyTCmcXquzImITdtgse0nTlZp""","3600","","False","autonomi-a-casa.ch"
-"txt","berner-krankenversicherer.ch","""v=spf1 -all""","3600","","False","berner-krankenversicherer.ch"
-"txt","berner-krankenversicherer.ch","""swisssign-check=qshKhRFkyzTSzu91rrptsywrdIU""","3600","","False","berner-krankenversicherer.ch"
-"txt","_dmarc.berner-krankenversicherer.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","berner-krankenversicherer.ch"
-"txt","visanach20._domainkey.berner-krankenversicherer.ch","""v=DKIM1; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq1AZXPZqEe+/EQMVubbIXbPr4wWxrrweQ20HdR+BjkyboTNgdKfqMciI8vamCUWTvji72Tcs0mvw4Gk3EOgJ0XtlLYurcBZyMgwBZgxtec1QDhKaLtjAprQbeRwCf5WbyJWQeDxtANZpMSpnpj+RmIUK0Rk8sJUxKMQoTxpbrGFEe10SWx8WXmhxnj1qxV+6ixnHfvWl"" ""TJVVvxiqiNiS6Nx3vdlP3XuKCH86Me1f+18CzBVO+sdbWA+Y05FT7HS8MowQZmRHSBP4iVW9BGtI8gai370Mj7yF/3ntQ0BdGXjSf4NG9h035pWcafntQKe9OI+vkOM4X8S+v5FH4peDqQIDAQAB;""","3600","","False","berner-krankenversicherer.ch"
-"txt","bernerkrankenversicherer.ch","""v=spf1 -all""","3600","","False","bernerkrankenversicherer.ch"
-"txt","bernerkrankenversicherer.ch","""swisssign-check=sko-QoDKTS0g2F3HSTSkMcGScPk""","3600","","False","bernerkrankenversicherer.ch"
-"txt","_dmarc.bernerkrankenversicherer.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","bernerkrankenversicherer.ch"
-"txt","cliintra.ch","""swisssign-check=QWGqZ0HXRcH4vBmxk55KdpxNkGA""","3600","mpa / 15-05-2025 / CR 8167211","False","cliintra.ch"
-"txt","directa.ch","""v=spf1 -all""","3600","","False","directa.ch"
-"txt","directa.ch","""swisssign-check=Rz4BZUEYEsLTZxWW6N4WBS6m1OE""","3600","","False","directa.ch"
-"txt","_dmarc.directa.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","directa.ch"
-"txt","directach20._domainkey.directa.ch","""v=DKIM1; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv10/tABSByVcymAWXmqnjUTmCwHyrEQG+FuLX8A2ALB9YjwAN5CJUOtqaEmlBjS8GJkh84v2OGg/lLmqJeBc1vuoJGlFMMa/PAk/ClFlG1Tc0Fgb2oeqU+IHAiKic/usEJGxIAH1c/5qrHX/sgeYc4NdGMzX9dOWa+o8yF12c5SuC0fF9c+duV6jW2CVJKrdDhUz8m4r"" ""228UyLoQkmXAgAUbYAQJv+FiTNT7xuIIZqTH2FV9SaOcI8Kyz8xtkBxZivT2JwpGtU1U8Y0JxQDpwMzLflZN1LKavEA++NN1vIpk5KS4HxOEPNHNX1G3P+23t+SL7lSOTI0mwA1FTm3EwQIDAQAB;""","3600","DIRECTACH20","False","directa.ch"
-"txt","entris-banking.ch","""v=spf1 mx ip4:185.178.62.11 ip4:185.178.62.12 ip4:185.178.62.22 ip4:185.178.62.23 include:_spf.psm.knowbe4.com -all""","900","","False","entris-banking.ch"
-"txt","_dmarc.entris-banking.ch","""v=DMARC1; p=quarantine; rua=mailto:dmarc_ent@entris-banking.ch; ruf=mailto:dmarc_ent@entris-banking.ch; fo=0:1; adkim=r; aspf=r; pct=100; rf=afrf; ri=86400""","900","","False","entris-banking.ch"
-"txt","entris-holding.ch._report._dmarc.entris-banking.ch","""v=DMARC1""","3600","","False","entris-banking.ch"
-"txt","privor.ch._report._dmarc.entris-banking.ch","""v=DMARC1""","3600","","False","entris-banking.ch"
-"txt","vsrb.ch._report._dmarc.entris-banking.ch","""v=DMARC1""","3600","","False","entris-banking.ch"
-"txt","key01._domainkey.entris-banking.ch","""v=DKIM1;p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnqizHYjGyoLY7bXPjDMsTkM5M8n1eSnRqkgABypKMxYfC0v7AkWaCtkfX9kQukc8spHuZ5mLQk67tNJI9/9YGRVQRuUwSXAh/LKZMPJjpgg5hTGjTHNUwlYPamc5/ROm7XaluwFTE8kyenpF8hDV6EzGwp0ONX5XrASBR3VZIOBtOhVVYOkPxPquYEbQP9zJAoekA3QAe"" ""dwJrphQaEYrA8mVsxmd5QEV2t58B9pCHCinYwTOsm89sMwl+mTVw/z64ld4C82XEHJcq9ujlqR9CnEUh4+fMdDTWU5APU2B93k0IujlOO8MQryVom1xwT46abYFMLLN4QP/uECWkU4/BQIDAQAB""","3600","","False","entris-banking.ch"
-"txt","key02._domainkey.entris-banking.ch","""v=DKIM1;p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1/ulIjwIr6MlyzboPtNwyjttVFKLnvomeYfEjH2haqUpCXrjp4+NRthpH8RK6InPb55QiRFBTK9WH0T1J+agWQMTT22Nu8SgClBo6Av/zM31AEbMMebkxaVaiq9xHs714uZMh5FLj2Um8Uun4kkHt+KrkvzNR2nIkyIVhjqex74U0uE9oyC1H1aKnNRL11VILxXbrYHlT"" ""JmUi2DtBDn8W/Oj1UgWC2g85qYZ1Kv2r6TnQjclxMCHf04VopNpxU573avaSKV5noiHbOznZBYzNGYLXzUgbhsyjXA9b22Ez7Pb9yR+5YdAWfnRkgGkUokmiNogAsJcqlDlbz6pBalwUwIDAQAB""","3600","","False","entris-banking.ch"
-"txt","atlassian.entris-banking.ch","""atlassian-domain-verification=syLgfhBblF4nus3m5i7YbFQp4s4Pw5eABYBiX0oVUZd9PAknvxRRNj5fL636qat8""","3600","","False","entris-banking.ch"
-"txt","atlassian-domain-verification.entris-banking.ch","""fcBtBC/QiGvmALtwJrJTGtyICW6qJQbIcVl6zcMkRjQeBejabMrJTVX1UxwZHzPo""","3600","","False","entris-banking.ch"
-"txt","cisco-ci-domain-verification.entris-banking.ch","""5c5383b9667233f4263403025cf2739270a2b7b72fc7bf2f2252f3b169137111""","3600","","False","entris-banking.ch"
-"txt","tbe.entris-banking.ch","""v=spf1 mx -all""","3600","","False","entris-banking.ch"
-"txt","tbf.entris-banking.ch","""v=spf1 mx -all""","3600","","False","entris-banking.ch"
-"txt","training.entris-banking.ch","""v=spf1 mx -all""","3600","","False","entris-banking.ch"
-"txt","entris-banking.ch","""cisco-ci-domain-verification=5c5383b9667233f4263403025cf2739270a2b7b72fc7bf2f2252f3b169137111""","3600","","False","entris-banking.ch"
-"txt","entris-banking.ch","""atlassian-domain-verification=fcBtBC/QiGvmALtwJrJTGtyICW6qJQbIcVl6zcMkRjQeBejabMrJTVX1UxwZHzPo""","3600","","False","entris-banking.ch"
-"txt","entris-banking.ch","""MS=ms69212723""","3600","","False","entris-banking.ch"
-"txt","entris-banking.ch","""swisssign-check=oLxXMqKk21SvoHAIbdq9fiMVzI8""","3600","mpa / 03-02-2025 / CR 8162469","False","entris-banking.ch"
-"txt","entris-banking.ch","""MS=ms92673362""","3600","","False","entris-banking.ch"
-"txt","s1-ix-mx._domainkey.entris-banking.ch","""v=DKIM1; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApP+5/3HNbFal8xQtmEMLST+Zsdw/HwNVGpMpM8Hv9cu7HHWwopM8iqwd1A9DRJxuFIY0IKrROl+sQ4jRARIVV3ZZGgoYmzyxgLftGobJEA8TnMETktHD1Gv3wX0SNtkAIzRGb4oHOkzU1s/iStbwGQH/F7L/W93hGmo9ODM4iLzD998uHyBEqmP8EhYrurwPs1BlQwq5"" ""j9nUREMa7Qnh8UGKk9ekD5u6q6jA4h0cYyZmC12uVk3PZmN1XUupc36CFLziMIIOP1iSjZAHut0rq7ZMRCrX09dJUXFDaizKBRB38hYExOygI5JEUtDAP2b5yA8T3V+RGCz1+o5Dph7cfQIDAQAB;""","900","mpa / 22-04-2024 / CR 8134039","False","entris-banking.ch"
-"txt","entris-banking.ch","""atlassian-sending-domain-verification=22a79264-8eda-40c4-869f-74428d47c2e5""","300","twe / 07.06.2024 / CR 8150653","False","entris-banking.ch"
-"txt","_gh-entris-banking-ag-e.entris-banking.ch","""aa151e854d""","3600","twe / 08.04.2025 / CR 8165450","False","entris-banking.ch"
-"txt","entris-banking.ch","""swisssign-check=gA-LB7HnkkR8fi3ST1PoYGWXvRY""","3600","twe / 10.02.2026 / CR 8179665","False","entris-banking.ch"
-"txt","entris-finanz.ch","""v=spf1 mx -all""","3600","","False","entris-finanz.ch"
-"txt","_dmarc.entris-finanz.ch","""v=DMARC1; p=none; rua=mailto:dmarc_ent@entris-banking.ch; ruf=mailto:dmarc_ent@entris-banking.ch; fo=0:1; adkim=r; aspf=r; pct=100; rf=afrf; ri=86400""","3600","","False","entris-finanz.ch"
-"txt","key01._domainkey.entris-finanz.ch","""v=DKIM1;p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAydQTObhdfdFfeeKrVxfZNpeUBW5caUwtBR6xnT+QaE2dr9VAYr1jT163W0+L6+DwK5OGcM2Ry2hA9nIkQx6kiQERdpJ4V5kEJzoOxKUSGmpLnsa9U42W8BxKzsJ8NRe3wP8r4kfMVJhuBNXHToid+zkGqwpCpyBprReBk25eDVEX35WDdKkyOKcIezqHRu941xF7blS+H"" ""l9hNCbKcZwnPpshJQ4TCz62uYvudLZMw8IH2T5zOniRirPynYVBd6bAoK+Cxc0Omhibad6sskpKOUqmBGH8XwyOX3guLndFwCIOg/Nh6p4vVaIiDu90FOfNDoGhARBfYT4UFVK6ZCGYLwIDAQAB""","3600","","False","entris-finanz.ch"
-"txt","key02._domainkey.entris-finanz.ch","""v=DKIM1;p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3AH0eRwAMyCucnNNR7Y3dSlAqFl3q6HE4fGXw4+lGoeEFqWzOhp6OIftQp+JSc+LFe5jn/vUkN5RVyOmlyhJNnadXq/TEHbl382E+lJLd6ApvOw6rJl94CWUtOaO+joJCW3TC94bR46wA1YhhaVY9kHxqJ1hpFxXpnx76BJ+XG9CXQQpdnEJc0geUI/oW0R7/m74UhfsX"" ""Tyg5eWND+p7CNGZmNwg8SSBgj0FQnzY1qxKe1pNEwB6G5BLNStIZq44GuNEfIFsqYoGfqBRaH4D+ztnM6M0yPeJ9j9/G+cGBP/VveLwtTGFfKh2IjK2+qyy4CMKdFtGaMuxn85pj3BGSwIDAQAB""","3600","","False","entris-finanz.ch"
-"txt","entris-holding.ch","""v=spf1 mx ip4:185.178.62.11 ip4:185.178.62.12 ip4:185.178.62.22 ip4:185.178.62.23 -all""","900","","False","entris-holding.ch"
-"txt","entris-holding.ch","""swisssign-check=IJRT5I1zpubhg4PQ1f1_vw20tvQ""","3600","mpa / 03-02-2025 / CR 8162469","False","entris-holding.ch"
-"txt","entris-holding.ch","""MS=ms53389411""","3600","","False","entris-holding.ch"
-"txt","_dmarc.entris-holding.ch","""v=DMARC1; p=none; rua=mailto:dmarc_ent@entris-banking.ch; ruf=mailto:dmarc_ent@entris-banking.ch; fo=0:1; adkim=r; aspf=r; pct=100; rf=afrf; ri=86400""","900","","False","entris-holding.ch"
-"txt","key01._domainkey.entris-holding.ch","""v=DKIM1;p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxZG27gXITni6/W0wgCoLwiojqRfhIv23ve37OdD6Mv7nNTa9Hnm2XRN0qLlOwC+HV2A01X5nBVSl3w+UYTK6QyygGRfAUzxvTRV9yh8oSUPr4s8HumNrTxUNSkPcuc6Tk8V+ur8pDg+doV8BYUT0WJl4a8rWr1IhZfgJATSNP5BkM0BX5Al+HJESa99aHAZyyAcAyWsyS"" ""hsPLBXApeKvzkmiKy9YOY/qN/BjirTkN1pEY1HMZ86h6+kp2vJFmK51TBTROnnoa2f1RS4DdH4ZGWcYHPlSAhfcU5gJQkaHfd+R5fYIBWjL2b5ONd0oMvvbfqGFDNijXL7muVehaSqmSQIDAQAB""","3600","","False","entris-holding.ch"
-"txt","key02._domainkey.entris-holding.ch","""v=DKIM1;p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqYXqPInaqDmhHKIHslUeyahHDp4Vbb3wjbuZ7skltOsLBjydKhuHHyitodALWG+LHYf/gPdLV+faprHCRD9RtG6cBDqnQ6kW/0SjlyehY1A5oir0eWM960KCgOf6v9D4Co4s7hle3r8j1LPn/2DHawSP8YWwhKg43tleUqs+MGnqn0YdPW2TE7i4E9YTSEfn8jna3zEmr"" ""iAtKid82B9u/BLWr5j+f14DlpiOXEMBVon85OiU2cGBYd66nFsq6PK3JFIVS7A0Qkpl/5Xh4UVJNbNjPdO+phB2QHpI2F+766AeJxYWf/USX3pHjlddsVXNjwQpS98FsmiU5mKuOBuwIQIDAQAB""","3600","","False","entris-holding.ch"
-"txt","s1-ix-mx._domainkey.entris-holding.ch","""v=DKIM1; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyhjhIQSXtB6K+8zK+BezSPHCLuMso9p22zXdqf/0qjBkTvyOPk6tExFBY+NzHITWznzq279vvL/yN4f5MSFWORnKyTUOvrWm3iI/B5kJeDljNzvKM3Zb+GtmAkhuf0P+aSaD1GtB2S9TGShshAd+WcV1+wkVgflWIj930ZgM6e/+NKhd7VOlLFKBn2IdyUKaZx1YRB+3"" ""eXBZtfrAwPVUiWwWPmf0ESYQBpEGU8zgjEihylbMJeZ5BBvXGQ85TfPlYy9xiztU9rrJsyQZKaNpgkcI9ofvIcgcgGC6i2veo3Oo1VUXarfe4u/J7jBaWh3yHnv2EER6ZrquoUR9kDKhWQIDAQAB;""","300","","False","entris-holding.ch"
-"txt","entris-holding.ch","""swisssign-check=TNW7nkNbcXiPOfaidKOZ4-TacPU""","3600","twe / 10.02.2026 / CR 8179665","False","entris-holding.ch"
-"txt","gipfelbuch.gr","""google-site-verification=CLw_fOa4UVnUfD9Z2h2qkbvg5kj4c3O3JjowgKDIh_Y""","3600","mpa / 06-02-2023 / Auftrag AMarkstrahler","False","gipfelbuch.gr"
-"txt","gkbtest.ch","""MS=ms38108497""","3600","sju / 05.08.2024 / CR 8150545","False","gkbtest.ch"
-"txt","ihfsholding.ch","""v=spf1 mx ip4:195.65.190.41 ip4:195.65.190.46 ip4:195.65.190.2 ip4:185.178.61.56 ip4:185.178.61.57 ip4:185.178.61.58 ip4:185.178.61.59 ip4:185.178.61.229 ip4:195.65.190.38 include:spf.protection.outlook.com -all""","900","twe / 04.04.2023 / CR 8134371","False","ihfsholding.ch"
-"txt","ihfsholding.ch","""MS=ms10034171""","3600","twe / 05.04.2023 / CR 8134371","False","ihfsholding.ch"
-"txt","ihfsholding.ch","""QuoVadis=404bd72d-fa72-473e-99f1-66828ad16cd0""","3600","twe / 18.04.2023 / CR 8134091","False","ihfsholding.ch"
-"txt","ihfsholding.ch","""hxxsz68j7ns8l72hr6g6njqrm24wffbw""","3600","twe / 06.209.2023 / CR 8139805","False","ihfsholding.ch"
-"txt","ihfsholding.ch","""_fdi9nljshjh1zaaxzazbnou1b65dnz9""","3600","Change# 8157154","False","ihfsholding.ch"
-"txt","inventx-dev.ch","""swisssign-check=mxsD8jVibEm8cOyLJA3jWqB15v4""","300","mpa / test","False","inventx-dev.ch"
-"txt","inventx-events.ch","""v=spf1 a mx include:_spf01.eyevip.ch -all""","3600","eyevip AG Event Tool for Marketing IX Wilhelm Tara","False","inventx-events.ch"
-"txt","inventx-events.ch","""d365mktkey=FIoim6F1sRdurCSWlKIllstqT7q4WsjckgJ4sdjtncEx""","900","MS Dynamics Verification","False","inventx-events.ch"
-"txt","@.ixacademy.ch","""MS=ms80214337""","3600","","False","ixacademy.ch"
-"txt","web.db4kids.ixofp.ch","""m5ccbgnl9nlqttz2vc1hmgyq2jh8t7jl""","3600","","False","ixofp.ch"
-"txt","ixshared.ch","""MS=ms16088212""","3600","mpa / 10-10-2019 / Microsoft Domain Verification","False","ixshared.ch"
-"txt","kpt-dev.ch","""70py0l0bzfgbsxsvl8bwnj49n7f0jymd""","3600","03.06.2020 / Thomas Vester / Verification","False","kpt-dev.ch"
-"txt","kpt-dev.ch","""rgmphqgml0wk30kmvytd75pyl2w6sx9z""","3600","mpa / 17.11.2021 / CR 8115545","False","kpt-dev.ch"
-"txt","_acme-challenge.wp-extern.kpt-tst.ch","""8X9Zh9-aU8mgw4iGAq5GVuZFwusUCShjdwAaJichWcc""","3600","","False","kpt-tst.ch"
-"txt","krankenversicherung-visana.ch","""v=spf1 -all""","3600","","False","krankenversicherung-visana.ch"
-"txt","krankenversicherung-visana.ch","""83951qbp1syqxs8gvwqhmlfy0rw1l3gv""","3600","","False","krankenversicherung-visana.ch"
-"txt","krankenversicherung-visana.ch","""swisssign-check=HPuyUxoIPZyv22xf8REaZZKK46w""","3600","","False","krankenversicherung-visana.ch"
-"txt","_dmarc.krankenversicherung-visana.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","krankenversicherung-visana.ch"
-"txt","my-visana.ch","""v=spf1 -all""","3600","","False","my-visana.ch"
-"txt","my-visana.ch","""c3wnvxcbsqpfz8k6kvgmd2m72pr75922""","3600","","False","my-visana.ch"
-"txt","my-visana.ch","""swisssign-check=NqlHiebgwOWZjfVlGvjayx5xXWc""","3600","","False","my-visana.ch"
-"txt","_dmarc.my-visana.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","my-visana.ch"
-"txt","mypoints.ch","""swisssign-check=yOILZ4m8eTV-7t8M1a8JRHZVNMQ""","3600","","False","mypoints.ch"
-"txt","myvisana.ch","""v=spf1 ip4:217.192.234.114 ip4:46.140.160.213 ip4:185.178.62.5 ip4:185.178.62.6 ip4:185.178.62.16 ip4:185.178.62.17 -all""","3600","","False","myvisana.ch"
-"txt","myvisana.ch","""h2yf2xcc1cmf6p5bh0kgyp2r7khxy1yx""","3600","","False","myvisana.ch"
-"txt","myvisana.ch","""swisssign-check=yNgNfP9BrXgseVUloOgBGX4FWJk""","3600","","False","myvisana.ch"
-"txt","myvisana.ch","""have-i-been-pwned-verification=dweb_kzxtgwlqgrpa6ykpdvw3rnsu""","3600","","False","myvisana.ch"
-"txt","_dmarc.myvisana.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","myvisana.ch"
-"txt","myvisana.ch._domainkey.myvisana.ch","""v=DKIM1; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxRRMzZhEH7pea/BFCsG3bXm8iaaQ7H4v0stYi+WTDNrjgT3luGbHfCR1Wgm5mBz/vvAUtFSE08V68Lj8tqz84mwgIRLKZQpzlOMLvYmxTqnwBEAA2TgU5oBA2Xd8otHmtEMNk4Y/v2vCEPFB6J/Ck8pUWu4tmooEm8wm7VnLGoZANhzZwE+y0CVu6i8aq6r4gOwLRLnB"" ""LhdJbs1RN/oK/UYlGshgoTiXBnnVRpCMyM3p9AyOIguSl9Ak86Kct/UnEjnU0Usmd/lxHtMtDOhRlu4EWgCkS8qIiJsFsSEFKPFhYGR7a7JBSFfhfhPjGnq15ZCHgnUEZ1lwI+EsPIYxuwIDAQAB;""","3600","","False","myvisana.ch"
-"txt","myvisanach22._domainkey.myvisana.ch","""v=DKIM1; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuPqsXMzh6njo8l5DpAWweuFxd0ri59bJIyjqsOCtcn0roFJrQGpMqYo3ojjcjJXkeKhszn+MO8geWUV8x+fctcIbcky9zjiOdvtRTCgY842YDB9sYhOrXBuNRpmqRiW87drIH9L4IgRAUEogXoPCTxuknR6LSLXzV7AlODXkN1xk/H+rvM2r9o1WIG0Hb8So4Lgyf6+o"" ""Ucgc2g3m2BLllR9lXCrFzX/5XwnKl1BhwwiT3TaJ52aB5wDZ2tQhzfY8if11uCxWmEnqAfdCXTKwNjA4IvQhxgiEJ+AGXyFHHgOhlLDyg4/hyVqrZl4JfHtit9lRKuYm5jGhaDF4vdZTswIDAQAB;""","3600","","False","myvisana.ch"
-"txt","s1-ix-mx._domainkey.myvisana.ch","""v=DKIM1; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmMOEvQAd//cULPMfuFhVQ8jRpA8D2lkdR/bqqvBC3JhU7H4WwKaGzcEKbGFocdSHex8LJoS2CATGUGND1lPWnsnVx7sF7pzz/gfv0qRtlUuVSQeG0gQNHNmG1eh5PXK/SQ9mgHQHfTjYvtGGQ92h0kMBujg1oOjJVCM2YRIxOmlr/twNuDH0kWDBb2uNN1O4qTT6gBFD"" ""F5Xt1FIJeIRXU0xiYYI/lSr6l8OmhCioZe987baXelIVtj69nj+PImFF/kH9eb5jv51oz2IMQDcA9sKAgoiCnqBRSTJ5rxdBgplbMXcD2P6c/H2kWztacopl8Qzvli2VYgrqLJDu5iZiZQIDAQAB;""","3600","","False","myvisana.ch"
-"txt","pbihag.ch","""MS=DB66A6A2BE7E6555AF6F14B422B1134BDED4FC82""","3600","","False","pbihag.ch"
-"txt","pbihag.ch","""MS=ms37044480""","3600","","False","pbihag.ch"
-"txt","pbihag.ch","""EB7CB725-C3F2-4F30-B8ED-C7679BDD3F54""","3600","","False","pbihag.ch"
-"txt","pbihag.ch","""QuoVadis=990c16f5-6aba-4a63-82a8-7cdadb74e9fe""","3600","","False","pbihag.ch"
-"txt","pbihag.ch","""f38lnhr5kr48muqe2f3ef75405""","3600","","False","pbihag.ch"
-"txt","pbihag.ch","""v=spf1 mx ip4:195.65.190.41 ip4:195.65.190.46 ip4:195.65.190.2 ip4:185.178.61.56 ip4:185.178.61.57 ip4:185.178.61.58 ip4:185.178.61.59 ip4:185.178.61.229 ip4:195.65.190.38 include:spf.protection.outlook.com -all""","3600","","False","pbihag.ch"
-"txt","_dmarc.pbihag.ch","""v=DMARC1;p=none;pct=100;rua=mailto:postmaster@pbihag.ch""","3600","","False","pbihag.ch"
-"txt","ebanking.pbihag.ch","""v=spf1 include:eu.rp.oracleemaildelivery.com ~all""","3600","mpa / 25-07-2023 / CR 8133914","False","pbihag.ch"
-"txt","pbihag.ch","""66mw2wjxh7mmdkjjzz1p8cm3f73y1r1z""","3600","twe / 06.209.2023 / CR 8139805","False","pbihag.ch"
-"txt","pbihag.ch","""QuoVadis=33b1db9a-0b63-4f9a-9fa0-4f4639ab4ead""","3600","mpa / 16-11-2023 / Change# 8142910","False","pbihag.ch"
-"txt","pbihag.ch","""_hy4jorapzxxxx2onmchi0qh6fyer6ug""","3600","Change# 8157154 ","False","pbihag.ch"
-"txt","pbihag.ch","""kfeqcifgdl5sv3pt4jdmv5j5fr""","3600","sbe / 21-02-2025 / CR # 8163466","False","pbihag.ch"
-"txt","_dmarc.privor.ch","""v=DMARC1; p=none; rua=mailto:dmarc_ent@entris-banking.ch; ruf=mailto:dmarc_ent@entris-banking.ch; fo=0:1; adkim=r; aspf=r; pct=100; rf=afrf; ri=86400""","900","","False","privor.ch"
-"txt","key01._domainkey.privor.ch","""v=DKIM1;p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAydQTObhdfdFfeeKrVxfZNpeUBW5caUwtBR6xnT+QaE2dr9VAYr1jT163W0+L6+DwK5OGcM2Ry2hA9nIkQx6kiQERdpJ4V5kEJzoOxKUSGmpLnsa9U42W8BxKzsJ8NRe3wP8r4kfMVJhuBNXHToid+zkGqwpCpyBprReBk25eDVEX35WDdKkyOKcIezqHRu941xF7blS+H"" ""l9hNCbKcZwnPpshJQ4TCz62uYvudLZMw8IH2T5zOniRirPynYVBd6bAoK+Cxc0Omhibad6sskpKOUqmBGH8XwyOX3guLndFwCIOg/Nh6p4vVaIiDu90FOfNDoGhARBfYT4UFVK6ZCGYLwIDAQAB""","3600","","False","privor.ch"
-"txt","key02._domainkey.privor.ch","""v=DKIM1;p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3AH0eRwAMyCucnNNR7Y3dSlAqFl3q6HE4fGXw4+lGoeEFqWzOhp6OIftQp+JSc+LFe5jn/vUkN5RVyOmlyhJNnadXq/TEHbl382E+lJLd6ApvOw6rJl94CWUtOaO+joJCW3TC94bR46wA1YhhaVY9kHxqJ1hpFxXpnx76BJ+XG9CXQQpdnEJc0geUI/oW0R7/m74UhfsX"" ""Tyg5eWND+p7CNGZmNwg8SSBgj0FQnzY1qxKe1pNEwB6G5BLNStIZq44GuNEfIFsqYoGfqBRaH4D+ztnM6M0yPeJ9j9/G+cGBP/VveLwtTGFfKh2IjK2+qyy4CMKdFtGaMuxn85pj3BGSwIDAQAB""","3600","","False","privor.ch"
-"txt","privor.ch","""swisssign-check=QF2OEAyuEu3X5SLb9Xj7uplc15c""","3600","mpa / 03-02-2025 / CR 8162469","False","privor.ch"
-"txt","privor.ch","""v=spf1 mx ip4:185.178.62.11 ip4:185.178.62.12 ip4:185.178.62.22 ip4:185.178.62.23 -all""","900","","False","privor.ch"
-"txt","privor.ch","""MS=ms50700992""","3600","","False","privor.ch"
-"txt","s1-ix-mx._domainkey.privor.ch","""v=DKIM1; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwiG9xKal27YIrHJ42mTzxGMOQ62HVvTwRXCfQZD4jdZSH/pasaEROO1DEQ64ihrmsuyjsFqFeNnqSFRFnspzGIpYqUeeLrGrTw86c0M07bs/SswRYh4WpuTtYBxV62a63QwSozSgPT2wmVNZpbixyCcCm0X27oFir9RwNg2iH2z2PMPdTcT/KK2lo/q90J2ZlA0xJiZr"" ""YuqEtRtItd7iVijsaUW06is6dJI0Y0lKVNyHibojVR+PX0G8wAhr91vgc40FhIPDTAmHLfPYbBUE8/74ezug0dBPuZ70EjjrJaWIxWyajl8wUDjkNYY0RtPrXhOZr1iJe0RjIcjHOT6d1QIDAQAB;""","300","","False","privor.ch"
-"txt","privor.ch","""swisssign-check=1UZabhKmz5tuIXoHqRYd2Seqv3g""","3600","twe / 10.02.2026 / CR 8179665","False","privor.ch"
-"txt","proventx.ch","""MS=ms55940773""","3600","","False","proventx.ch"
-"txt","proventx.ch","""v=spf1 ip4:83.144.233.114 ip4:46.140.249.250 ip4:146.185.0.91 ip4:146.185.0.90 ip4:217.193.142.10 ip4:217.193.142.13 ip4:46.140.115.222 include:spf.protection.outlook.com include:spf.emailsignatures365.com -all""","3600","","False","proventx.ch"
-"txt","pvs-visana.ch","""v=spf1"" ""-all""","3600","","False","pvs-visana.ch"
-"txt","pvs-visana.ch","""google-site-verification=E8puX0MnGeFfhdYLsVnW3FNnmMWHUfaKDREiJCBut-w""","3600","","False","pvs-visana.ch"
-"txt","pvs-visana.ch","""swisssign-check=s0DRZaQOQ9SYieGZp-1Xf5JuhDQ""","3600","","False","pvs-visana.ch"
-"txt","_dmarc.romontschia.ch","""v=DMARC1; p=quarantine; rua=mailto:dmarc_aki@albinkistler.ch; ruf=mailto:dmarc_aki@albinkistler.ch; fo=0:1; adkim=r; aspf=r; pct=100; rf=afrf; ri=86400""","3600","aso / 16.10.2024 / Change #8148691","False","romontschia.ch"
-"txt","sana-24.ch","""v=spf1 -all""","3600","","False","sana-24.ch"
-"txt","sana-24.ch","""l1zk8bxqnks09d8p5x7snm6rk5v9s5pf""","3600","","False","sana-24.ch"
-"txt","sana-24.ch","""swisssign-check=1ZTEPL8VH4cyOG8Af7rDPPBjuxs""","3600","","False","sana-24.ch"
-"txt","_dmarc.sana-24.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","sana-24.ch"
-"txt","sana24.ch","""v=spf1 -all""","3600","","False","sana24.ch"
-"txt","sana24.ch","""ktxfzr8zyfct1t03z0jv2hvhyvztr2wh""","3600","","False","sana24.ch"
-"txt","sana24.ch","""swisssign-check=8xCC4XIIa986uKbLETZ-kFEEzLw""","3600","","False","sana24.ch"
-"txt","_dmarc.sana24.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","sana24.ch"
-"txt","newsletter.sana24.ch","""v=spf1 ip4:195.190.140.0/24 ip4:88.86.101.0/24 -all""","3600","","False","sana24.ch"
-"txt","sana24ch20._domainkey.sana24.ch","""v=DKIM1; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmVr7PnRa4MBvRregccABy2gldbdn7tDFYAiLcL1mHG4WljSk5Q7h8NiQ+JW5LB0v5GlpskQ1B0N6+i+y9tofVxPvTATPAf00Wsfcyp6/GUJ83xVYAFUx77LwkIpKqUiVYP2hAZPbZo5zAwdoIEdF0CSDSXILcW1/O029pVnYCzKbGb9vxozg5U1a01W3uzzmqypAdC7j"" ""LRf1YE4Q0I9ZnQ2+gUnOPP8qRTd61nns1l/R7toN23YGbO6+VSFBsJcj5vB/uTK7d4vtnLkhNmUnrQQzQSV6QgSZN9BokEolggjz+Z/06BLNO9k2IOwvP4t6bbgoxV2wqjmcg5dWy9y2owIDAQAB;""","3600","SANA24CH20","False","sana24.ch"
-"txt","stratusworks.ch","""v=spf1 include:spf.protection.outlook.com -all""","3600","","False","stratusworks.ch"
-"txt","swissic.ch","""MS=ms35865995""","3600","Microsoft Azure","False","swissic.ch"
-"txt","swissic.ch","""MS=ms99323573""","3600","","False","swissic.ch"
-"txt","iamtst.swissic.ch","""v=spf1 include:spf.protection.outlook.com -all""","3600","twe / 25.07.2025 / CR 8168673","False","swissic.ch"
-"txt","swissic.ch","""_4zfxy8yd0me7rez8wn1wdlutxy5m6mz""","900","mpa / 11-11-2025 / Cert DCV","False","swissic.ch"
-"txt","swissic.net","""MS=ms92716862""","3600","","False","swissic.net"
-"txt","visana-ag.ch","""v=spf1 -all""","3600","","False","visana-ag.ch"
-"txt","visana-ag.ch","""jd11q5l4z9s1g3dv6lyv66lv6y9g07kb""","3600","","False","visana-ag.ch"
-"txt","visana-ag.ch","""swisssign-check=FiMxoAfF-mRPACGplMl3ujBaD7Q""","3600","","False","visana-ag.ch"
-"txt","_dmarc.visana-ag.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visana-ag.ch"
-"txt","visana-ag.com","""v=spf1 -all""","3600","","False","visana-ag.com"
-"txt","visana-ag.com","""swisssign-check=NGk0vPaAG6yMvMrMbHUN4aTahv8""","3600","","False","visana-ag.com"
-"txt","_dmarc.visana-ag.com","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visana-ag.com"
-"txt","visana-ag.com","""swisssign-check=JZie2Omv-ZL1tkS-Wyz2DdqWUl0""","3600","dko / 08.08.2025 / SR 6269106","False","visana-ag.com"
-"txt","visana-club.ch","""v=spf1 -all""","3600","","False","visana-club.ch"
-"txt","visana-club.ch","""bggch0jmj2554j1ytzwqvr3xvv1g6tr7""","3600","","False","visana-club.ch"
-"txt","visana-club.ch","""swisssign-check=FSAaNr48dduPpPE9T6iiFujJNeA""","3600","","False","visana-club.ch"
-"txt","_dmarc.visana-club.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visana-club.ch"
-"txt","visana-finanz.ch","""QuoVadis=0572f1f3-9369-4299-87e3-7bb891d38f80""","3600","","False","visana-finanz.ch"
-"txt","visana-finanz.ch","""v=spf1 -all""","3600","","False","visana-finanz.ch"
-"txt","visana-finanz.ch","""9zkt9cq97j72zgl7jpsg5786yp194z30""","3600","","False","visana-finanz.ch"
-"txt","visana-finanz.ch","""swisssign-check=nRLQklTbmYJzBNO1ZhZz1sjMV1Y""","3600","","False","visana-finanz.ch"
-"txt","_dmarc.visana-finanz.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;"" ""fo=1""","3600","","False","visana-finanz.ch"
-"txt","visana-plus.ch","""QuoVadis=c68ebc48-fde6-4bda-aca7-eeb93be95956""","3600","","False","visana-plus.ch"
-"txt","visana-plus.ch","""v=spf1 -all""","3600","","False","visana-plus.ch"
-"txt","visana-plus.ch","""p7p7w5h0f7v2yq6brgn2g9bvkpmhs54f""","3600","","False","visana-plus.ch"
-"txt","visana-plus.ch","""swisssign-check=JYEsZkVu4MpqqdouqLirCctaXrw""","3600","","False","visana-plus.ch"
-"txt","_dmarc.visana-plus.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visana-plus.ch"
-"txt","visana-services.com","""v=spf1 -all""","3600","","False","visana-services.com"
-"txt","visana-services.com","""swisssign-check=2bdnltLRIlm0MB10hI0sXdOfwxs""","3600","","False","visana-services.com"
-"txt","_dmarc.visana-services.com","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visana-services.com"
-"txt","visana-versicherung.ch","""QuoVadis=6486f8dd-cd03-45be-8a0a-56da44689494""","3600","","False","visana-versicherung.ch"
-"txt","visana-versicherung.ch","""v=spf1 -all""","3600","","False","visana-versicherung.ch"
-"txt","visana-versicherung.ch","""hcdm54yw8k7j6924qc89sg6nc48p8lff""","3600","","False","visana-versicherung.ch"
-"txt","visana-versicherung.ch","""swisssign-check=gQr3SZWkYaf-FnkcoC1KdODwttI""","3600","","False","visana-versicherung.ch"
-"txt","_dmarc.visana-versicherung.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visana-versicherung.ch"
-"txt","visana-versicherungen.ch","""QuoVadis=097a928b-c637-4164-926c-cd7ee14066c0""","3600","","False","visana-versicherungen.ch"
-"txt","visana-versicherungen.ch","""v=spf1 -all""","3600","","False","visana-versicherungen.ch"
-"txt","visana-versicherungen.ch","""r440s5pll177kkcxhfdy5j37kpwhkqzm""","3600","","False","visana-versicherungen.ch"
-"txt","visana-versicherungen.ch","""swisssign-check=UfA-w3QHmPG4R8QPzS6d54QVwAU""","3600","","False","visana-versicherungen.ch"
-"txt","_dmarc.visana-versicherungen.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visana-versicherungen.ch"
-"txt","visana.ch","""v=spf1 a:smtp.pub.begasoft.ch ip4:217.192.234.114 ip4:46.140.160.213 ip4:185.178.62.5 ip4:185.178.62.6 ip4:185.178.62.16 ip4:185.178.62.17 ip4:185.178.62.24 ip4:185.178.62.25 include:spf-de.emailsignatures365.com -all""","3600","","False","visana.ch"
-"txt","visana.ch","""facebook-domain-verification=w2cw6yyr995wl02m9jmf6454suf8kz""","3600","","False","visana.ch"
-"txt","visana.ch","""MS=761BEC46ED57D8A87687CE442E808B17057C5629""","3600","","False","visana.ch"
-"txt","visana.ch","""MS=ms17131044""","3600","","False","visana.ch"
-"txt","visana.ch","""mt266w9csxt893tl27hwjy5xzpd1xgf0""","3600","","False","visana.ch"
-"txt","visana.ch","""atlassian-domain-verification=uTJYa8siWyb4rYsHYKygnEbgkArcSZdBC1DNM8gb/aYc3xobcNv1KBe1nDe9QbCU""","3600","","False","visana.ch"
-"txt","visana.ch","""cisco-ci-domain-verification=a774008f9970c52486b6ef6450282547d3498ec529a0bf3b4e88945e926499b""","3600","","False","visana.ch"
-"txt","visana.ch","""swisssign-check=Kc6HGc0q1zYxARBuQ24WbbuTvTM""","3600","","False","visana.ch"
-"txt","_dmarc.visana.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visana.ch"
-"txt","_smtp._tls.visana.ch","""v=TLSRPTv1;"" ""rua=mailto:qtzuzn1x@tls.eu.dmarcian.com""","3600","","False","visana.ch"
-"txt","dap.visana.ch","""google-site-verification=GcZ5XO_WpYezBHcvNzbZHd2nNQM-h7LdaHgk4RxsJGU""","3600","","False","visana.ch"
-"txt","default._bimi.visana.ch","""v=BIMI1;"" ""l=https://vmc.digicert.com/d987e8b6-10be-48e8-87e5-1e95bce2a26e.svg;"" ""a=https://vmc.digicert.com/d987e8b6-10be-48e8-87e5-1e95bce2a26e.pem;""","3600","","False","visana.ch"
-"txt","entry.visana.ch","""google-site-verification=Hf1hOp_zgnEwU1cycx9C6E3jWQ1fFXGEvQRDdtqaspI""","3600","","False","visana.ch"
-"txt","s1-ix-mx._domainkey.visana.ch","""v=DKIM1; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA19AxViAK1oT/Df7hqnl7QJNlLhoyL08dMJYhbxLcSoXbcss3r25ft5S2vp9hSns5baB5OA+S7/iqaaCEtiQRqlI6wRhcQ3hPgCjlGRcwtv/cZMiH093n/WVf4Im3zrXUH1PFSEGCbnaVTAzU4oSxImhlltqsz7Dwpc2vPGMKGoDvmLx0LjlCYpEwTLHM2i/k4C4qM05y"" ""QOgL1xU5rYBv4xjYY+b1SrsFCwe7xU7f1+g2TMQRhaxKkTwol7CsInujm3dPrIglLLRNUVu3bDEuWOGaOegJKS3ys+btpacnIoKRJVPBSlBLfKE2ugubuoog0la3apYqUJSe7UpNIBDMIQIDAQAB;""","3600","","False","visana.ch"
-"txt","visana.ch._domainkey.visana.ch","""v=DKIM1; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyCrg9tdJgSYdjWDFXsPLSeO2S0HzjBpSEFMFz5a3hLexud+jWxjEeR5ifXauhvTuBg2DTXGyK0nHl1LGU/O8CzjNUSQN3JeGR1uC/T4any6Pe5iH61XATU+CeoCbv/H6LllD/T41KKMCp51EJB+xBLl8f44LstKqwzcXVHCJGChFDcPEqRbSNA7Ppug618RDWBFFcc2h"" ""ljpl3aEssDvYVcoE26ihSAHyy8YbzO/2L2/omp9qPsNFgVjYcLAOmU1aoaofY4Ix3O07zsFOAdmKMDPJ3xGGcHiCtz6arUShs5gDrSmffHKhsloJdkN2IxEle6HACy4e8dL43poViNedWQIDAQAB;""","3600","","False","visana.ch"
-"txt","abna-service.visana.ch","""v=spf1 include:spf.mailjet.com -all""","3600","","False","visana.ch"
-"txt","_dmarc.abna-service.visana.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visana.ch"
-"txt","mailjet._c57cf921.abna-service.visana.ch","""c57cf921222f6ec7d7b21fbc6e1a048b""","3600","","False","visana.ch"
-"txt","mailjet._domainkey.abna-service.visana.ch","""k=rsa;"" ""p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDECbaC05pwFOzfLkTNtCGCERpHTOOeM/IwcimDHHg3Qjp5FsppYXH2KMsJeQmfOZ4Ihzuv594b2AnZx/PMnrKcZwZPhTv0iK1AnzQp/JwEqU0q14ETZQjsd4Y4S1+k2wxz9DMuiUwNyduNsD/syACkmsQZ8rhb7mabV83PLqsx0wIDAQAB""","3600","","False","visana.ch"
-"txt","asuid.assicurazioni.visana.ch","""117879CE78B0FC4A7F522C35536D93A4C91CF6B3D7BBB98AC081D3D5782C1EFD""","3600","","False","visana.ch"
-"txt","asuid.assurances.visana.ch","""117879CE78B0FC4A7F522C35536D93A4C91CF6B3D7BBB98AC081D3D5782C1EFD""","3600","","False","visana.ch"
-"txt","avb.visana.ch","""v=spf1 mx a:smtp.pub.begasoft.ch -all""","3600","","False","visana.ch"
-"txt","asuid.campaign.visana.ch","""117879CE78B0FC4A7F522C35536D93A4C91CF6B3D7BBB98AC081D3D5782C1EFD""","3600","","False","visana.ch"
-"txt","asuid.cinema.visana.ch","""117879CE78B0FC4A7F522C35536D93A4C91CF6B3D7BBB98AC081D3D5782C1EFD""","3600","","False","visana.ch"
-"txt","collect.visana.ch","""google-site-verification=yOca-gyfVQtLu0U9UyIJVbd4cjwg7AqJMwkVb9NUvX8""","3600","","False","visana.ch"
-"txt","collect.visana.ch","""v=spf1 -all""","3600","","False","visana.ch"
-"txt","_dmarc.collect.visana.ch","""v=DMARC1;"" ""p=none;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visana.ch"
-"txt","curaxtest.visana.ch","""v=spf1 -all""","3600","","False","visana.ch"
-"txt","_dmarc.curaxtest.visana.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visana.ch"
-"txt","dashboard.visana.ch","""v=spf1 include:_spf.firebasemail.com -all""","3600","","False","visana.ch"
-"txt","dashboard.visana.ch","""firebase=visana-sales-academy-test""","3600","","False","visana.ch"
-"txt","dashboard.visana.ch","""firebase=visana-sales-academy-uat""","3600","","False","visana.ch"
-"txt","dashboard.visana.ch","""firebase=visana-sales-academy-prod""","3600","","False","visana.ch"
-"txt","directa.visana.ch","""v=spf1 include:spf.mailjet.com -all""","3600","","False","visana.ch"
-"txt","_dmarc.directa.visana.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visana.ch"
-"txt","mailjet._dcc0ba55.directa.visana.ch","""dcc0ba5501c3ed38353f88b7ef79661e""","3600","TKI-1130","False","visana.ch"
-"txt","mailjet._domainkey.directa.visana.ch","""k=rsa;"" ""p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCvvq+mcjGTqt03GcJgkKKkT5I/B5+c1TYQ5g8mXicRlq1g2EZiAwT7Todbo5vupqfSp3H8Q8IBpudwj+Dj+J0qYAdWkC3fXp+DcV/5tVr2klgS2DMlylWdkexFOy9spHs0ZhDay0+iQyK7Ti4BVJbDppnJDkEM7Eq3lLZf2j8DhwIDAQAB""","3600","TKI-1130","False","visana.ch"
-"txt","entry-abna.visana.ch","""swisssign-check=mFSYTYozO12On56cNWG9bSkK_44""","3600","","False","visana.ch"
-"txt","entw-service.visana.ch","""v=spf1 include:spf.mailjet.com -all""","3600","","False","visana.ch"
-"txt","_dmarc.entw-service.visana.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visana.ch"
-"txt","mailjet._18c7ca14.entw-service.visana.ch","""18c7ca14c262e8cc9f4a4393cabb25b0""","3600","","False","visana.ch"
-"txt","mailjet._domainkey.entw-service.visana.ch","""k=rsa;"" ""p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDg/AXn3oo5MdDg649tM0/3aPEAlxobKH84L3pggeFX7h0CoVmxVv9hP1ahdhz0XsVumEGaDx16gccm+xj4bssfuNPvCqkWxSmKAQbMK1O8OsVzRrKNMjevhNKnADdD5j7XhbsqlMr0e6zL9kDUDVulC6y8RTrYTGJyKan+fEo2QQIDAQAB""","3600","","False","visana.ch"
-"txt","events.visana.ch","""v=spf1 include:mailomat.cloud -all""","3600","","False","visana.ch"
-"txt","_dmarc.events.visana.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:7cca6b28@mxtoolbox.dmarc-report.com,mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:7cca6b28@forensics.dmarc-report.com,mailto:qtzuzn1x@fr.eu.dmarcian.com""","3600","","False","visana.ch"
-"txt","mom1._domainkey.events.visana.ch","""v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCw2tq4edf2v19jFd0U+OuwFBNdh3RF9P/XfKFCZhRQxTqsBGD2Wi2Io0VKw8FrVMXNEh4bEYFILtZBOTqT6t1CuSeAgMZpIMVYvERjnOwJQn5gPu2qkiiOG1RxKhpxeEHq9n9oo/F4iM2JuKDOehCoFX00xjo8PckXMNUAn4C4zQIDAQAB""","3600","","False","visana.ch"
-"txt","feedback.visana.ch","""v=spf1 ip4:5.104.94.72 -all""","3600","","False","visana.ch"
-"txt","_dmarc.feedback.visana.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visana.ch"
-"txt","amp21e._domainkey.feedback.visana.ch","""v=DKIM1; k=ed25519; p=LFRYp0eltkp5IblkEVCVR6WVa307jQGLNP8lHCz1NS0=""","3600","","False","visana.ch"
-"txt","amp21r._domainkey.feedback.visana.ch","""v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyPWo60rAuPKkrP12ueKoimlnLX5zoF1lxwKctILfVyUs3vv+aMw5/o9ot4PbvLPuBWwF+sq5fM7XiY//zlUqHxfhdsoxKrP+y3yMZrGTlcAuZONM7TKdeTms8kRtF2ze7cw8jXPuFDGNmlE"" ""rOAn5M6mUzC10EsQ+eXJEN+8GCjoX23dOT1L4kXyCbSSlZqgJvvxlG3h9iUGDIh8qaJgj5QoX2bu96Qx9coOv+7LW686rvMarSzcbtlk9ehhXHgD2xwgrAxSkBYd8fgF4er9FdGlp1LuG2cSAb+qMiWT+lm4bVhz1DPbmRT1RcsAfllrP9NqSPMWslfFfKuWFGZa9fwIDAQAB""","3600","","False","visana.ch"
-"txt","info.visana.ch","""v=spf1 ip4:217.192.234.118 ip4:46.140.160.219 ip4:185.178.62.5 ip4:185.178.62.6 ip4:185.178.62.16 ip4:185.178.62.17 -all""","3600","","False","visana.ch"
-"txt","_dmarc.info.visana.ch","""v=DMARC1; p=reject; rua=mailto:qtzuzn1x@ag.eu.dmarcian.com; ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visana.ch"
-"txt","dkim._domainkey.info.visana.ch","""v=DKIM1; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCqAonKZK8IOYpxWbbzj4UhHmNB0adPWtB+BVNXFwHwMEXIij1S8dkdRFqKhU8VaY4Yvo54Fyv996/HUH0JgsTTT2RyNp+DoNKZw5dRPlT/Vc/9MefFxuvZHrIa9vj8+DBYpz4975s/a7U7XtrioC4rj5GfF0GygtAavc7Kt5/RewIDAQAB;""","3600","","False","visana.ch"
-"txt","jobs.visana.ch","""v=spf1 include:_spf.prospective.ch -all""","3600","","False","visana.ch"
-"txt","jobs.visana.ch","""swisssign-check=1_WwMVz3FEcMBh_czycI1L4oZRE""","3600","","False","visana.ch"
-"txt","learning.visana.ch","""v=spf1 include:_spf-dc57.sapsf.eu ~all""","3600","","False","visana.ch"
-"txt","_dmarc.learning.visana.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visana.ch"
-"txt","sfsf._domainkey.learning.visana.ch","""v=DKIM1; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv9m+2yLk6gaAUbek6rBqd3hqkO4j88J+IjZn/yQ14xKnkU7pxDznRfwomRb/lLdOFv9QzPB13+oC5dO5IoiJf5cY44W/JxUBHCzmoTjSp+5mhWG9TzySryGJBkExyibaKiSdWt""","3600","","False","visana.ch"
-"txt","_dmarc.liegenschaftsverwaltung.visana.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visana.ch"
-"txt","nonprod-app.visana.ch","""swisssign-check=m0ek8TGgTsrj_iLj9qzq95StR3c""","3600","","False","visana.ch"
-"txt","nonprod-dap.visana.ch","""swisssign-check=-6WQvm0jBt15WzZGnVxGCZsxIzs""","3600","","False","visana.ch"
-"txt","nonprod-my.visana.ch","""swisssign-check=0zxm34YLLHjikQDn8Om8HXRge9g""","3600","","False","visana.ch"
-"txt","nonprod-receiver.visana.ch","""swisssign-check=aTMK0Db5oMX3iWMLcbwaqZBeK44""","3600","","False","visana.ch"
-"txt","referral.visana.ch","""swisssign-check=YFmBIFHRauwf7XO7YyuBCj0BPc0""","3600","","False","visana.ch"
-"txt","service.visana.ch","""v=spf1 include:spf.mailjet.com -all""","3600","","False","visana.ch"
-"txt","service.visana.ch","""google-site-verification=mMmtzdtKerY6deK38veXR3IA9dZtfvkn3Mg08UG-yww""","3600","","False","visana.ch"
-"txt","_dmarc.service.visana.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;"" ""fo=1;"" ""adkim=r;"" ""aspf=r""","3600","","False","visana.ch"
-"txt","mailjet._c60d8801.service.visana.ch","""c60d8801bbe42d32b62c4627cc981217""","3600","","False","visana.ch"
-"txt","mailjet._domainkey.service.visana.ch","""k=rsa;"" ""p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDAmE1ZUsX9WomnQ0lzjUDxHkcJzbeUF9oJId+SL60ztT9byym6E4f+Dx8aBb7cLi9d402mr1/HsoJ6OsBX7ETfclzZfU/qgJSNQSnWU5O99XrqRmZMnLqmK2ZrFPMPKtFVaGxR42uSS7RwIP282ccHnZMZB3fLDmPcWXa1BNHV4wIDAQAB""","3600","","False","visana.ch"
-"txt","sponsoring.visana.ch","""v=spf1 include:spf.mandrillapp.com -all""","3600","","False","visana.ch"
-"txt","_dmarc.sponsoring.visana.ch","""v=DMARC1;"" ""p=none;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visana.ch"
-"txt","mandrill._domainkey.sponsoring.visana.ch","""v=DKIM1;"" ""k=rsa;"" ""p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCrLHiExVd55zd/IQ/J/mRwSRMAocV/hMB3jXwaHH36d9NaVynQFYV8NaWi69c1veUtRzGt7yAioXqLj7Z4TeEUoOLgrKsn8YnckGs9i3B3tVFB+Ch/4mPhXWiNfNdynHWBcPcbJ8kjEQ2U8y78dHZj1YeRXXVvWob2OaKynO8/lQIDAQAB;""","3600","","False","visana.ch"
-"txt","sprint.visana.ch","""swisssign-check=b_wXAUFW6pAm3kVLVeQ-vvtAZSA""","3600","","False","visana.ch"
-"txt","test.visana.ch","""v=spf1 ~all""","3600","","False","visana.ch"
-"txt","_dmarc.test.visana.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visana.ch"
-"txt","uk.visana.ch","""v=spf1 mx include:spf.augure.com -all""","3600","","False","visana.ch"
-"txt","_dmarc.uk.visana.ch","""v=DMARC1;p=none;rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visana.ch"
-"txt","asuid.versicherungen.visana.ch","""117879CE78B0FC4A7F522C35536D93A4C91CF6B3D7BBB98AC081D3D5782C1EFD""","3600","","False","visana.ch"
-"txt","shop.visana.ch","""swisssign-check=gHkB7E-ZShj-AZ_xmtI_dqJwvVI""","3600","","False","visana.ch"
-"txt","visana.ch","""google-site-verification=Ce45Sijp1YtCXQoo2rllPSNJKlCw5Fi89J2-cSzoe7I""","3600","sju / 27.11.2025 / SR 6275056","False","visana.ch"
-"txt","asuid.quiz.visana.ch","""117879CE78B0FC4A7F522C35536D93A4C91CF6B3D7BBB98AC081D3D5782C1EFD""","3600","sju / 16.12.2025 / SR 6275890","False","visana.ch"
-"txt","s1-ix-mx._domainkey.info.visana.ch","""v=DKIM1; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1QVSsvwM2ZkVTlcL6+bylXMLUbHo9UiS5aM6/9Sn7FB+dLxPCQOiWCEG5hMU6MB71Kcbyd0mRby0AwZ+pvWAre9TvPMW8rr71Ypl3HtelxrEKfUh+c2j4Vk7MoGZ7iwRTWkz1K9cZ+z1lESoQJZIV+TqTAw9IMeTZNPfYhq/FRQ1UK/jHTvMGlsZMR6gMkpIATwQnvf3"" ""ioKbdcPv9qz8PWxgMElrxBwVkI/RnddTAFEuKlXOrZqBckv9qSkmy7OuXfLFe7l8hHf6dQf+kPfOZUJ1t6Maqn50upYzZ7CsUa2q4OoqPmLBt0KZdUkIAgl57FxxZG5EjgRyzkmml1Wx1wIDAQAB;""","3600","mpa / 09-02-2026 / CR 8172159","False","visana.ch"
-"txt","visana.com","""v=spf1 -all""","3600","","False","visana.com"
-"txt","visana.com","""swisssign-check=ErcuYSKjy9Rybxz516TmOLVYgDY""","3600","","False","visana.com"
-"txt","visana.com","""MS=ms35264763""","3600","","False","visana.com"
-"txt","_dmarc.visana.com","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visana.com"
-"txt","visanacom20._domainkey.visana.com","""v=DKIM1; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAo2SqBP2bAjuKfT26lDBS3LAzZHJICRDk8s0LiiNfOLDE/oLUuQYj9cTz5DwJzZvTLFtu8Duv0RSd99Obx7nAOszhqxD1rjDNToajNQPPT0dt/hIkrESejsbmMO0gvNrVQCBRG5+3Vqg24S259LVO7elqPhcHxxs9bdKW/44Ste0RcwQiYGutnd3Lld1ix8FjCFIqPR6y"" ""879F+8KN2ogskWp3wCW7/hMaUQXCb8vLTKqGneq3AgjfTe7kELPUe4ky6b1N8OzHDyYsKt15/IYLGsfaQt0/Reb8lqgpvIOD5CL1I7GXrUvlX+JKHevzbN0pNicTLLNaH+rnTqnOtJzfSQIDAQAB;""","3600","VISANACOM20","False","visana.com"
-"txt","visana.com","""swisssign-check=nCK3StE1J3-h7lU057VAwG1ysJM""","3600","dko / 08.08.2025 / SR6269106","False","visana.com"
-"txt","visana.eu","""v=spf1 -all""","3600","","False","visana.eu"
-"txt","visana.eu","""swisssign-check=GQcmZqBYwKpe84_uL9uxQBL50QI""","3600","","False","visana.eu"
-"txt","_dmarc.visana.eu","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visana.eu"
-"txt","visanaclub.ch","""QuoVadis=885bfb13-68ec-4e6e-b34d-ec0ed419176a""","3600","","False","visanaclub.ch"
-"txt","visanaclub.ch","""v=spf1 -all""","3600","","False","visanaclub.ch"
-"txt","visanaclub.ch","""vrm56xgp47t541kh7k2mllbmjk3cpndh""","3600","","False","visanaclub.ch"
-"txt","visanaclub.ch","""swisssign-check=cSTzVXXl7lULVr6DTQLdgATsd88""","3600","","False","visanaclub.ch"
-"txt","_dmarc.visanaclub.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visanaclub.ch"
-"txt","visanaplus.ch","""QuoVadis=24db9654-031a-4c42-865d-368086c7b9af""","3600","","False","visanaplus.ch"
-"txt","visanaplus.ch","""v=spf1 -all""","3600","","False","visanaplus.ch"
-"txt","visanaplus.ch","""x4b2rd9m4khkhzjvzdxpnx130jqgyw9p""","3600","","False","visanaplus.ch"
-"txt","visanaplus.ch","""swisssign-check=_gWGgoTLFgjZARvf8dkVGiYuM4A""","3600","","False","visanaplus.ch"
-"txt","_dmarc.visanaplus.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","visanaplus.ch"
-"txt","visanatest.ch","""MS=ms46138509""","3600","","False","visanatest.ch"
-"txt","visanatest.ch","""swisssign-check=501935jVOW_nlMAOwlcYmqM0Ww8""","3600","","False","visanatest.ch"
-"txt","visanatest.ch","""v=spf1 mx include:spf.protection.outlook.com -all""","3600","","False","visanatest.ch"
-"txt","viva-care.ch","""QuoVadis=ef41ae42-a49f-46d3-abc2-613a6dbb7060""","3600","","False","viva-care.ch"
-"txt","viva-care.ch","""v=spf1 -all""","3600","","False","viva-care.ch"
-"txt","viva-care.ch","""0jt4l612bdbbf4x8r9cnb5z1qyz19q9h""","3600","","False","viva-care.ch"
-"txt","viva-care.ch","""swisssign-check=GH1mn-hpwj---dLVufAHNhMkj4k""","3600","","False","viva-care.ch"
-"txt","_dmarc.viva-care.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","viva-care.ch"
-"txt","vivacare.ch","""v=spf1 -all""","3600","","False","vivacare.ch"
-"txt","vivacare.ch","""lx29pvx3ynn1hscswslsrtxx16k4g4d6""","3600","","False","vivacare.ch"
-"txt","vivacare.ch","""swisssign-check=QA8FpR9z444t4l-1Wls5VuNbubw""","3600","","False","vivacare.ch"
-"txt","_dmarc.vivacare.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","vivacare.ch"
-"txt","newsletter.vivacare.ch","""v=spf1 ip4:195.190.140.0/24 ip4:88.86.101.0/24 ~all""","3600","","False","vivacare.ch"
-"txt","vivacarech20._domainkey.vivacare.ch","""v=DKIM1; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwWoa/VyOIqlr5UrHT4IjmJW08uKop2o/vb34q8wgXIQ/4nKYFMd5aze3NrtKemLeZPuu8rNPx3KcC/rCv6+sgmqr+NfA2B+8m7R5aVMKCQhdvsUwaU3/g1MFyxYywVWpcaYkzMl6UaR1zFwYmVZImgBpbvzxlEkrEU4CrADXZhSH1HBz8YsCYPSOM7rP4w7QggkbKt6g"" ""7EE8IhmSza7Fgq528G1961WS7kEAizosIX71ZIEBhJX/awMj86Nuf+EvOTFNeV0lFPIEYWROmE8SwbibaX5hYmBwZHCYr4FkawwzSlmL/280NRSQedOmPKhasx7WL2fk6Y5lwnKp4hk5GwIDAQAB;""","3600","VIVACARECH20","False","vivacare.ch"
-"txt","vorsorge-konto.ch","""swisssign-check=X4Zz0A9Zp1PsHi21bgUclWJWBaJT7pKWS5kTOO6C8m""","3600","","False","vorsorge-konto.ch"
-"txt","vorsorge-konto.ch","""3DC4C2A0-7009-4E93-A5A6-21A3C52366CB""","3600","","False","vorsorge-konto.ch"
-"txt","vorsorge-konto.ch","""v=spf1 ip4:81.221.254.0/24 -all""","3600","","False","vorsorge-konto.ch"
-"txt","vsrb.ch","""swisssign-check=nTmNV7Jsojs-eeP0pnpeaWF9Vdk""","3600","mpa / 03-02-2025 / CR 8162469","False","vsrb.ch"
-"txt","vsrb.ch","""v=spf1 mx ip4:185.178.62.11 ip4:185.178.62.12 ip4:185.178.62.22 ip4:185.178.62.23 -all""","900","","False","vsrb.ch"
-"txt","vsrb.ch","""MS=ms47853864""","3600","","False","vsrb.ch"
-"txt","_dmarc.vsrb.ch","""v=DMARC1; p=none; rua=mailto:dmarc_ent@entris-banking.ch; ruf=mailto:dmarc_ent@entris-banking.ch; fo=0:1; adkim=r; aspf=r; pct=100; rf=afrf; ri=86400""","900","","False","vsrb.ch"
-"txt","key01._domainkey.vsrb.ch","""v=DKIM1;p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAupyK9GqT5ue28qwrn28GnUlNGRmIYL2NM+wrY5gFzgeBGsXz2yCTJ3oBRGVgNZV7Vg/amQmhBFHIqYrRZf3HP4tIR3dHJ67jJl5ArVNsaTWlMzE7EJHBnk8D4a3EgVYKsUGOeG5qy6Rtny83gaiHrNFYigjvTTW1fs6KsMaAjQWeftPBDpAQfX9LJBlq0Z72e/bPtu2Af"" ""sSmlCVmP52eAakQ/+ZmObKK8t1qQF5fvvh+5nirC1qQLs4vwKQpXn8F1Y+cOPM6xHj0QgTjtoBEUFn2ww4p0Df8LN/S66YNS/e7R85zNAQl7v6z2V5KqoEN1oyHmmaAc2HpmXCWHmIXZQIDAQAB""","3600","","False","vsrb.ch"
-"txt","key02._domainkey.vsrb.ch","""v=DKIM1;p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3AH0eRwAMyCucnNNR7Y3dSlAqFl3q6HE4fGXw4+lGoeEFqWzOhp6OIftQp+JSc+LFe5jn/vUkN5RVyOmlyhJNnadXq/TEHbl382E+lJLd6ApvOw6rJl94CWUtOaO+joJCW3TC94bR46wA1YhhaVY9kHxqJ1hpFxXpnx76BJ+XG9CXQQpdnEJc0geUI/oW0R7/m74UhfsX"" ""Tyg5eWND+p7CNGZmNwg8SSBgj0FQnzY1qxKe1pNEwB6G5BLNStIZq44GuNEfIFsqYoGfqBRaH4D+ztnM6M0yPeJ9j9/G+cGBP/VveLwtTGFfKh2IjK2+qyy4CMKdFtGaMuxn85pj3BGSwIDAQAB""","3600","","False","vsrb.ch"
-"txt","s1-ix-mx._domainkey.vsrb.ch","""v=DKIM1; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3cPVBF8vx+LduCGn7qeSwC08rPAu+6+27d6DA6jRfbsJIASXh4757StvimfTV1HssQIx8d9aXuhoVkZ2cwlsR4Fknxo5hc3qNVyvz1lai5EB+H+oBCfjpIy82GmxXGBlw7AXbUiEsx4KicnzbIDfQasLmdiV/K+bYlLFVkx/ewu7oo5Y7U3uAY2uBUiVKnenxU9c/ND9"" ""0cmwkZESrD+Pj20Gtaw46IcWImh0mfZiwPl4Zogs2jhC9vI0+h6vicIpPUDyfUCricSsQI34zhi8p3QcXU5ubNVZb9M5ujJNScUXObXxar0byWEDOElRQhJUh07uaEm8th9QtmHSjjEbXQIDAQAB;""","300","","False","vsrb.ch"
-"txt","vsrb.ch","""swisssign-check=7feJEyFMPCWDbwJu6myBtsvuh5A""","3600","twe / 10.02.2026 / CR 8179665","False","vsrb.ch"
-"txt","wwwvisana.ch","""v=spf1 -all""","3600","","False","wwwvisana.ch"
-"txt","wwwvisana.ch","""swisssign-check=OzhKAVvLMdtBmldxzB34LK2KMIY""","3600","","False","wwwvisana.ch"
-"txt","_dmarc.wwwvisana.ch","""v=DMARC1;"" ""p=reject;"" ""rua=mailto:qtzuzn1x@ag.eu.dmarcian.com;"" ""ruf=mailto:qtzuzn1x@fr.eu.dmarcian.com;""","3600","","False","wwwvisana.ch"
-"txt","akp.ch","""v=spf1 mx -all""","3600","","False","akp.ch"
-"txt","akp.ch","""MS=ms27315809""","3600","mpa / 16-07-2024 / CR 8148688","False","akp.ch"
-"txt","_dmarc.akp.ch","""v=DMARC1; p=quarantine; rua=mailto:dmarc_aki@albinkistler.ch; ruf=mailto:dmarc_aki@albinkistler.ch; fo=0:1; adkim=r; aspf=r; pct=100; rf=afrf; ri=86400""","3600","aso / 16.10.2024 / Change #8148691","False","akp.ch"
-"txt","ixcloud.ch","""MS=ms48576203""","3600","mpa / 03-07-2019 / O365 Nessi","False","ixcloud.ch"
-"txt","ixcloud.ch","""v=spf1 mx include:spf.protection.outlook.com -all""","3600","mpa / 03-07-2019 / O365 spf.protection.outlook.com","False","ixcloud.ch"
-"txt","_amazonses.login.ixcloud.ch","""y6WkKb716oQ0P67skcCkXzaOlnWKGgB5+vVGzUxxgas=""","3600","mpa / 18-01-2024 / CR 8141019","False","ixcloud.ch"
-"txt","_amazonses.login.ixcloud.ch","""XRf7bJbP/LN0H0pGJkEJv5ZEn5ep6DsJUYSFQdpHGIg=""","3600","mpa / 18-01-2024 / CR 8141019","False","ixcloud.ch"
-"txt","_amazonses.idp.ixcloud.ch","""ghgz+K+8qJpExkvn2SNGezciR8Cj36wPcQoah60qHTE=""","3600","mpa / 18-01-2024 / CR 8141019","False","ixcloud.ch"
-"txt","_amazonses.idp.ixcloud.ch","""xNx1HkOU8dUSxJoMvrgogWqrVWpNB6wXmEG+cqcQjr8=""","3600","mpa / 18-01-2024 / CR 8141019","False","ixcloud.ch"
-"txt","idp.ixcloud.ch","""v=spf1 include:amazonses.com ~all""","3600","mpa / 18-01-2024 / CR 8141019","False","ixcloud.ch"
-"txt","bellerivebanking.ch","""MS=ms67846318""","3600","mpa / 18.05.2018 / S. Machado","False","bellerivebanking.ch"
-"txt","bellerivebanking.ch","""v=spf1 mx ip4:185.178.62.9 ip4:185.178.62.10 ~all""","900","twe / 17.04.2023 / Inc 7628755","False","bellerivebanking.ch"
-"txt","albinkistler.ch","""MS=DFB25F02412A2E63CAEA8FCC1B68AE256CF0BB25""","3600","","False","albinkistler.ch"
-"txt","albinkistler.ch","""MS=ms87929682""","3600","","False","albinkistler.ch"
-"txt","albinkistler.ch","""MS=ms26130540""","3600","","False","albinkistler.ch"
-"txt","mailjet._66f07e9c.albinkistler.ch","""66f07e9cfe4f517ff74220eeb880963c""","3600","mpa / 01-02-2024 / CR 8146015","False","albinkistler.ch"
-"txt","mailjet._domainkey.albinkistler.ch","""k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDk5UqZDb8u/hiRUZW3kGJFycp7HPMJR+6V7TBb8zA3V7GGeDRSNXV1ftIYUzwljHU5owRy8fOw+X+z4FB4t+S2MdgD1Q9IaVTWCzq8S6cpwuQdBJT0y0alVSjjNFucmNtFGrKodmGWYQ1ewOqmtWM7m72HZT1TI5Xvw8XWCPKKbQIDAQAB""","3600","mpa / 01-02-2024 / CR 8146015","False","albinkistler.ch"
-"txt","vpn2corp.albinkistler.ch","""swisssign-check=o4PBvITg-wdHZL2tORnPThi9oYk""","3600","","False","albinkistler.ch"
-"txt","_dmarc.albinkistler.ch","""v=DMARC1; p=quarantine; rua=mailto:dmarc_aki@albinkistler.ch; ruf=mailto:dmarc_aki@albinkistler.ch; fo=0:1; adkim=r; aspf=r; pct=100; rf=afrf; ri=86400""","3600","aso / 16.10.2024 / Change #8148691","False","albinkistler.ch"
-"txt","albinkistler.ch","""v=spf1 include:_spf.taywa.ch include:spf.mailjet.com include:spf.protection.outlook.com -all""","3600","aso / 16.10.2024 / Change #8148691","False","albinkistler.ch"
-"txt","albinkistler.ch","""atlassian-domain-verification=VJ2RnTswadzaECcS5b2Gm/X27aaHha/ledOpSThPsbhv3fZG1LpSuLBu9x1CdU6Z""","3600","","False","albinkistler.ch"
-"txt","jira.albinkistler.ch","""jira-albinkistler-ch-0c82644f-c433-45cb-a374-448c02091773.saas.atlassian.com""","3600","twe / 08.10.2025 / CR 8172692","False","albinkistler.ch"
-"txt","_ee4c4deb37645a685e1b2c74bc3cc4e7.albinkistler.ch","""jira-albinkistler-ch-0c82644f-c433-45cb-a374-448c02091773.ssl.atlassian.com""","3600","twe / 08.10.2025 / CR 8172692","False","albinkistler.ch"
-"txt","prod.jira.albinkistler.ch","""prod-jira-albinkistler-ch-7e3f8916-3b06-40b3-9091-17bae67c2880.saas.atlassian.com""","3600","twe / 08.10.2025 / CR 8172692","False","albinkistler.ch"
-"txt","_74115307093723cf1de09aeb3cbd37c6.prod.jira.albinkistler.ch","""prod-jira-albinkistler-ch-7e3f8916-3b06-40b3-9091-17bae67c2880.ssl.atlassian.com""","3600","twe / 08.10.2025 / CR 8172692","False","albinkistler.ch"
-"txt","confluence.albinkistler.ch","""confluence-albinkistler-c-96edf883-48b4-4a19-b926-c7d5fb61cc70.saas.atlassian.com""","3600","twe / 08.10.2025 / CR 8172692","False","albinkistler.ch"
-"txt","_829f8345d80dbaee94f4147476f02cba.confluence.albinkistler.ch","""confluence-albinkistler-c-96edf883-48b4-4a19-b926-c7d5fb61cc70.ssl.atlassian.com""","3600","twe / 08.10.2025 / CR 8172692","False","albinkistler.ch"
-"txt","prod.confluence.albinkistler.ch","""prod-confluence-albinkist-c9297888-4b12-4b69-a149-51ae1ce810f6.saas.atlassian.com""","3600","twe / 08.10.2025 / CR 8172692","False","albinkistler.ch"
-"txt","_ccf38c233417bc217357f3bc41b5bb61.prod.confluence.albinkistler.ch","""prod-confluence-albinkist-c9297888-4b12-4b69-a149-51ae1ce810f6.ssl.atlassian.com""","3600","twe / 08.10.2025 / CR 8172692","False","albinkistler.ch"
-"txt","_ee4c4deb37645a685e1b2c74bc3cc4e7.jira.albinkistler.ch","""jira-albinkistler-ch-0c82644f-c433-45cb-a374-448c02091773.ssl.atlassian.com""","3600","twe / 08.10.2025 / CR 8172692","False","albinkistler.ch"
-"txt","albinkistler.ch","""atlassian-sending-domain-verification=bc88db2b-7df6-4b20-a565-8b24deda2426""","3600","mri / 10.10.2025 / Change# 8173623","False","albinkistler.ch"
-"txt","inventx.ch","""v=spf1 a mx ip4:185.178.60.8 ip4:185.178.60.9 include:servers.mcsv.net include:spf.protection.outlook.com include:spf.emailsignatures365.com ip4:93.189.64.0/22 -all""","3600","mri / 26.09.2024 / CR 8132728 / added 185.178.60.8, 185.178.60.9","False","inventx.ch"
-"txt","inventx.ch","""MS=ms18313091""","3600","CR 8021855  / Office 365","False","inventx.ch"
-"txt","inventx.ch","""atlassian-domain-verification=UvIGhO6/JtTlWC2c7KUDi85ILAr3v7M5nvP/Tz5s8J8P8kgWPFKsu/hSjrn7PY/m""","3600","mpa / 27.08.2018 / CR 8045018","False","inventx.ch"
-"txt","inventx.ch","""m+DOOn6uedR/39K8tLPw6bMS6TM4WzSUT0oGdC0w+GQuBuby2J9zKaNFodMRSL/vinIGOp+DH/xD6ZHG4YGhHw==""","3600","Kalender Federation","False","inventx.ch"
-"txt","inventx.ch","""google-site-verification=hb9EJPJcR5UxpW5J4QElzgHZKKc4UcUzoXJOFQM52YQ""","3600","mri / 20.5.19 / Anfrage Pirmin / Change: 8055232","False","inventx.ch"
-"txt","inventx.ch","""d365mktkey=zkwALwMF1urumrWDCh2oFu6fGyfZUMscv6q9gHX2AHgx""","3600","mpa / 28-03-2023 / CR 8129229 MS Dynamics","False","inventx.ch"
-"txt","inventx.ch","""miro-verification=7aaa1578126e487bc2950c6f31b23d1853a598cb""","3600","mpa / 05-07-2023 / Miro Domain Verification","False","inventx.ch"
-"txt","asuid.chatty.inventx.ch","""72C1F77829EBAA6DEABC5802227CC9D007EBEA8B66A471E500DA57C1F21A472A""","3600","mri / 24.11.2023 / CR# 8123887","False","inventx.ch"
-"txt","_amazonses.idp.inventx.ch","""lkIynyw/nG6yo6h/SzfeILI71dxLbQOov6kVMahjbhc=""","3600","mpa / 18-01-2024 / CR 8141019","False","inventx.ch"
-"txt","_amazonses.idp.inventx.ch","""nTPY9lN+8fFfcTHq/nKe9CTSVxr1+wfCqX3Kv7uwsgE=""","3600","mpa / 18-01-2024 / CR 8141019","False","inventx.ch"
-"txt","_dmarc.connect-test.inventx.ch","""v=DMARC1; p=reject;""","3600","mpa / 10-04-2024 / CR 8148364","False","inventx.ch"
-"txt","_dmarc.connect.inventx.ch","""v=DMARC1; p=reject;""","3600","mpa / 10-04-2024 / CR 8148364","False","inventx.ch"
-"txt","splashtop-sso-challenge-20240424.inventx.ch","""350a75f163a1d0c2c18262daa1e12435""","3600","mpa / 24-04-2024 / CR 8149172","False","inventx.ch"
-"txt","inventx.ch","""swisssign-check=EgIMZirf64M2LQSOjdTFK4IXuDA""","3600","mpa / 03-06-2025 / SwissSign Domain Validation","False","inventx.ch"
-"txt","contact.inventx.ch","""d365mktkey=uWxN01eCWANDr4htQWGUxLKnFZjQZWQVBt5AIjzm75Yx""","3600","mpa / 24-11-2022 / MS Dynamics Event Mails (Sieber Peter/Koller Christie)","False","inventx.ch"
-"txt","idp.inventx.ch","""v=spf1 include:amazonses.com ~all""","3600","mpa / 18-01-2024 / CR 8141019","False","inventx.ch"
-"txt","mx1.inventx.ch","""v=spf1 include:inventx.ch ~all""","3600","","False","inventx.ch"
-"txt","mx2.inventx.ch","""v=spf1 include:inventx.ch ~all""","3600","","False","inventx.ch"
-"txt","s1-ix-mx._domainkey.inventx.ch","""v=DKIM1; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu0H40xZFZl7I7zgRRaW50noikp57GU3j3c2U7bzEDRmYNExOeIttGJ1cUWEWgoTRt0Z2Bu1AtipHA7RDdt6c6PQXo1mP4kpPfmQwTOlnuFUyFfPZzrWWI9kGjdzbGBDjwd4CvsCGeaq0jYEnplHRgHjMxSfycZRKFy9vikNUo3rxG15JcB6FWt9F83Ev8FFrmOxsX6j4"" ""GkqJuASdPzYSd2a2q7RU5i1s7yq2ZluQLDqHPYUQLTsYv3/7An0W++PP+4lecySEA5ZYHUrWY13HrCQeykFh+dK3hlL5UtsIOiM7kG0+g6E94J/MO5Y20MdZuidivrkhALJ8HuGf8W5y6QIDAQAB;""","3600","mpa / 14-08-2024 / CR 8132728","False","inventx.ch"
-"txt","splashtop-sso-challenge-230924.inventx.ch","""z8c261f672bf0d9d7488b41e938ed929""","3600","twe / 25.09.2024 / CR 8153510","False","inventx.ch"
-"txt","asuid.api.ixquiz.inventx.ch","""477C3E076E28B7260055B514FA1E5D303B18798B5B944B31306CCFBE724608BD""","3600","mpa / 27-11-2024 / CR 8159325","False","inventx.ch"
-"txt","asuid.ixquiz.inventx.ch","""477C3E076E28B7260055B514FA1E5D303B18798B5B944B31306CCFBE724608BD""","3600","mpa / 27-11-2024 / CR 8159325","False","inventx.ch"
-"txt","inventx.ch","""_1res6gy1kcuoflxwz4lqld97uwuqo7q""","900","mpa / 05-11-2025 / Cert DCV","False","inventx.ch"
-"txt","ac.inventx.ch","""_6rka4132go66zfemceds74d8gkkqqw4""","3600","[IX] Change# 8174636 - [IX] Abacus Zertifikat erneuen - DNS TXT Records für DCV","False","inventx.ch"
-"txt","inventx.ch","""_6rka4132go66zfemceds74d8gkkqqw4""","3600","[IX] Change# 8174636 - [IX] Abacus Zertifikat erneuen - DNS TXT Records für DCV","False","inventx.ch"
-"txt","inventx.ch","""atlassian-domain-verification=ym2spyA2tt9fJFySsTAqWKussskyQh8LpnlyifhlobixNt1ONhjl9WBDf3M8We9X""","3600","sju / 17.12.2025 / CR 8174733","False","inventx.ch"
-"txt","gkb.ch","""facebook-domain-verification=8k3obh3x0ejg6nycbh4n5d9c8vc5et""","3600","CR 8041999  Facebook","False","gkb.ch"
-"txt","gkb.ch","""MS=D58DEA8A0DE070A3723E45B7C38394EA86BC7065""","3600","mpa / 20.03.2018 / CR 8043858","False","gkb.ch"
-"txt","gkb.ch","""d82fbda8-9db0-485b-8fac-534ed12ce08b""","3600","dko / 27.7.2018 / CR# 8050399","False","gkb.ch"
-"txt","gkb.ch","""v=spf1 mx include:spf.umantis.com include:spf.abacuscity.ch include:mailing.eqs.com include:_spf.general.transactional-mail-a.com -all""","3600","mpa / 15.11.2018 / CR 8052839","False","gkb.ch"
-"txt","gkb.ch","""adobe-idp-site-verification=befb41768ef30d808d318bb04c7fe1c75448c64e1775462b79ed2d1afcea804d""","3600","mpa / 09.04.2019 / CR 8057153","False","gkb.ch"
-"txt","gkb.ch","""facebook-domain-verification=fqdznf3jhuzf6a3hdvwudikgi1z2yp""","3600","mpa / 08.10.2019 / CR 8078456","False","gkb.ch"
-"txt","asuid.feedback.gkb.ch","""1D3190AAAAC051E920C7DC92C03675E2E668EB9F45CF30CAE81B4AA04DD89178""","3600","Change# 8103452","False","gkb.ch"
-"txt","survalyzer2._domainkey.gkb.ch","""v=DKIM1; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCyLEF4ub+ESZoHRu5rRsiFsVF0icl8SqwNJQ3n4jv4TN77yKuBPEwjkiJmnhPK/Vq3nurJaH7C1TbMHtblTKVIOqOHP74R5FxUcsPgq65Hxd+3EFEYWHgSN20Rf0EmHNYGk/UJCzGx8SwAWrWQcnJIq7Pl6mwXIoutiveBIKHgTQIDAQAB""","3600","Change# 8103453","False","gkb.ch"
-"txt","asuid.produktinformationen.gkb.ch","""B910BD3B763E8503A41EDBFBBE0E791C5CB493A1114B840A8FE676006193E5BC""","3600","CR 8108075","False","gkb.ch"
-"txt","mailjet._43176c9c.gkb.ch","""43176c9c8b4feff76ede2da54ae20d2d""","3600","CR# 8110364","False","gkb.ch"
-"txt","mailjet._domainkey.gkb.ch","""k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCtSyRqORiBtDQrBhMWblskzhE750QZWi814BwvYxURDkUvM1OHEYcK26sYF6/uF9sQQ2MT4GA+ZGYjMv2hmFv7Yuuk4T+w2JTMndJUvtr+iShw9aObv5B9fxlbIyOcYkvpTbkOe1h5dixFP3+xJCBBdgid7sDDv8j1d++FbPaJTQIDAQAB""","3600","CR# 8110364","False","gkb.ch"
-"txt","_zitadel-challenge.kids-test.gkb.ch","""XPQnrkpUatd01p5Oj24gxUMz8dVklVV3""","3600","twe / 26.07.2023 / 8133236","False","gkb.ch"
-"txt","_zitadel-challenge.kids.gkb.ch","""AbrGa16x82uej6CuMHqo8aNi5pFtNJfJ""","3600","twe / 28.07.2023 / CR 8133236","False","gkb.ch"
-"txt","ses.media.gkb.ch","""v=spf1 include:amazonses.com ~all""","3600","mpa / 06.11.2023 / CR 8142291","False","gkb.ch"
-"txt","maileqs._domainkey.media.gkb.ch","""p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5U8WdItTuDdnbSpeTQ"" ""g/kMhh52BtiVoKG/7YT50CEbcRmxtR1af/JMEIjpH1koYErBSgKOPrgNTDqcIhbX"" ""HrZChe3Tww9mj9cw5Wyz1/isicNnOd6giO5hfV217zt1yR/toCCPgaL36cC5e1ry"" ""UM72KzIdFxgd+SCxeFHss+JCCNR9qiubdOXsHSwT2XJtM4aitLum4Qf3ygt1pSne"" ""Baz7YROEG6uk0/vkzKOXr1CGrpq4YIPUYDbnZE9bpjEB7URNJBxdbNgYcMuv83pK"" ""lfbbslyHGQkvttnSYtLFhnaZzznULtXDBxmowbtTHnDcYq0dZvS03LyrQiMPK/sR"" ""wzhwIDAQAB""","3600","mpa / 06.11.2023 / CR 8142291","False","gkb.ch"
-"txt","gkb.ch","""atlassian-domain-verification=i9dltSyIDwQUSxHJicPIFjFKz9hVLnfyqrirMv70Ah55mlXKYVUcCW0YH3KdWBfu""","86400","mri / 19.12.2023 / CR# 8144352","False","gkb.ch"
-"txt","_dmarc.gkb.ch","""v=DMARC1;p=none""","3600","mpa / 26-02-2024 / CR 8146630","False","gkb.ch"
-"txt","gkb.ch","""atlassian-sending-domain-verification=f2b6c8ef-97a4-427a-8748-b0b7f9f04b53""","3600","twe/ 15.03.2024 / CR 8147671","False","gkb.ch"
-"txt","maileqs._domainkey.gkb.ch","""p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApop09dYhN1bCwwqNAI3A1lxv0E45RRcygSXQzLObwg69"" ""/tEV1djzwiGy6q4EG/uJdZcr99LqGv7vgBz9+hGM0eTWsds6wf3+A+eSq8vz9AwEwPVhJw6zL+IKf3axSbMcWQ/T5Ut+Roehxq"" ""5zFsg6Yw36dVRr5c64V623ulBcMmd1zCxh3NSC44MqAu9VaAbCnxs1YXrTgJpKxoufndsUg5d9dSaMIFBr5WRbdcYgzbYmX6ah"" ""sbgeX0X8x3rSyIrsIYr8X9zMIhDDFQ/HCWTFlOGT5HAF5orvg/2c3U4I5wEtBaZJPwINB+0TPHUYGqtr4eukTXPSpdFIhlNHBXYdOwIDAQAB""","3600","twe / 06.07.2022 / CR 8123718","False","gkb.ch"
-"txt","gkb.ch","""figma-domain-verification=6c70910491e52ea55ece03da109f8b0ba51113afdafa0656664e2f33c255d6ea-1723532814""","3600","mpa / 15-08-2024 / CR 8154196","False","gkb.ch"
-"txt","mx2.gkb.ch","""v=spf1 include:gkb.ch ~all""","3600","twe / 07.08.2024 /  Inc 7723529","False","gkb.ch"
-"txt","mx1.gkb.ch","""v=spf1 include:gkb.ch ~all""","3600","twe / 07.08.2024 /  Inc 7723529","False","gkb.ch"
-"txt","mail.engagement.gkb.ch","""mandrill_verify.9Tpnx15UdDxKgE6ccoubqg""","3600","twe / 08.11.2024 / CR 8157601","False","gkb.ch"
-"txt","mail.engagement.gkb.ch","""v=spf1 include:spf.mandrillapp.com ?all""","300","twe / 08.11.2024 / CR 8157601","False","gkb.ch"
-"txt","_dmarc.mail.engagement.gkb.ch","""v=DMARC1;"" ""p=none;""","3600","twe / 08.11.2024 / CR 8157601","False","gkb.ch"
-"txt","falknis.gkb.ch","""v=spf1 mx -all""","900","mpa / 25-07-2025 / CR 8153099","False","gkb.ch"
-"txt","capricorn.gkb.ch","""v=spf1 include:mailomat.cloud -all""","3600","twe / 24-09-2025 / CR 8172638","False","gkb.ch"
-"txt","mom1._domainkey.capricorn.gkb.ch","""v=DKIM1;k=rsa;"" ""p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsH6/H9XKmkuxgZ3pb+g9lHOs9icZxBpR4wF0OEcBLBWfcxYmCeAXsuM0EMhCpkm4DGPVlLkG82prowIjhFP6K3rFTaxF7XSEVX/ezajewErTFjIEo9NDls4sZc6JvFXR/4WuY9TIIMvD8bYik8cHTzWnTvlgoKwET5NKYRkQVdY"" ""+tAH25UrEvk2hFcC/WHQ1pV60KaHn+p6spOa+Vvo4oWrnBaMZs9y+fz93bOTLG6r5QuIoBgVx3c/wVDKESAwvdkacS9CpBNGmMYos7PDfn/R/8T2WGVfN9GC7dGS7NzLgffQRxzVICHmOPkf0SOmGwSHyjdMiflcW1vVDDVnveQIDAQAB""","3600","","False","gkb.ch"
-"txt","retarusbsi._domainkey.gkb.ch","""v=DKIM1;"" ""h=sha256;"" ""k=rsa;"" ""s=email;"" ""p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDvTdSHoVmogMsNr9JTHGGS7vHPtXBG8iKF6ghkStiZ0ogCqxsH/13Qcdo7awyPpexbc4acLDKGWD04nYjSfR+sx0F5YvwY/35EarusCBKZMlHrflESxsaRULYCLiVVGRyb30NWKiUuRMuttsuI/86fGx4jmjgi7IKsJEO0PWak3wIDAQAB;""","3600","csa / 17-10-2025 / CR 8173872","False","gkb.ch"
-"txt","events.gkb.ch","""v=spf1"" ""include:mailomat.cloud"" ""-all""","3600","twe/27.01.2026/CR 8178901","False","gkb.ch"
-"txt","mom1._domainkey.events.gkb.ch","""v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoTQA7HSAwn5jyi/AU+np0o/mr0TcrRjBB6+A4OkVlaTzpsUCsS52qdzd+xqSGLVCn5me7C9WPST6jKCPcWZ5Hk4EhpzTyO+Nc47DLQVG/yS+QfjtGmiYqJjvsnIt6/Owmrh5quAc86AHoA+tb17zMSaWEhGjF23sWf4pxV+P"" ""u1mWxokBSt1utSGM0UNBX7Xl2JcIQnB43+8e6HhDw9ovmEEC8TJIAs5A+jwkZZMx9bILcw204Mk9xdGEm6GOJOj3js1qh9/Un7YtP1/d3FUcgZlABo8lueXCrlvDcfMBp2LKH4MVJ2HPK95AzhxDRqSbRpnE4CQ+Oey2H+SaHTx7qQIDAQAB""","3600","twe / 30.01.2026 / CR 8178901","False","gkb.ch"
-"txt","grkb.ch","""v=spf1 -all""","3600","mpa / 03-04-2024 / CR 8147520","False","grkb.ch"
+type,name,text,ttl,comment,disabled,zone
+txt,akp.ch,"""MS=ms27315809""",14400,,False,akp.ch
+txt,akp.ch,"""v=spf1 mx -all""",14400,,False,akp.ch
+txt,_dmarc.akp.ch,"""""v=DMARC1""",14400,,False,akp.ch
+txt,albinkistler.ch,"""MS=ms26130540""",14400,,False,albinkistler.ch
+txt,albinkistler.ch,"""MS=ms87929682""",14400,,False,albinkistler.ch
+txt,albinkistler.ch,"""MS=DFB25F02412A2E63CAEA8FCC1B68AE256CF0BB25""",14400,,False,albinkistler.ch
+txt,albinkistler.ch,"""atlassian-domain-verification=VJ2RnTswadzaECcS5b2Gm/X27aaHha/ledOpSThPsbhv3fZG1LpSuLBu9x1CdU6Z""",14400,,False,albinkistler.ch
+txt,albinkistler.ch,"""v=spf1 include:_spf.taywa.ch include:spf.mailjet.com include:spf.protection.outlook.com -all""",14400,,False,albinkistler.ch
+txt,albinkistler.ch,"""atlassian-sending-domain-verification=bc88db2b-7df6-4b20-a565-8b24deda2426""",14400,,False,albinkistler.ch
+txt,mailjet._66f07e9c.albinkistler.ch,"""66f07e9cfe4f517ff74220eeb880963c""",14400,,False,albinkistler.ch
+txt,_dmarc.albinkistler.ch,"""""v=DMARC1""",14400,,False,albinkistler.ch
+txt,mailjet._domainkey.albinkistler.ch,"""""k=rsa""",14400,,False,albinkistler.ch
+txt,_ee4c4deb37645a685e1b2c74bc3cc4e7.albinkistler.ch,"""jira-albinkistler-ch-0c82644f-c433-45cb-a374-448c02091773.ssl.atlassian.com""",14400,,False,albinkistler.ch
+txt,confluence.albinkistler.ch,"""confluence-albinkistler-c-96edf883-48b4-4a19-b926-c7d5fb61cc70.saas.atlassian.com""",14400,,False,albinkistler.ch
+txt,_829f8345d80dbaee94f4147476f02cba.confluence.albinkistler.ch,"""confluence-albinkistler-c-96edf883-48b4-4a19-b926-c7d5fb61cc70.ssl.atlassian.com""",14400,,False,albinkistler.ch
+txt,prod.confluence.albinkistler.ch,"""prod-confluence-albinkist-c9297888-4b12-4b69-a149-51ae1ce810f6.saas.atlassian.com""",14400,,False,albinkistler.ch
+txt,_ccf38c233417bc217357f3bc41b5bb61.prod.confluence.albinkistler.ch,"""prod-confluence-albinkist-c9297888-4b12-4b69-a149-51ae1ce810f6.ssl.atlassian.com""",14400,,False,albinkistler.ch
+txt,jira.albinkistler.ch,"""jira-albinkistler-ch-0c82644f-c433-45cb-a374-448c02091773.saas.atlassian.com""",14400,,False,albinkistler.ch
+txt,_ee4c4deb37645a685e1b2c74bc3cc4e7.jira.albinkistler.ch,"""jira-albinkistler-ch-0c82644f-c433-45cb-a374-448c02091773.ssl.atlassian.com""",14400,,False,albinkistler.ch
+txt,prod.jira.albinkistler.ch,"""prod-jira-albinkistler-ch-7e3f8916-3b06-40b3-9091-17bae67c2880.saas.atlassian.com""",14400,,False,albinkistler.ch
+txt,_74115307093723cf1de09aeb3cbd37c6.prod.jira.albinkistler.ch,"""prod-jira-albinkistler-ch-7e3f8916-3b06-40b3-9091-17bae67c2880.ssl.atlassian.com""",14400,,False,albinkistler.ch
+txt,vpn2corp.albinkistler.ch,"""swisssign-check=o4PBvITg-wdHZL2tORnPThi9oYk""",14400,,False,albinkistler.ch
+txt,autonom-daheim.ch,"""swisssign-check=JGxOdX5HIRmNcKYeyGwG7RJyyt0""",14400,,False,autonom-daheim.ch
+txt,autonom-daheim.ch,"""v=spf1 -all""",14400,,False,autonom-daheim.ch
+txt,autonom-daheim.ch,"""swisssign-check=m3_mf8UAdbF86IWDQTlfaFZA8Ks""",14400,,False,autonom-daheim.ch
+txt,_dmarc.autonom-daheim.ch,"""""v=DMARC1""",14400,,False,autonom-daheim.ch
+txt,www.autonom-daheim.ch,"""swisssign-check=iGU6MRtxxEMnSOHcxe3pChIaILWlLxCVs2RMjrmCBN""",14400,,False,autonom-daheim.ch
+txt,autonome-chez-soi.ch,"""swisssign-check=6jyc6QF6E_WAjf1uak4XUhPv068""",14400,,False,autonome-chez-soi.ch
+txt,autonome-chez-soi.ch,"""v=spf1 -all""",14400,,False,autonome-chez-soi.ch
+txt,autonome-chez-soi.ch,"""swisssign-check=Zjsxs72XHhHLVbIRRj6OZaavZDc""",14400,,False,autonome-chez-soi.ch
+txt,_dmarc.autonome-chez-soi.ch,"""""v=DMARC1""",14400,,False,autonome-chez-soi.ch
+txt,www.autonome-chez-soi.ch,"""swisssign-check=Pt1qIY3bQA9pgboBeXZttArrienATbtBtHXf3WNaRQ""",14400,,False,autonome-chez-soi.ch
+txt,autonomi-a-casa.ch,"""v=spf1 -all""",14400,,False,autonomi-a-casa.ch
+txt,autonomi-a-casa.ch,"""swisssign-check=VH-NSNpFKf2AsTuXwDJGczNXzrQ""",14400,,False,autonomi-a-casa.ch
+txt,autonomi-a-casa.ch,"""swisssign-check=SsG2RNeCnDCug-lfp_dKlNCizSQ""",14400,,False,autonomi-a-casa.ch
+txt,_dmarc.autonomi-a-casa.ch,"""""v=DMARC1""",14400,,False,autonomi-a-casa.ch
+txt,www.autonomi-a-casa.ch,"""swisssign-check=mlemRz1qQ830Sly3HZyTCmcXquzImITdtgse0nTlZp""",14400,,False,autonomi-a-casa.ch
+txt,bellerivebanking.ch,"""v=spf1 mx ip4:185.178.62.9 ip4:185.178.62.10 ~all""",900,,False,bellerivebanking.ch
+txt,bellerivebanking.ch,"""MS=ms67846318""",900,,False,bellerivebanking.ch
+txt,berner-krankenversicherer.ch,"""v=spf1 -all""",14400,,False,berner-krankenversicherer.ch
+txt,berner-krankenversicherer.ch,"""swisssign-check=oYRGSivLLIefpThj3c6gfbQ92EE""",14400,,False,berner-krankenversicherer.ch
+txt,_dmarc.berner-krankenversicherer.ch,"""""v=DMARC1""",14400,,False,berner-krankenversicherer.ch
+txt,visanach20._domainkey.berner-krankenversicherer.ch,"""""v=DKIM1""",14400,,False,berner-krankenversicherer.ch
+txt,bernerkrankenversicherer.ch,"""v=spf1 -all""",14400,,False,bernerkrankenversicherer.ch
+txt,bernerkrankenversicherer.ch,"""swisssign-check=t1DI6X3mymqBUTDww-uIidsdhRA""",14400,,False,bernerkrankenversicherer.ch
+txt,_dmarc.bernerkrankenversicherer.ch,"""""v=DMARC1""",14400,,False,bernerkrankenversicherer.ch
+txt,cliintra.ch,"""swisssign-check=QWGqZ0HXRcH4vBmxk55KdpxNkGA""",14400,,False,cliintra.ch
+txt,directa.ch,"""swisssign-check=Rz4BZUEYEsLTZxWW6N4WBS6m1OE""",86400,,False,directa.ch
+txt,directa.ch,"""v=spf1 -all""",86400,,False,directa.ch
+txt,directa.ch,"""swisssign-check=kMs77N4XuxU83d-vAuXgZWWPHJY""",86400,,False,directa.ch
+txt,_dmarc.directa.ch,"""""v=DMARC1""",86400,,False,directa.ch
+txt,directach20._domainkey.directa.ch,"""""v=DKIM1""",86400,,False,directa.ch
+txt,entris-banking.ch,"""v=spf1 mx ip4:185.178.62.11 ip4:185.178.62.12 ip4:185.178.62.22 ip4:185.178.62.23 include:_spf.psm.knowbe4.com -all""",300,,False,entris-banking.ch
+txt,entris-banking.ch,"""MS=ms92673362""",300,,False,entris-banking.ch
+txt,entris-banking.ch,"""swisssign-check=oLxXMqKk21SvoHAIbdq9fiMVzI8""",300,,False,entris-banking.ch
+txt,entris-banking.ch,"""MS=ms69212723""",300,,False,entris-banking.ch
+txt,entris-banking.ch,"""atlassian-domain-verification=fcBtBC/QiGvmALtwJrJTGtyICW6qJQbIcVl6zcMkRjQeBejabMrJTVX1UxwZHzPo""",300,,False,entris-banking.ch
+txt,entris-banking.ch,"""cisco-ci-domain-verification=5c5383b9667233f4263403025cf2739270a2b7b72fc7bf2f2252f3b169137111""",300,,False,entris-banking.ch
+txt,entris-banking.ch,"""atlassian-sending-domain-verification=22a79264-8eda-40c4-869f-74428d47c2e5""",300,,False,entris-banking.ch
+txt,entris-banking.ch,"""swisssign-check=gA-LB7HnkkR8fi3ST1PoYGWXvRY""",300,,False,entris-banking.ch
+txt,_dmarc.entris-banking.ch,"""""v=DMARC1""",900,,False,entris-banking.ch
+txt,entris-holding.ch._report._dmarc.entris-banking.ch,"""v=DMARC1""",14400,,False,entris-banking.ch
+txt,privor.ch._report._dmarc.entris-banking.ch,"""v=DMARC1""",14400,,False,entris-banking.ch
+txt,vsrb.ch._report._dmarc.entris-banking.ch,"""v=DMARC1""",14400,,False,entris-banking.ch
+txt,key01._domainkey.entris-banking.ch,"""""v=DKIM1""",14400,,False,entris-banking.ch
+txt,key02._domainkey.entris-banking.ch,"""""v=DKIM1""",14400,,False,entris-banking.ch
+txt,s1-ix-mx._domainkey.entris-banking.ch,"""""v=DKIM1""",900,,False,entris-banking.ch
+txt,_gh-entris-banking-ag-e.entris-banking.ch,"""aa151e854d""",14400,,False,entris-banking.ch
+txt,atlassian.entris-banking.ch,"""atlassian-domain-verification=syLgfhBblF4nus3m5i7YbFQp4s4Pw5eABYBiX0oVUZd9PAknvxRRNj5fL636qat8""",14400,,False,entris-banking.ch
+txt,atlassian-domain-verification.entris-banking.ch,"""fcBtBC/QiGvmALtwJrJTGtyICW6qJQbIcVl6zcMkRjQeBejabMrJTVX1UxwZHzPo""",14400,,False,entris-banking.ch
+txt,cisco-ci-domain-verification.entris-banking.ch,"""5c5383b9667233f4263403025cf2739270a2b7b72fc7bf2f2252f3b169137111""",14400,,False,entris-banking.ch
+txt,tbe.entris-banking.ch,"""v=spf1 mx -all""",14400,,False,entris-banking.ch
+txt,tbf.entris-banking.ch,"""v=spf1 mx -all""",14400,,False,entris-banking.ch
+txt,training.entris-banking.ch,"""v=spf1 mx -all""",14400,,False,entris-banking.ch
+txt,entris-finanz.ch,"""v=spf1 mx -all""",14400,,False,entris-finanz.ch
+txt,_dmarc.entris-finanz.ch,"""""v=DMARC1""",14400,,False,entris-finanz.ch
+txt,key01._domainkey.entris-finanz.ch,"""""v=DKIM1""",14400,,False,entris-finanz.ch
+txt,key02._domainkey.entris-finanz.ch,"""""v=DKIM1""",14400,,False,entris-finanz.ch
+txt,entris-holding.ch,"""MS=ms53389411""",900,,False,entris-holding.ch
+txt,entris-holding.ch,"""swisssign-check=IJRT5I1zpubhg4PQ1f1_vw20tvQ""",900,,False,entris-holding.ch
+txt,entris-holding.ch,"""v=spf1 mx ip4:185.178.62.11 ip4:185.178.62.12 ip4:185.178.62.22 ip4:185.178.62.23 -all""",900,,False,entris-holding.ch
+txt,entris-holding.ch,"""swisssign-check=TNW7nkNbcXiPOfaidKOZ4-TacPU""",900,,False,entris-holding.ch
+txt,_dmarc.entris-holding.ch,"""""v=DMARC1""",900,,False,entris-holding.ch
+txt,key01._domainkey.entris-holding.ch,"""""v=DKIM1""",14400,,False,entris-holding.ch
+txt,key02._domainkey.entris-holding.ch,"""""v=DKIM1""",14400,,False,entris-holding.ch
+txt,s1-ix-mx._domainkey.entris-holding.ch,"""""v=DKIM1""",300,,False,entris-holding.ch
+txt,gkb.ch,"""facebook-domain-verification=fqdznf3jhuzf6a3hdvwudikgi1z2yp""",900,,False,gkb.ch
+txt,gkb.ch,"""adobe-idp-site-verification=befb41768ef30d808d318bb04c7fe1c75448c64e1775462b79ed2d1afcea804d""",900,,False,gkb.ch
+txt,gkb.ch,"""v=spf1 mx include:spf.umantis.com include:spf.abacuscity.ch include:mailing.eqs.com include:_spf.general.transactional-mail-a.com -all""",900,,False,gkb.ch
+txt,gkb.ch,"""d82fbda8-9db0-485b-8fac-534ed12ce08b""",900,,False,gkb.ch
+txt,gkb.ch,"""MS=D58DEA8A0DE070A3723E45B7C38394EA86BC7065""",900,,False,gkb.ch
+txt,gkb.ch,"""facebook-domain-verification=8k3obh3x0ejg6nycbh4n5d9c8vc5et""",900,,False,gkb.ch
+txt,gkb.ch,"""atlassian-domain-verification=i9dltSyIDwQUSxHJicPIFjFKz9hVLnfyqrirMv70Ah55mlXKYVUcCW0YH3KdWBfu""",900,,False,gkb.ch
+txt,gkb.ch,"""figma-domain-verification=6c70910491e52ea55ece03da109f8b0ba51113afdafa0656664e2f33c255d6ea-1723532814""",900,,False,gkb.ch
+txt,gkb.ch,"""atlassian-sending-domain-verification=f2b6c8ef-97a4-427a-8748-b0b7f9f04b53""",900,,False,gkb.ch
+txt,mailjet._43176c9c.gkb.ch,"""43176c9c8b4feff76ede2da54ae20d2d""",14400,,False,gkb.ch
+txt,_dmarc.gkb.ch,"""""v=DMARC1""",14400,,False,gkb.ch
+txt,mailjet._domainkey.gkb.ch,"""""k=rsa""",14400,,False,gkb.ch
+txt,retarusbsi._domainkey.gkb.ch,"""""v=DKIM1""",14400,,False,gkb.ch
+txt,survalyzer2._domainkey.gkb.ch,"""""v=DKIM1""",14400,,False,gkb.ch
+txt,capricorn.gkb.ch,"""v=spf1 include:mailomat.cloud -all""",14400,,False,gkb.ch
+txt,mom1._domainkey.capricorn.gkb.ch,"""""v=DKIM1""",14400,,False,gkb.ch
+txt,mail.engagement.gkb.ch,"""v=spf1 include:spf.mandrillapp.com ?all""",300,,False,gkb.ch
+txt,mail.engagement.gkb.ch,"""mandrill_verify.9Tpnx15UdDxKgE6ccoubqg""",300,,False,gkb.ch
+txt,_dmarc.mail.engagement.gkb.ch,"""""v=DMARC1""",14400,,False,gkb.ch
+txt,falknis.gkb.ch,"""v=spf1 mx -all""",900,,False,gkb.ch
+txt,asuid.feedback.gkb.ch,"""1D3190AAAAC051E920C7DC92C03675E2E668EB9F45CF30CAE81B4AA04DD89178""",14400,,False,gkb.ch
+txt,_zitadel-challenge.kids.gkb.ch,"""AbrGa16x82uej6CuMHqo8aNi5pFtNJfJ""",14400,,False,gkb.ch
+txt,_zitadel-challenge.kids-test.gkb.ch,"""XPQnrkpUatd01p5Oj24gxUMz8dVklVV3""",14400,,False,gkb.ch
+txt,mx1.gkb.ch,"""v=spf1 include:gkb.ch ~all""",14400,,False,gkb.ch
+txt,mx2.gkb.ch,"""v=spf1 include:gkb.ch ~all""",14400,,False,gkb.ch
+txt,asuid.produktinformationen.gkb.ch,"""B910BD3B763E8503A41EDBFBBE0E791C5CB493A1114B840A8FE676006193E5BC""",14400,,False,gkb.ch
+txt,gkbtest.ch,"""MS=ms38108497""",14400,,False,gkbtest.ch
+txt,grkb.ch,"""v=spf1 -all""",14400,,False,grkb.ch
+txt,ihfsholding.ch,"""_fdi9nljshjh1zaaxzazbnou1b65dnz9""",60,,False,ihfsholding.ch
+txt,ihfsholding.ch,"""hxxsz68j7ns8l72hr6g6njqrm24wffbw""",60,,False,ihfsholding.ch
+txt,ihfsholding.ch,"""QuoVadis=404bd72d-fa72-473e-99f1-66828ad16cd0""",60,,False,ihfsholding.ch
+txt,ihfsholding.ch,"""MS=ms10034171""",60,,False,ihfsholding.ch
+txt,ihfsholding.ch,"""v=spf1 mx ip4:195.65.190.41 ip4:195.65.190.46 ip4:195.65.190.2 ip4:185.178.61.56 ip4:185.178.61.57 ip4:185.178.61.58 ip4:185.178.61.59 ip4:185.178.61.229 ip4:195.65.190.38 include:spf.protection.outlook.com -all""",60,,False,ihfsholding.ch
+txt,inventx-dev.ch,"""swisssign-check=mxsD8jVibEm8cOyLJA3jWqB15v4""",300,,False,inventx-dev.ch
+txt,inventx.ch,"""miro-verification=7aaa1578126e487bc2950c6f31b23d1853a598cb""",14400,,False,inventx.ch
+txt,inventx.ch,"""d365mktkey=zkwALwMF1urumrWDCh2oFu6fGyfZUMscv6q9gHX2AHgx""",14400,,False,inventx.ch
+txt,inventx.ch,"""google-site-verification=hb9EJPJcR5UxpW5J4QElzgHZKKc4UcUzoXJOFQM52YQ""",14400,,False,inventx.ch
+txt,inventx.ch,"""m+DOOn6uedR/39K8tLPw6bMS6TM4WzSUT0oGdC0w+GQuBuby2J9zKaNFodMRSL/vinIGOp+DH/xD6ZHG4YGhHw==""",14400,,False,inventx.ch
+txt,inventx.ch,"""atlassian-domain-verification=UvIGhO6/JtTlWC2c7KUDi85ILAr3v7M5nvP/Tz5s8J8P8kgWPFKsu/hSjrn7PY/m""",14400,,False,inventx.ch
+txt,inventx.ch,"""MS=ms18313091""",14400,,False,inventx.ch
+txt,inventx.ch,"""v=spf1 a mx ip4:185.178.60.8 ip4:185.178.60.9 include:servers.mcsv.net include:spf.protection.outlook.com include:spf.emailsignatures365.com ip4:93.189.64.0/22 -all""",14400,,False,inventx.ch
+txt,inventx.ch,"""swisssign-check=wDSHgJ_wKgPK92GY1HgZOeIC-og""",14400,,False,inventx.ch
+txt,inventx.ch,"""atlassian-domain-verification=ym2spyA2tt9fJFySsTAqWKussskyQh8LpnlyifhlobixNt1ONhjl9WBDf3M8We9X""",14400,,False,inventx.ch
+txt,s1-ix-mx._domainkey.inventx.ch,"""""v=DKIM1""",14400,,False,inventx.ch
+txt,asuid.chatty.inventx.ch,"""72C1F77829EBAA6DEABC5802227CC9D007EBEA8B66A471E500DA57C1F21A472A""",3600,,False,inventx.ch
+txt,_dmarc.connect.inventx.ch,"""""v=DMARC1""",14400,,False,inventx.ch
+txt,_dmarc.connect-test.inventx.ch,"""""v=DMARC1""",14400,,False,inventx.ch
+txt,asuid.api.ixquiz.inventx.ch,"""477C3E076E28B7260055B514FA1E5D303B18798B5B944B31306CCFBE724608BD""",14400,,False,inventx.ch
+txt,asuid.ixquiz.inventx.ch,"""477C3E076E28B7260055B514FA1E5D303B18798B5B944B31306CCFBE724608BD""",14400,,False,inventx.ch
+txt,mx1.inventx.ch,"""v=spf1 include:inventx.ch ~all""",14400,,False,inventx.ch
+txt,mx2.inventx.ch,"""v=spf1 include:inventx.ch ~all""",14400,,False,inventx.ch
+txt,splashtop-sso-challenge-20240424.inventx.ch,"""350a75f163a1d0c2c18262daa1e12435""",14400,,False,inventx.ch
+txt,splashtop-sso-challenge-230924.inventx.ch,"""z8c261f672bf0d9d7488b41e938ed929""",14400,,False,inventx.ch
+txt,vpn2corp-test.inventx.ch,"""_6fe4zkutghzb57d3oq2knjjxl43p262""",14400,,False,inventx.ch
+txt,www.vpn2corp-test.inventx.ch,"""_8qx1bhubgmkswq1rf84mqshqmdryhrn""",14400,,False,inventx.ch
+txt,\@.ixacademy.ch,"""MS=ms80214337""",14400,,False,ixacademy.ch
+txt,ixcloud.ch,"""v=spf1 mx -all""",3600,,False,ixcloud.ch
+txt,ixcloud.ch,"""MS=ms48576203""",3600,,False,ixcloud.ch
+txt,_amazonses.login.ixcloud.ch,"""XRf7bJbP/LN0H0pGJkEJv5ZEn5ep6DsJUYSFQdpHGIg=""",3600,,False,ixcloud.ch
+txt,_amazonses.login.ixcloud.ch,"""y6WkKb716oQ0P67skcCkXzaOlnWKGgB5+vVGzUxxgas=""",3600,,False,ixcloud.ch
+txt,orchestrator-test.ixcloud.ch,"""_dh14h5b119lsje1jno8121rxvizq5q3""",3600,,False,ixcloud.ch
+txt,web.db4kids.ixofp.ch,"""m5ccbgnl9nlqttz2vc1hmgyq2jh8t7jl""",14400,,False,ixofp.ch
+txt,ixshared.ch,"""MS=ms16088212""",3600,,False,ixshared.ch
+txt,kpt-dev.ch,"""rgmphqgml0wk30kmvytd75pyl2w6sx9z""",28800,,False,kpt-dev.ch
+txt,kpt-dev.ch,"""70py0l0bzfgbsxsvl8bwnj49n7f0jymd""",28800,,False,kpt-dev.ch
+txt,_acme-challenge.wp-extern.kpt-tst.ch,"""8X9Zh9-aU8mgw4iGAq5GVuZFwusUCShjdwAaJichWcc""",28800,,False,kpt-tst.ch
+txt,krankenversicherung-visana.ch,"""83951qbp1syqxs8gvwqhmlfy0rw1l3gv""",14400,,False,krankenversicherung-visana.ch
+txt,krankenversicherung-visana.ch,"""v=spf1 -all""",14400,,False,krankenversicherung-visana.ch
+txt,krankenversicherung-visana.ch,"""swisssign-check=ASWHfs_AotG3HAcw8-lXbGTrCeo""",14400,,False,krankenversicherung-visana.ch
+txt,_dmarc.krankenversicherung-visana.ch,"""""v=DMARC1""",14400,,False,krankenversicherung-visana.ch
+txt,my-visana.ch,"""c3wnvxcbsqpfz8k6kvgmd2m72pr75922""",14400,,False,my-visana.ch
+txt,my-visana.ch,"""v=spf1 -all""",14400,,False,my-visana.ch
+txt,my-visana.ch,"""swisssign-check=Ey9d6-lH6dZ7MnfzcYG3mOCUz7U""",14400,,False,my-visana.ch
+txt,_dmarc.my-visana.ch,"""""v=DMARC1""",14400,,False,my-visana.ch
+txt,mypoints.ch,"""swisssign-check=yuTvPqmjJEBIR6pX0MQXOLot5pE""",14400,,False,mypoints.ch
+txt,myvisana.ch,"""have-i-been-pwned-verification=dweb_kzxtgwlqgrpa6ykpdvw3rnsu""",14400,,False,myvisana.ch
+txt,myvisana.ch,"""h2yf2xcc1cmf6p5bh0kgyp2r7khxy1yx""",14400,,False,myvisana.ch
+txt,myvisana.ch,"""v=spf1 ip4:217.192.234.114 ip4:46.140.160.213 ip4:185.178.62.5 ip4:185.178.62.6 ip4:185.178.62.16 ip4:185.178.62.17 -all""",14400,,False,myvisana.ch
+txt,myvisana.ch,"""swisssign-check=2omVusH0RawV4L2ojPoq4jhc6AE""",14400,,False,myvisana.ch
+txt,_dmarc.myvisana.ch,"""""v=DMARC1""",14400,,False,myvisana.ch
+txt,myvisana.ch._domainkey.myvisana.ch,"""""v=DKIM1""",14400,,False,myvisana.ch
+txt,myvisanach22._domainkey.myvisana.ch,"""""v=DKIM1""",14400,,False,myvisana.ch
+txt,s1-ix-mx._domainkey.myvisana.ch,"""""v=DKIM1""",14400,,False,myvisana.ch
+txt,pbihag.ch,"""v=spf1 mx ip4:195.65.190.41 ip4:195.65.190.46 ip4:195.65.190.2 ip4:185.178.61.56 ip4:185.178.61.57 ip4:185.178.61.58 ip4:185.178.61.59 ip4:185.178.61.229 ip4:195.65.190.38 include:spf.protection.outlook.com -all""",14400,,False,pbihag.ch
+txt,pbihag.ch,"""f38lnhr5kr48muqe2f3ef75405""",14400,,False,pbihag.ch
+txt,pbihag.ch,"""QuoVadis=990c16f5-6aba-4a63-82a8-7cdadb74e9fe""",14400,,False,pbihag.ch
+txt,pbihag.ch,"""EB7CB725-C3F2-4F30-B8ED-C7679BDD3F54""",14400,,False,pbihag.ch
+txt,pbihag.ch,"""MS=ms37044480""",14400,,False,pbihag.ch
+txt,pbihag.ch,"""MS=DB66A6A2BE7E6555AF6F14B422B1134BDED4FC82""",14400,,False,pbihag.ch
+txt,pbihag.ch,"""kfeqcifgdl5sv3pt4jdmv5j5fr""",14400,,False,pbihag.ch
+txt,pbihag.ch,"""_hy4jorapzxxxx2onmchi0qh6fyer6ug""",14400,,False,pbihag.ch
+txt,pbihag.ch,"""QuoVadis=33b1db9a-0b63-4f9a-9fa0-4f4639ab4ead""",14400,,False,pbihag.ch
+txt,pbihag.ch,"""66mw2wjxh7mmdkjjzz1p8cm3f73y1r1z""",14400,,False,pbihag.ch
+txt,_dmarc.pbihag.ch,"""""v=DMARC1""",14400,,False,pbihag.ch
+txt,privor.ch,"""MS=ms50700992""",900,,False,privor.ch
+txt,privor.ch,"""v=spf1 mx ip4:185.178.62.11 ip4:185.178.62.12 ip4:185.178.62.22 ip4:185.178.62.23 -all""",900,,False,privor.ch
+txt,privor.ch,"""swisssign-check=QF2OEAyuEu3X5SLb9Xj7uplc15c""",900,,False,privor.ch
+txt,privor.ch,"""swisssign-check=1UZabhKmz5tuIXoHqRYd2Seqv3g""",900,,False,privor.ch
+txt,_dmarc.privor.ch,"""""v=DMARC1""",900,,False,privor.ch
+txt,key01._domainkey.privor.ch,"""""v=DKIM1""",14400,,False,privor.ch
+txt,key02._domainkey.privor.ch,"""""v=DKIM1""",14400,,False,privor.ch
+txt,s1-ix-mx._domainkey.privor.ch,"""""v=DKIM1""",300,,False,privor.ch
+txt,proventx.ch,"""v=spf1 ip4:83.144.233.114 ip4:46.140.249.250 ip4:146.185.0.91 ip4:146.185.0.90 ip4:217.193.142.10 ip4:217.193.142.13 ip4:46.140.115.222 include:spf.protection.outlook.com include:spf.emailsignatures365.com -all""",3600,,False,proventx.ch
+txt,proventx.ch,"""MS=ms55940773""",3600,,False,proventx.ch
+txt,pvs-visana.ch,"""google-site-verification=E8puX0MnGeFfhdYLsVnW3FNnmMWHUfaKDREiJCBut-w""",14400,,False,pvs-visana.ch
+txt,pvs-visana.ch,"""v=spf1"" ""-all""",14400,,False,pvs-visana.ch
+txt,pvs-visana.ch,"""swisssign-check=mTA8bo8aXjJGVlhoXmhr1LgPmiI""",14400,,False,pvs-visana.ch
+txt,_dmarc.romontschia.ch,"""""v=DMARC1""",14400,,False,romontschia.ch
+txt,sana-24.ch,"""l1zk8bxqnks09d8p5x7snm6rk5v9s5pf""",14400,,False,sana-24.ch
+txt,sana-24.ch,"""v=spf1 -all""",14400,,False,sana-24.ch
+txt,sana-24.ch,"""swisssign-check=WSWaYY8NRYo92DURV8IGefHglpI""",14400,,False,sana-24.ch
+txt,_dmarc.sana-24.ch,"""""v=DMARC1""",14400,,False,sana-24.ch
+txt,sana24.ch,"""ktxfzr8zyfct1t03z0jv2hvhyvztr2wh""",14400,,False,sana24.ch
+txt,sana24.ch,"""v=spf1 -all""",14400,,False,sana24.ch
+txt,sana24.ch,"""swisssign-check=kGQcuUG4ylYAqUd1Exa3pttMRd4""",14400,,False,sana24.ch
+txt,_dmarc.sana24.ch,"""""v=DMARC1""",14400,,False,sana24.ch
+txt,sana24ch20._domainkey.sana24.ch,"""""v=DKIM1""",14400,,False,sana24.ch
+txt,newsletter.sana24.ch,"""v=spf1 ip4:195.190.140.0/24 ip4:88.86.101.0/24 -all""",14400,,False,sana24.ch
+txt,stratusworks.ch,"""v=spf1 include:spf.protection.outlook.com -all""",3600,,False,stratusworks.ch
+txt,swissic.ch,"""MS=ms99323573""",900,,False,swissic.ch
+txt,swissic.ch,"""MS=ms35865995""",900,,False,swissic.ch
+txt,swissic.ch,"""_4zfxy8yd0me7rez8wn1wdlutxy5m6mz""",900,,False,swissic.ch
+txt,iamtst.swissic.ch,"""v=spf1 include:spf.protection.outlook.com -all""",14400,,False,swissic.ch
+txt,swissic.net,"""MS=ms92716862""",14400,,False,swissic.net
+txt,visana-ag.ch,"""jd11q5l4z9s1g3dv6lyv66lv6y9g07kb""",14400,,False,visana-ag.ch
+txt,visana-ag.ch,"""v=spf1 -all""",14400,,False,visana-ag.ch
+txt,visana-ag.ch,"""swisssign-check=77UdyUNJ7aFBFSezO5NiyP0ecD0""",14400,,False,visana-ag.ch
+txt,_dmarc.visana-ag.ch,"""""v=DMARC1""",14400,,False,visana-ag.ch
+txt,visana-ag.com,"""swisssign-check=NGk0vPaAG6yMvMrMbHUN4aTahv8""",14400,,False,visana-ag.com
+txt,visana-ag.com,"""v=spf1 -all""",14400,,False,visana-ag.com
+txt,visana-ag.com,"""swisssign-check=yKNZNN0vOwk0q8kF9JeLX_-if48""",14400,,False,visana-ag.com
+txt,_dmarc.visana-ag.com,"""""v=DMARC1""",14400,,False,visana-ag.com
+txt,visana-club.ch,"""bggch0jmj2554j1ytzwqvr3xvv1g6tr7""",14400,,False,visana-club.ch
+txt,visana-club.ch,"""v=spf1 -all""",14400,,False,visana-club.ch
+txt,visana-club.ch,"""swisssign-check=nOKYczlGTeDrCaH_UFS0T0WXkmg""",14400,,False,visana-club.ch
+txt,_dmarc.visana-club.ch,"""""v=DMARC1""",14400,,False,visana-club.ch
+txt,visana-finanz.ch,"""swisssign-check=nRLQklTbmYJzBNO1ZhZz1sjMV1Y""",14400,,False,visana-finanz.ch
+txt,visana-finanz.ch,"""9zkt9cq97j72zgl7jpsg5786yp194z30""",14400,,False,visana-finanz.ch
+txt,visana-finanz.ch,"""v=spf1 -all""",14400,,False,visana-finanz.ch
+txt,visana-finanz.ch,"""QuoVadis=0572f1f3-9369-4299-87e3-7bb891d38f80""",14400,,False,visana-finanz.ch
+txt,_dmarc.visana-finanz.ch,"""""v=DMARC1""",14400,,False,visana-finanz.ch
+txt,visana-plus.ch,"""swisssign-check=JYEsZkVu4MpqqdouqLirCctaXrw""",14400,,False,visana-plus.ch
+txt,visana-plus.ch,"""p7p7w5h0f7v2yq6brgn2g9bvkpmhs54f""",14400,,False,visana-plus.ch
+txt,visana-plus.ch,"""v=spf1 -all""",14400,,False,visana-plus.ch
+txt,visana-plus.ch,"""QuoVadis=c68ebc48-fde6-4bda-aca7-eeb93be95956""",14400,,False,visana-plus.ch
+txt,_dmarc.visana-plus.ch,"""""v=DMARC1""",14400,,False,visana-plus.ch
+txt,visana-services.com,"""swisssign-check=2bdnltLRIlm0MB10hI0sXdOfwxs""",14400,,False,visana-services.com
+txt,visana-services.com,"""v=spf1 -all""",14400,,False,visana-services.com
+txt,_dmarc.visana-services.com,"""""v=DMARC1""",14400,,False,visana-services.com
+txt,visana-versicherung.ch,"""swisssign-check=gQr3SZWkYaf-FnkcoC1KdODwttI""",14400,,False,visana-versicherung.ch
+txt,visana-versicherung.ch,"""hcdm54yw8k7j6924qc89sg6nc48p8lff""",14400,,False,visana-versicherung.ch
+txt,visana-versicherung.ch,"""v=spf1 -all""",14400,,False,visana-versicherung.ch
+txt,visana-versicherung.ch,"""QuoVadis=6486f8dd-cd03-45be-8a0a-56da44689494""",14400,,False,visana-versicherung.ch
+txt,_dmarc.visana-versicherung.ch,"""""v=DMARC1""",14400,,False,visana-versicherung.ch
+txt,visana-versicherungen.ch,"""swisssign-check=UfA-w3QHmPG4R8QPzS6d54QVwAU""",14400,,False,visana-versicherungen.ch
+txt,visana-versicherungen.ch,"""r440s5pll177kkcxhfdy5j37kpwhkqzm""",14400,,False,visana-versicherungen.ch
+txt,visana-versicherungen.ch,"""v=spf1 -all""",14400,,False,visana-versicherungen.ch
+txt,visana-versicherungen.ch,"""QuoVadis=097a928b-c637-4164-926c-cd7ee14066c0""",14400,,False,visana-versicherungen.ch
+txt,_dmarc.visana-versicherungen.ch,"""""v=DMARC1""",14400,,False,visana-versicherungen.ch
+txt,visana.ch,"""swisssign-check=Kc6HGc0q1zYxARBuQ24WbbuTvTM""",3600,,False,visana.ch
+txt,visana.ch,"""cisco-ci-domain-verification=a774008f9970c52486b6ef6450282547d3498ec529a0bf3b4e88945e926499b""",3600,,False,visana.ch
+txt,visana.ch,"""atlassian-domain-verification=uTJYa8siWyb4rYsHYKygnEbgkArcSZdBC1DNM8gb/aYc3xobcNv1KBe1nDe9QbCU""",3600,,False,visana.ch
+txt,visana.ch,"""mt266w9csxt893tl27hwjy5xzpd1xgf0""",3600,,False,visana.ch
+txt,visana.ch,"""MS=ms17131044""",3600,,False,visana.ch
+txt,visana.ch,"""MS=761BEC46ED57D8A87687CE442E808B17057C5629""",3600,,False,visana.ch
+txt,visana.ch,"""facebook-domain-verification=w2cw6yyr995wl02m9jmf6454suf8kz""",3600,,False,visana.ch
+txt,visana.ch,"""v=spf1 a:smtp.pub.begasoft.ch ip4:217.192.234.114 ip4:46.140.160.213 ip4:185.178.62.5 ip4:185.178.62.6 ip4:185.178.62.16 ip4:185.178.62.17 ip4:185.178.62.24 ip4:185.178.62.25 include:spf-de.emailsignatures365.com -all""",3600,,False,visana.ch
+txt,visana.ch,"""google-site-verification=Ce45Sijp1YtCXQoo2rllPSNJKlCw5Fi89J2-cSzoe7I""",3600,,False,visana.ch
+txt,visana.ch,"""swisssign-check=l2bTAbUUL7qQeyiUaWS3g__8XzI""",3600,,False,visana.ch
+txt,default._bimi.visana.ch,"""""v=BIMI1""",14400,,False,visana.ch
+txt,_dmarc.visana.ch,"""""v=DMARC1""",14400,,False,visana.ch
+txt,visana.ch._domainkey.visana.ch,"""""v=DKIM1""",14400,,False,visana.ch
+txt,s1-ix-mx._domainkey.visana.ch,"""""v=DKIM1""",14400,,False,visana.ch
+txt,_smtp._tls.visana.ch,"""""v=TLSRPTv1""",14400,,False,visana.ch
+txt,dap.visana.ch,"""google-site-verification=GcZ5XO_WpYezBHcvNzbZHd2nNQM-h7LdaHgk4RxsJGU""",14400,,False,visana.ch
+txt,entry.visana.ch,"""google-site-verification=Hf1hOp_zgnEwU1cycx9C6E3jWQ1fFXGEvQRDdtqaspI""",14400,,False,visana.ch
+txt,asuid.quiz.visana.ch,"""117879CE78B0FC4A7F522C35536D93A4C91CF6B3D7BBB98AC081D3D5782C1EFD""",14400,,False,visana.ch
+txt,visana.com,"""MS=ms35264763""",14400,,False,visana.com
+txt,visana.com,"""v=spf1 -all""",14400,,False,visana.com
+txt,visana.com,"""swisssign-check=nCK3StE1J3-h7lU057VAwG1ysJM""",14400,,False,visana.com
+txt,visana.com,"""swisssign-check=ONxGNtrilbQAEn8minSBr3oelnU""",14400,,False,visana.com
+txt,_dmarc.visana.com,"""""v=DMARC1""",14400,,False,visana.com
+txt,visanacom20._domainkey.visana.com,"""""v=DKIM1""",14400,,False,visana.com
+txt,visana.eu,"""swisssign-check=GQcmZqBYwKpe84_uL9uxQBL50QI""",14400,,False,visana.eu
+txt,visana.eu,"""v=spf1 -all""",14400,,False,visana.eu
+txt,_dmarc.visana.eu,"""""v=DMARC1""",14400,,False,visana.eu
+txt,visanaclub.ch,"""swisssign-check=cSTzVXXl7lULVr6DTQLdgATsd88""",14400,,False,visanaclub.ch
+txt,visanaclub.ch,"""vrm56xgp47t541kh7k2mllbmjk3cpndh""",14400,,False,visanaclub.ch
+txt,visanaclub.ch,"""v=spf1 -all""",14400,,False,visanaclub.ch
+txt,visanaclub.ch,"""QuoVadis=885bfb13-68ec-4e6e-b34d-ec0ed419176a""",14400,,False,visanaclub.ch
+txt,_dmarc.visanaclub.ch,"""""v=DMARC1""",14400,,False,visanaclub.ch
+txt,visanaplus.ch,"""swisssign-check=_gWGgoTLFgjZARvf8dkVGiYuM4A""",14400,,False,visanaplus.ch
+txt,visanaplus.ch,"""x4b2rd9m4khkhzjvzdxpnx130jqgyw9p""",14400,,False,visanaplus.ch
+txt,visanaplus.ch,"""v=spf1 -all""",14400,,False,visanaplus.ch
+txt,visanaplus.ch,"""QuoVadis=24db9654-031a-4c42-865d-368086c7b9af""",14400,,False,visanaplus.ch
+txt,_dmarc.visanaplus.ch,"""""v=DMARC1""",14400,,False,visanaplus.ch
+txt,visanatest.ch,"""v=spf1 mx include:spf.protection.outlook.com -all""",14400,,False,visanatest.ch
+txt,visanatest.ch,"""MS=ms46138509""",14400,,False,visanatest.ch
+txt,visanatest.ch,"""swisssign-check=LqCJhtf87_dLF-eGWZBVXuOEqWk""",14400,,False,visanatest.ch
+txt,viva-care.ch,"""swisssign-check=GH1mn-hpwj---dLVufAHNhMkj4k""",14400,,False,viva-care.ch
+txt,viva-care.ch,"""0jt4l612bdbbf4x8r9cnb5z1qyz19q9h""",14400,,False,viva-care.ch
+txt,viva-care.ch,"""v=spf1 -all""",14400,,False,viva-care.ch
+txt,viva-care.ch,"""QuoVadis=ef41ae42-a49f-46d3-abc2-613a6dbb7060""",14400,,False,viva-care.ch
+txt,_dmarc.viva-care.ch,"""""v=DMARC1""",14400,,False,viva-care.ch
+txt,vivacare.ch,"""lx29pvx3ynn1hscswslsrtxx16k4g4d6""",14400,,False,vivacare.ch
+txt,vivacare.ch,"""v=spf1 -all""",14400,,False,vivacare.ch
+txt,vivacare.ch,"""swisssign-check=1JHlu79BrY6UoNneQ2t8MxXpOsU""",14400,,False,vivacare.ch
+txt,_dmarc.vivacare.ch,"""""v=DMARC1""",14400,,False,vivacare.ch
+txt,vivacarech20._domainkey.vivacare.ch,"""""v=DKIM1""",14400,,False,vivacare.ch
+txt,newsletter.vivacare.ch,"""v=spf1 ip4:195.190.140.0/24 ip4:88.86.101.0/24 ~all""",14400,,False,vivacare.ch
+txt,vorsorge-konto.ch,"""v=spf1 ip4:81.221.254.0/24 -all""",14400,,False,vorsorge-konto.ch
+txt,vorsorge-konto.ch,"""3DC4C2A0-7009-4E93-A5A6-21A3C52366CB""",14400,,False,vorsorge-konto.ch
+txt,vorsorge-konto.ch,"""swisssign-check=X4Zz0A9Zp1PsHi21bgUclWJWBaJT7pKWS5kTOO6C8m""",14400,,False,vorsorge-konto.ch
+txt,vsrb.ch,"""MS=ms47853864""",900,,False,vsrb.ch
+txt,vsrb.ch,"""v=spf1 mx ip4:185.178.62.11 ip4:185.178.62.12 ip4:185.178.62.22 ip4:185.178.62.23 -all""",900,,False,vsrb.ch
+txt,vsrb.ch,"""swisssign-check=nTmNV7Jsojs-eeP0pnpeaWF9Vdk""",900,,False,vsrb.ch
+txt,vsrb.ch,"""swisssign-check=7feJEyFMPCWDbwJu6myBtsvuh5A""",900,,False,vsrb.ch
+txt,_dmarc.vsrb.ch,"""""v=DMARC1""",900,,False,vsrb.ch
+txt,key01._domainkey.vsrb.ch,"""""v=DKIM1""",14400,,False,vsrb.ch
+txt,key02._domainkey.vsrb.ch,"""""v=DKIM1""",14400,,False,vsrb.ch
+txt,s1-ix-mx._domainkey.vsrb.ch,"""""v=DKIM1""",300,,False,vsrb.ch
+txt,wwwvisana.ch,"""swisssign-check=OzhKAVvLMdtBmldxzB34LK2KMIY""",14400,,False,wwwvisana.ch
+txt,wwwvisana.ch,"""v=spf1 -all""",14400,,False,wwwvisana.ch
+txt,_dmarc.wwwvisana.ch,"""""v=DMARC1""",14400,,False,wwwvisana.ch
