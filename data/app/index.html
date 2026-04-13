@@ -194,6 +194,7 @@
             <h3 id="modalTitle" style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.5rem;">Add DNS Record</h3>
             <form id="recordForm" onsubmit="saveRecord(event)">
                 <input type="hidden" id="recOriginalValue">
+                <input type="hidden" id="recOriginalName">
                 
                 <div class="form-group">
                     <label>Record Type</label>
@@ -558,6 +559,12 @@
                     const cfRec = r.cfRecord;
                     let shortName = rec.name;
                     const type = rec.type.toLowerCase();
+
+                    const removeCsv = getRemoveCsvRow(rec.type, shortName, zoneName, rec.value);
+                    const remSplit = removeCsv.indexOf('\n');
+                    if (!groupedRemoves[type]) groupedRemoves[type] = { header: removeCsv.slice(0, remSplit), rows: [] };
+                    groupedRemoves[type].rows.push(removeCsv.slice(remSplit + 1));
+
                     const csvData = buildCsvRow(rec.type, shortName, rec.value, cfRec.ttl, rec.disabled, zoneName, rec.priority, rec.weight, rec.port);
                     const splitIdx = csvData.indexOf('\n');
                     if (!groupedUpdates[type]) groupedUpdates[type] = { header: csvData.slice(0, splitIdx), rows: [] };
@@ -930,6 +937,7 @@
             document.getElementById('modalTitle').textContent = 'Add DNS Record';
             document.getElementById('recordForm').reset();
             document.getElementById('recOriginalValue').value = '';
+            document.getElementById('recOriginalName').value = '';
             document.getElementById('recType').disabled = false;
             handleTypeChange();
             document.getElementById('recordModal').classList.add('active');
@@ -1083,6 +1091,7 @@
             typeSelect.disabled = true; // Don't allow changing type on edit
             
             document.getElementById('recName').value = rec.name;
+            document.getElementById('recOriginalName').value = rec.name;
             document.getElementById('recValue').value = rec.value.replace(/^"|"$/g, ''); // strip quotes for UI
             document.getElementById('recOriginalValue').value = rec.value;
             document.getElementById('recTtl').value = rec.ttl;
@@ -1103,28 +1112,32 @@
         function buildCsvRow(type, name, value, ttl, disabled, zone, priority, weight, port) {
             const t = type.toLowerCase();
             const d = disabled ? 'True' : 'False';
-            // Safe escape quotes for TXT
-            const v = t === 'txt' ? `"${value.replace(/"/g, '""')}"` : value;
+            let v = value;
+            if (t === 'txt') {
+                let txtVal = value;
+                if (!txtVal.startsWith('"')) txtVal = '"' + txtVal;
+                if (!txtVal.endsWith('"')) txtVal = txtVal + '"';
+                v = `"${txtVal.replace(/"/g, '""')}"`;
+            }
             
-            if (t === 'a' || t === 'aaaa') return `type,name,address,ttl,comment,disabled,zone\n${t},${name},${v},${ttl},,${d},${zone}`;
-            if (t === 'cname') return `type,name,canonical,ttl,comment,disabled,zone\n${t},${name},${v},${ttl},,${d},${zone}`;
-            if (t === 'txt') return `type,name,text,ttl,comment,disabled,zone\n${t},${name},${v},${ttl},,${d},${zone}`;
+            if (t === 'a' || t === 'aaaa') return `type,zone,name,address,ttl,comment,disabled\n${t},${zone},${name},${v},${ttl},,${d}`;
+            if (t === 'cname') return `type,zone,name,canonical,ttl,comment,disabled\n${t},${zone},${name},${v},${ttl},,${d}`;
+            if (t === 'txt') return `type,zone,name,text,ttl,comment,disabled\n${t},${zone},${name},${v},${ttl},,${d}`;
             if (t === 'mx') return `type,zone,name,mail_exchanger,priority,ttl,disabled\n${t},${zone},${name},${v},${priority},${ttl},${d}`;
-            if (t === 'srv') return `type,name,target,port,priority,weight,ttl,disabled,zone\n${t},${name},${v},${port},${priority},${weight},${ttl},${d},${zone}`;
+            if (t === 'srv') return `type,zone,name,target,port,priority,weight,ttl,disabled\n${t},${zone},${name},${v},${port},${priority},${weight},${ttl},${d}`;
             
             // ns, ptr, caa, etc.
-            return `type,name,content,ttl,disabled,zone\n${t},${name},${v},${ttl},${d},${zone}`;
+            return `type,zone,name,content,ttl,disabled\n${t},${zone},${name},${v},${ttl},${d}`;
         }
 
         function getRemoveCsvRow(type, name, zone, originalValue) {
             const t = type.toLowerCase();
-            // Best effort removal by matching name and zone, maybe value too if we have it
-            if (t === 'a' || t === 'aaaa') return `type,name,address,zone\n${t},${name},${originalValue},${zone}`;
-            if (t === 'cname') return `type,name,canonical,zone\n${t},${name},${originalValue},${zone}`;
-            if (t === 'txt') return `type,name,text,zone\n${t},${name},"${originalValue.replace(/"/g, '""')}",${zone}`;
-            if (t === 'mx') return `type,name,mail_exchanger,zone\n${t},${name},${originalValue},${zone}`;
-            if (t === 'srv') return `type,name,target,zone\n${t},${name},${originalValue},${zone}`;
-            return `type,name,content,zone\n${t},${name},${originalValue},${zone}`;
+            if (t === 'a' || t === 'aaaa') return `type,zone,name,address\n${t},${zone},${name},${originalValue}`;
+            if (t === 'cname') return `type,zone,name,canonical\n${t},${zone},${name},${originalValue}`;
+            if (t === 'txt') return `type,zone,name,text\n${t},${zone},${name},"${originalValue.replace(/"/g, '""')}"`;
+            if (t === 'mx') return `type,zone,name,mail_exchanger\n${t},${zone},${name},${originalValue}`;
+            if (t === 'srv') return `type,zone,name,target\n${t},${zone},${name},${originalValue}`;
+            return `type,zone,name,content\n${t},${zone},${name},${originalValue}`;
         }
 
         async function saveRecord(e) {
@@ -1139,6 +1152,8 @@
             const type = document.getElementById('recType').value;
             const name = document.getElementById('recName').value;
             const value = document.getElementById('recValue').value;
+            const originalValue = document.getElementById('recOriginalValue').value;
+            const originalName = document.getElementById('recOriginalName').value;
             const ttl = document.getElementById('recTtl').value;
             const disabled = document.getElementById('recDisabled').checked;
             
@@ -1146,8 +1161,14 @@
             const weight = document.getElementById('recWeight').value || '';
             const port = document.getElementById('recPort').value || '';
 
-            const csvData = buildCsvRow(type, name, value, ttl, disabled, zone, priority, weight, port);
             const formData = new FormData();
+
+            if (originalValue) {
+                const removeCsv = getRemoveCsvRow(type, originalName || name, zone, originalValue);
+                formData.append('remove', removeCsv);
+            }
+
+            const csvData = buildCsvRow(type, name, value, ttl, disabled, zone, priority, weight, port);
             formData.append('update', csvData);
 
             try {
