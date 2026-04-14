@@ -13,24 +13,35 @@ local domain = origin.name;
 local absolute(d) = if std.endsWith(d, ".") then d else d + ".";
 local fqdn(d) = 
   if std.endsWith(d, ".") then d 
-  else if d == "@" then domain + "."
+  else if d == "@" || d == "" then domain + "."
   else if d == domain then d + "."
   else if std.endsWith(d, "." + domain) then d + "." 
   else d + "." + domain + ".";
 
+local to_relative(f) =
+  if f == domain + "." then "@"
+  else if std.endsWith(f, "." + domain + ".") then std.substr(f, 0, std.length(f) - std.length("." + domain + "."))
+  else f;
+
+local rel_name(d) =
+  if d == "@" || d == "" then "@"
+  else to_relative(fqdn(d));
+
+local rel_value(d) = to_relative(absolute(d));
+
 local formatRecord(name, ttl, type, value) =
-  local safeTtl = if ttl == null || std.toString(ttl) == "" then "3600" else std.toString(ttl);
-  std.format("%-30s %-7s IN %-7s %s", [fqdn(name), safeTtl, type, value]);
+  local safeTtl = if ttl == null || std.toString(ttl) == "" || std.toString(ttl) == "1" || std.toString(ttl) == "3600" then "" else std.toString(ttl);
+  std.format("%-30s %-7s IN %-7s %s", [rel_name(name), safeTtl, type, value]);
 
 local a_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "A", r.address) for r in std.get(origin, "has_a_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
 local aaaa_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "AAAA", r.address) for r in std.get(origin, "has_aaaa_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
-local cname_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "CNAME", absolute(r.canonical)) for r in std.get(origin, "has_cname_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local cname_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "CNAME", rel_value(r.canonical)) for r in std.get(origin, "has_cname_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
 local txt_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "TXT", r.text) for r in std.get(origin, "has_txt_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
-local mx_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "MX", std.toString(r.priority) + " " + absolute(r.mail_exchanger)) for r in std.get(origin, "has_mx_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
-local srv_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "SRV", std.toString(r.priority) + " " + std.toString(r.weight) + " " + std.toString(r.port) + " " + absolute(r.target)) for r in std.get(origin, "has_srv_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
-local ptr_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "PTR", absolute(r.content)) for r in std.get(origin, "has_ptr_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local mx_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "MX", std.toString(r.priority) + " " + rel_value(r.mail_exchanger)) for r in std.get(origin, "has_mx_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local srv_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "SRV", std.toString(r.priority) + " " + std.toString(r.weight) + " " + std.toString(r.port) + " " + rel_value(r.target)) for r in std.get(origin, "has_srv_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local ptr_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "PTR", rel_value(r.content)) for r in std.get(origin, "has_ptr_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
 local caa_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "CAA", r.content) for r in std.get(origin, "has_caa_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
-local ns_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "NS", absolute(r.content)) for r in std.get(origin, "has_ns_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local ns_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "NS", rel_value(r.content)) for r in std.get(origin, "has_ns_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
 local sshfp_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "SSHFP", r.content) for r in std.get(origin, "has_sshfp_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
 
 local records = a_recs + aaaa_recs + cname_recs + txt_recs + mx_recs + srv_recs + ptr_recs + caa_recs + ns_recs + sshfp_recs;
@@ -46,10 +57,8 @@ local soa_record = std.format("@ IN SOA %s hostmaster.%s ( 2026030401 7200 3600 
 
 std.join("\n", [
   "; Zone file for " + domain,
-  "$ORIGIN " + absolute(domain),
+  "; $ORIGIN " + absolute(domain),
   "$TTL 3600",
   soa_record,
-] + generated_ns_recs + [
-  "",
-] + records) + "\n"
+] + generated_ns_recs + records) + "\n"
 '''

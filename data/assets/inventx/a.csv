@@ -572,3 +572,4 @@ a,test,10.11.11.11,3600,,False,inventix.ch
 a,mail,62.12.142.98,1,,False,inventx-events.ch
 a,migrationtest,213.158.152.245,1,,False,inventx-events.ch
 a,www,213.158.152.245,1,,False,inventx-events.ch
+a,@,213.158.152.245,1,,False,inventx-events.ch

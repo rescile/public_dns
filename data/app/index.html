@@ -415,6 +415,7 @@
                 const exMap = new Map();
                 cfRecords.forEach(r => {
                     let val = r.content;
+                    if (r.type === 'TXT' && val.startsWith('"') && val.endsWith('"')) { val = val.slice(1, -1); }
                     if (r.type === 'SRV' && r.data) { val = `${r.data.priority} ${r.data.weight} ${r.data.port} ${r.data.target}`; }
                     const key = `${r.name}|${r.type}|${val.toLowerCase()}`;
                     exMap.set(key, r);
@@ -735,6 +736,7 @@
                                 ... on zone_file { name filename }
                                 ... on knot_conf { name filename }
                                 ... on knot_docker { name filename }
+                                ... on tfvars { name filename }
                             }
                         }
                         has_a_record { node { name original_name address ttl disabled } }
@@ -808,6 +810,7 @@
                         if(out.__typename === 'zone_file') icon = 'description';
                         if(out.__typename === 'knot_conf') icon = 'settings';
                         if(out.__typename === 'knot_docker') icon = 'rocket_launch';
+                        if(out.__typename === 'tfvars') icon = 'data_object';
 
                         const url = `/api/outputs/${out.__typename}/${out.name}/${out.filename}/download`;
                         artifactsDiv.innerHTML += `
@@ -1120,24 +1123,31 @@
                 v = `"${txtVal.replace(/"/g, '""')}"`;
             }
             
-            if (t === 'a' || t === 'aaaa') return `type,zone,name,address,ttl,comment,disabled\n${t},${zone},${name},${v},${ttl},,${d}`;
-            if (t === 'cname') return `type,zone,name,canonical,ttl,comment,disabled\n${t},${zone},${name},${v},${ttl},,${d}`;
-            if (t === 'txt') return `type,zone,name,text,ttl,comment,disabled\n${t},${zone},${name},${v},${ttl},,${d}`;
+            if (t === 'a' || t === 'aaaa') return `type,name,address,ttl,comment,disabled,zone\n${t},${name},${v},${ttl},,${d},${zone}`;
+            if (t === 'cname') return `type,name,canonical,ttl,comment,disabled,zone\n${t},${name},${v},${ttl},,${d},${zone}`;
+            if (t === 'txt') return `type,name,text,ttl,comment,disabled,zone\n${t},${name},${v},${ttl},,${d},${zone}`;
             if (t === 'mx') return `type,zone,name,mail_exchanger,priority,ttl,disabled\n${t},${zone},${name},${v},${priority},${ttl},${d}`;
-            if (t === 'srv') return `type,zone,name,target,port,priority,weight,ttl,disabled\n${t},${zone},${name},${v},${port},${priority},${weight},${ttl},${d}`;
+            if (t === 'srv') return `type,name,target,port,priority,weight,ttl,disabled,zone\n${t},${name},${v},${port},${priority},${weight},${ttl},${d},${zone}`;
             
             // ns, ptr, caa, etc.
-            return `type,zone,name,content,ttl,disabled\n${t},${zone},${name},${v},${ttl},${d}`;
+            return `type,name,content,ttl,disabled,zone\n${t},${name},${v},${ttl},${d},${zone}`;
         }
 
         function getRemoveCsvRow(type, name, zone, originalValue) {
             const t = type.toLowerCase();
-            if (t === 'a' || t === 'aaaa') return `type,zone,name,address\n${t},${zone},${name},${originalValue}`;
-            if (t === 'cname') return `type,zone,name,canonical\n${t},${zone},${name},${originalValue}`;
-            if (t === 'txt') return `type,zone,name,text\n${t},${zone},${name},"${originalValue.replace(/"/g, '""')}"`;
-            if (t === 'mx') return `type,zone,name,mail_exchanger\n${t},${zone},${name},${originalValue}`;
-            if (t === 'srv') return `type,zone,name,target\n${t},${zone},${name},${originalValue}`;
-            return `type,zone,name,content\n${t},${zone},${name},${originalValue}`;
+            let v = originalValue || '';
+            if (t === 'txt') {
+                let txtVal = v;
+                if (!txtVal.startsWith('"')) txtVal = '"' + txtVal;
+                if (!txtVal.endsWith('"')) txtVal = txtVal + '"';
+                v = `"${txtVal.replace(/"/g, '""')}"`;
+            }
+            if (t === 'a' || t === 'aaaa') return `type,name,address,zone\n${t},${name},${v},${zone}`;
+            if (t === 'cname') return `type,name,canonical,zone\n${t},${name},${v},${zone}`;
+            if (t === 'txt') return `type,name,text,zone\n${t},${name},${v},${zone}`;
+            if (t === 'mx') return `type,zone,name,mail_exchanger\n${t},${zone},${name},${v}`;
+            if (t === 'srv') return `type,name,target,zone\n${t},${name},${v},${zone}`;
+            return `type,name,content,zone\n${t},${name},${v},${zone}`;
         }
 
         async function saveRecord(e) {

@@ -309,3 +309,5 @@ txt,s1-ix-mx._domainkey.vsrb.ch,"""""v=DKIM1""",300,,False,vsrb.ch
 txt,wwwvisana.ch,"""swisssign-check=OzhKAVvLMdtBmldxzB34LK2KMIY""",14400,,False,wwwvisana.ch
 txt,wwwvisana.ch,"""v=spf1 -all""",14400,,False,wwwvisana.ch
 txt,_dmarc.wwwvisana.ch,"""""v=DMARC1""",14400,,False,wwwvisana.ch
+txt,@,"""v=spf1 a mx include:_spf01.eyevip.ch -all""",1,,False,inventx-events.ch
+txt,@,"""d365mktkey=FIoim6F1sRdurCSWlKIllstqT7q4WsjckgJ4sdjtncEx""",900,,False,inventx-events.ch
