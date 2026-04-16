@@ -11,12 +11,15 @@ local origin = std.extVar("origin_resource");
 local vanity_ns_data = std.extVar("vanity_ns_data");
 local domain = origin.name;
 local multisigner = std.asciiLower(std.toString(std.get(origin, "multisigner", "false"))) == "true";
-local vanity_ns = std.get(origin, "vanity_name_server", []);
+
+local raw_vns = std.get(origin, "vanity_name_server", []);
+local vanity_ns = if std.type(raw_vns) == "string" then (if std.length(raw_vns) > 0 then std.split(raw_vns, ",") else []) else raw_vns;
 
 local cf_ips = std.prune([
-  if std.objectHas(vanity_ns_data, ns) && std.get(vanity_ns_data[ns], "provider", "") == "cloudflare" then
-    std.get(std.get(vanity_ns_data[ns], "target", {}), "ipv4", null)
+  if std.objectHas(vanity_ns_data, std.stripChars(ns, " ")) && std.get(vanity_ns_data[std.stripChars(ns, " ")], "provider", "") == "cloudflare" then
+    std.get(std.get(vanity_ns_data[std.stripChars(ns, " ")], "target", {}), "ipv4", null)
   for ns in vanity_ns
+  if std.stripChars(ns, " ") != ""
 ]);
 local cf_first_ip = if std.length(cf_ips) > 0 then cf_ips[0] else "10.0.1.1";
 

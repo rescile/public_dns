@@ -49,3 +49,53 @@ create_relation = { type = "has_ns_record" }
 with = "sshfp"
 join = { local = "auth", remote = "zone" }
 create_relation = { type = "has_sshfp_record" }
+
+[[link_resources]]
+with = "cert"
+join = { local = "auth", remote = "zone" }
+create_relation = { type = "has_cert_record" }
+
+[[link_resources]]
+with = "dnskey"
+join = { local = "auth", remote = "zone" }
+create_relation = { type = "has_dnskey_record" }
+
+[[link_resources]]
+with = "ds"
+join = { local = "auth", remote = "zone" }
+create_relation = { type = "has_ds_record" }
+
+[[link_resources]]
+with = "https"
+join = { local = "auth", remote = "zone" }
+create_relation = { type = "has_https_record" }
+
+[[link_resources]]
+with = "loc"
+join = { local = "auth", remote = "zone" }
+create_relation = { type = "has_loc_record" }
+
+[[link_resources]]
+with = "naptr"
+join = { local = "auth", remote = "zone" }
+create_relation = { type = "has_naptr_record" }
+
+[[link_resources]]
+with = "smimea"
+join = { local = "auth", remote = "zone" }
+create_relation = { type = "has_smimea_record" }
+
+[[link_resources]]
+with = "svcb"
+join = { local = "auth", remote = "zone" }
+create_relation = { type = "has_svcb_record" }
+
+[[link_resources]]
+with = "tlsa"
+join = { local = "auth", remote = "zone" }
+create_relation = { type = "has_tlsa_record" }
+
+[[link_resources]]
+with = "uri"
+join = { local = "auth", remote = "zone" }
+create_relation = { type = "has_uri_record" }

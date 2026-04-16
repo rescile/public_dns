@@ -44,15 +44,29 @@ local caa_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "
 local ns_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "NS", rel_value(r.content)) for r in std.get(origin, "has_ns_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
 local sshfp_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "SSHFP", r.content) for r in std.get(origin, "has_sshfp_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
 
-local records = a_recs + aaaa_recs + cname_recs + txt_recs + mx_recs + srv_recs + ptr_recs + caa_recs + ns_recs + sshfp_recs;
+local cert_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "CERT", r.content) for r in std.get(origin, "has_cert_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local dnskey_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "DNSKEY", r.content) for r in std.get(origin, "has_dnskey_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local ds_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "DS", r.content) for r in std.get(origin, "has_ds_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local https_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "HTTPS", r.content) for r in std.get(origin, "has_https_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local loc_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "LOC", r.content) for r in std.get(origin, "has_loc_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local naptr_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "NAPTR", r.content) for r in std.get(origin, "has_naptr_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local smimea_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "SMIMEA", r.content) for r in std.get(origin, "has_smimea_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local svcb_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "SVCB", r.content) for r in std.get(origin, "has_svcb_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local tlsa_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "TLSA", r.content) for r in std.get(origin, "has_tlsa_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local uri_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "URI", r.content) for r in std.get(origin, "has_uri_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
 
-local vanity_ns = std.get(origin, "vanity_name_server", []);
-local generated_ns_recs = if std.length(vanity_ns) > 0 then
-  [std.format("@ IN NS %s.", [absolute(ns)]) for ns in vanity_ns]
+local records = a_recs + aaaa_recs + cname_recs + txt_recs + mx_recs + srv_recs + ptr_recs + caa_recs + ns_recs + sshfp_recs + cert_recs + dnskey_recs + ds_recs + https_recs + loc_recs + naptr_recs + smimea_recs + svcb_recs + tlsa_recs + uri_recs;
+
+local raw_vns = std.get(origin, "vanity_name_server", []);
+local vanity_ns = if std.type(raw_vns) == "string" then (if std.length(raw_vns) > 0 then std.split(raw_vns, ",") else []) else raw_vns;
+local clean_vanity_ns = [std.stripChars(ns, " ") for ns in vanity_ns if std.stripChars(ns, " ") != ""];
+
+local generated_ns_recs = if std.length(clean_vanity_ns) > 0 then
+  [std.format("@ IN NS %s.", [absolute(ns)]) for ns in clean_vanity_ns]
 else
   ["@ IN NS ns3.ixcloud.ch.", "@ IN NS ns4.ixcloud.ch."];
 
-local soa_primary = if std.length(vanity_ns) > 0 then absolute(vanity_ns[0]) else "ns3.ixcloud.ch.";
+local soa_primary = if std.length(clean_vanity_ns) > 0 then absolute(clean_vanity_ns[0]) else "ns3.ixcloud.ch.";
 local soa_record = std.format("@ IN SOA %s hostmaster.%s ( 2026030401 7200 3600 1209600 3600 )", [soa_primary, absolute(domain)]);
 
 std.join("\n", [

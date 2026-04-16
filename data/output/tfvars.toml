@@ -1,4 +1,5 @@
 origin_resource = "zone"
+vanity_ns_data = { "json!" = "vanity_ns.json" }
 
 [[output]]
 resource_type = "tfvars"
@@ -7,6 +8,7 @@ mimetype = "application/json"
 name = "tfvars_{{ origin_resource.name }}"
 jsonnet = '''
 local origin = std.extVar("origin_resource");
+local vanity_ns_data = std.extVar("vanity_ns_data");
 local domain = origin.name;
 
 local fqdn(d) = 
@@ -75,13 +77,31 @@ local parse_sshfp(c) =
 
 local sshfp_recs = [ buildRec(r, "SSHFP") + { data: parse_sshfp(r.content) } for r in std.get(origin, "has_sshfp_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
 
-local all_records = a_recs + aaaa_recs + cname_recs + txt_recs + mx_recs + srv_recs + ptr_recs + caa_recs + ns_recs + sshfp_recs;
+local cert_recs = [ buildRec(r, "CERT") + { content: strip(r.content) } for r in std.get(origin, "has_cert_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
+local dnskey_recs = [ buildRec(r, "DNSKEY") + { content: strip(r.content) } for r in std.get(origin, "has_dnskey_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
+local ds_recs = [ buildRec(r, "DS") + { content: strip(r.content) } for r in std.get(origin, "has_ds_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
+local https_recs = [ buildRec(r, "HTTPS") + { content: strip(r.content) } for r in std.get(origin, "has_https_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
+local loc_recs = [ buildRec(r, "LOC") + { content: strip(r.content) } for r in std.get(origin, "has_loc_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
+local naptr_recs = [ buildRec(r, "NAPTR") + { content: strip(r.content) } for r in std.get(origin, "has_naptr_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
+local smimea_recs = [ buildRec(r, "SMIMEA") + { content: strip(r.content) } for r in std.get(origin, "has_smimea_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
+local svcb_recs = [ buildRec(r, "SVCB") + { content: strip(r.content) } for r in std.get(origin, "has_svcb_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
+local tlsa_recs = [ buildRec(r, "TLSA") + { content: strip(r.content) } for r in std.get(origin, "has_tlsa_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
+local uri_recs = [ buildRec(r, "URI") + { content: strip(r.content) } for r in std.get(origin, "has_uri_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
+
+local all_records = a_recs + aaaa_recs + cname_recs + txt_recs + mx_recs + srv_recs + ptr_recs + caa_recs + ns_recs + sshfp_recs + cert_recs + dnskey_recs + ds_recs + https_recs + loc_recs + naptr_recs + smimea_recs + svcb_recs + tlsa_recs + uri_recs;
+
+local raw_vns = std.get(origin, "vanity_name_server", "");
+local all_vns = if std.type(raw_vns) == "string" then (if std.length(raw_vns) > 0 then std.split(raw_vns, ",") else []) else raw_vns;
+local cf_vns = [
+  std.stripChars(ns, " ") for ns in all_vns 
+  if std.stripChars(ns, " ") != "" && std.objectHas(vanity_ns_data, std.stripChars(ns, " ")) && std.get(vanity_ns_data[std.stripChars(ns, " ")], "provider", "") == "cloudflare"
+];
 
 local output = {
   records: all_records,
   zones: [
     {
-      vanity_name_servers: std.get(origin, "vanity_name_server", []),
+      vanity_name_servers: cf_vns,
       zone: domain
     }
   ]

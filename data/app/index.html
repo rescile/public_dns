@@ -159,10 +159,28 @@
                         </div>
                     </div>
 
-                    <div id="emptyZonePrompt" class="empty-state">
+                    <div id="emptyZonePrompt" class="empty-state hidden">
                         <span class="material-symbols-outlined" style="font-size: 48px; color: var(--border);">dns</span>
                         <h3>No Zone Selected</h3>
                         <p>Select a DNS zone from the top bar to view details.</p>
+                    </div>
+
+                    <div id="zoneListView" class="hidden">
+                        <div class="card" style="padding: 0; overflow: hidden;">
+                            <div class="card-header" style="margin: 1.5rem 1.5rem 0; padding-bottom: 1rem;">
+                                <h2>Zones</h2>
+                            </div>
+                            <div class="table-container" style="border: none; border-radius: 0;">
+                                <table id="zonesListTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th><th>Format</th><th>DNSSEC</th><th>Status</th><th style="width: 100px; text-align: right;">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -207,8 +225,19 @@
                         <option value="srv">SRV</option>
                         <option value="ptr">PTR</option>
                         <option value="caa">CAA</option>
+                        <option value="cert">CERT</option>
+                        <option value="cname">CNAME</option>
+                        <option value="dnskey">DNSKEY</option>
+                        <option value="ds">DS</option>
+                        <option value="https">HTTPS</option>
+                        <option value="loc">LOC</option>
                         <option value="ns">NS</option>
+                        <option value="naptr">NAPTR</option>
+                        <option value="smimea">SMIMEA</option>
                         <option value="sshfp">SSHFP</option>
+                        <option value="svcb">SVCB</option>
+                        <option value="tlsa">TLSA</option>
+                        <option value="uri">URI</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -324,6 +353,9 @@
             if (view === 'overview') {
                 document.getElementById('overviewView').classList.remove('hidden');
                 document.getElementById('nav-overview').classList.add('active');
+                if (!document.getElementById('zoneSelect').value) {
+                    renderZoneList();
+                }
             } else if (view === 'sync') {
                 document.getElementById('syncView').classList.remove('hidden');
                 document.getElementById('nav-sync').classList.add('active');
@@ -376,9 +408,12 @@
                 const zoneData = await zoneRes.json();
                 let zoneId = null;
                 let cfRecords = [];
+                let cfVanity = [];
                 
                 if (zoneData.success && zoneData.result.length > 0) {
-                    zoneId = zoneData.result[0].id;
+                    const cfZone = zoneData.result[0];
+                    zoneId = cfZone.id;
+                    cfVanity = (cfZone.vanity_name_servers && cfZone.vanity_name_servers.length > 0) ? cfZone.vanity_name_servers : (cfZone.name_servers || []);
                     diffStatus.textContent = 'Fetching existing records...';
                     let page = 1;
                     while (true) {
@@ -442,11 +477,22 @@
                     if (!decMap.has(key) && eRec.type !== 'SOA' && eRec.type !== 'NS') { toRemove.push(eRec); }
                 });
                 
-                window.pendingSync = { zoneName, zoneId, accountId, toAdd, toUpdate, toRemove };
+                let decVanity = zone.cf_vanity_name_server ? (Array.isArray(zone.cf_vanity_name_server) ? zone.cf_vanity_name_server : String(zone.cf_vanity_name_server).split(',')).map(s => s.trim()).filter(s => s) : [];
+                let cfVanityStr = cfVanity.slice().sort().join(', ');
+                let decVanityStr = decVanity.slice().sort().join(', ');
+                
+                let updateVanity = false;
+                let toUpdateVanity = decVanity;
+                if (zone.vanity_name_server && cfVanityStr !== decVanityStr) { updateVanity = true; }
+                
+                window.pendingSync = { zoneName, zoneId, accountId, toAdd, toUpdate, toRemove, updateVanity, toUpdateVanity, cfVanityStr };
                 
                 document.getElementById('diffResults').classList.remove('hidden');
                 if (!zoneId) {
                     tbody.innerHTML += `<tr><td><span class="badge badge-type">ZONE</span></td><td>${zoneName}</td><td style="color: #10b981; font-weight: 500;">Exists</td><td><span class="badge badge-false">Missing</span></td></tr>`;
+                }
+                if (updateVanity) {
+                    tbody.innerHTML += `<tr><td><span class="badge badge-type">VANITY NS</span></td><td>@</td><td style="color: var(--info); font-weight: 500;">${decVanityStr || 'None'}</td><td>${zoneId ? `<span style="color: var(--text-light);">${cfVanityStr || 'None'}</span>` : '<span class="badge badge-false">Missing</span>'}</td></tr>`;
                 }
                 toAdd.forEach(r => {
                     tbody.innerHTML += `<tr><td><span class="badge badge-type">${r.type}</span></td><td>${r.name}</td><td style="color: #10b981; font-weight: 500;">${r.content} <span style="font-size: 0.85em; color: var(--text-light);">(TTL: ${r.ttl})</span></td><td><span class="badge badge-false">Missing</span></td></tr>`;
@@ -460,9 +506,9 @@
                     tbody.innerHTML += `<tr><td><span class="badge badge-type">${r.type}</span></td><td>${r.name}</td><td><span class="badge badge-false">Missing</span></td><td style="color: #ef4444; font-weight: 500;">${val} <span style="font-size: 0.85em; color: var(--text-light);">(TTL: ${r.ttl})</span></td></tr>`;
                 });
                 
-                if (!zoneId && toAdd.length === 0 && toUpdate.length === 0 && toRemove.length === 0) {
+                if (!zoneId && toAdd.length === 0 && toUpdate.length === 0 && toRemove.length === 0 && !updateVanity) {
                     diffStatus.textContent = 'Zone will be created, no records to sync.'; applyBtn.disabled = false; pullBtn.disabled = false;
-                } else if (toAdd.length === 0 && toUpdate.length === 0 && toRemove.length === 0) {
+                } else if (toAdd.length === 0 && toUpdate.length === 0 && toRemove.length === 0 && !updateVanity) {
                     diffStatus.textContent = 'No changes to apply. Cloudflare is fully synced.';
                 } else {
                     diffStatus.textContent = 'Review changes below and choose to Push or Pull.'; applyBtn.disabled = false; pullBtn.disabled = false;
@@ -489,7 +535,14 @@
                     const data = await res.json();
                     if (!data.success) throw new Error(data.errors[0].message);
                     zoneId = data.result.id;
+                    window.pendingSync.zoneId = zoneId;
                 }
+
+                if (window.pendingSync.updateVanity) {
+                    diffStatus.textContent = `Updating Vanity Name Servers...`;
+                    await fetch(`api/cloudflare/zones/${zoneId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ vanity_name_servers: window.pendingSync.toUpdateVanity }) });
+                }
+
                 for (const r of toRemove) { diffStatus.textContent = `Removing ${r.name}...`; await fetch(`api/cloudflare/zones/${zoneId}/dns_records/${r.id}`, { method: 'DELETE' }); }
                 for (const r of toAdd) {
                     diffStatus.textContent = `Adding ${r.name}...`;
@@ -581,6 +634,29 @@
                     if (groupedUpdates[type]) formData.append('update', `${groupedUpdates[type].header}\n${groupedUpdates[type].rows.join('\n')}`);
                     await fetch(`/api/assets/${type}.csv`, { method: 'POST', body: formData });
                 }
+
+                if (window.pendingSync.updateVanity) {
+                    diffStatus.textContent = 'Syncing Vanity Name Servers...';
+                    const zone = zonesData[zoneName];
+                    const view = zone.view || 'default';
+                    const zone_format = zone.zone_format || 'FORWARD';
+                    const disabled = zone.disabled || 'False';
+                    const dnssec = zone.dnssec || 'False';
+
+                    let allNs = new Set(zone.vanity_name_server ? String(zone.vanity_name_server).split(',').map(s=>s.trim()).filter(s=>s) : []);
+                    if (zone.cf_vanity_name_server) {
+                        String(zone.cf_vanity_name_server).split(',').map(s=>s.trim()).filter(s=>s).forEach(ns => allNs.delete(ns));
+                    }
+                    if (window.pendingSync.cfVanityStr) {
+                        window.pendingSync.cfVanityStr.split(',').map(s=>s.trim()).filter(s=>s).forEach(ns => allNs.add(ns));
+                    }
+                    
+                    const vanity = Array.from(allNs).join(',').replace(/"/g, '""');
+                    const csvData = `type,name,view,zone_format,disabled,dnssec,vanity_name_server\nauth,${zoneName},${view},${zone_format},${disabled},${dnssec},"${vanity}"`;
+                    const formData = new FormData();
+                    formData.append('update', csvData);
+                    await fetch(`/api/assets/auth.csv`, { method: 'POST', body: formData });
+                }
                 
                 showNotification('Pull complete!');
                 window.pendingSync = null;
@@ -612,6 +688,9 @@
                 query {
                     zone {
                         name
+                        zone_format
+                        dnssec
+                        disabled
                     }
                 }
             `;
@@ -634,7 +713,10 @@
 
                 data.zone.sort((a, b) => a.name.localeCompare(b.name)).forEach(z => {
                     zonesData[z.name] = {
-                        name: z.name
+                        name: z.name,
+                        zone_format: z.zone_format,
+                        dnssec: z.dnssec,
+                        disabled: z.disabled
                     };
                     const option = document.createElement('option');
                     option.value = z.name;
@@ -651,11 +733,49 @@
                 
                 if (select.value) {
                     select.dispatchEvent(new Event('change'));
+                } else {
+                    renderZoneList();
                 }
             } catch (err) {
                 console.error('Failed to fetch DNS zones:', err);
             }
         }
+
+        function renderZoneList() {
+            const listTableBody = document.querySelector('#zonesListTable tbody');
+            if (!listTableBody) return;
+            
+            listTableBody.innerHTML = '';
+            Object.values(zonesData).forEach(zone => {
+                const tr = document.createElement('tr');
+                const isDnssec = zone.dnssec === 'True' || zone.dnssec === true || zone.dnssec === 'true';
+                const isActive = !(zone.disabled === 'True' || zone.disabled === true || zone.disabled === 'true');
+                
+                tr.innerHTML = `
+                    <td><strong>${zone.name}</strong></td>
+                    <td>${zone.zone_format || 'FORWARD'}</td>
+                    <td>${isDnssec ? '<span class="badge badge-true">Enabled</span>' : '<span class="badge badge-false">Disabled</span>'}</td>
+                    <td>${isActive ? '<span class="badge badge-true">Active</span>' : '<span class="badge badge-false">Disabled</span>'}</td>
+                    <td style="text-align: right;">
+                        <button class="action-btn" title="View" onclick="selectZone('${zone.name}')">
+                            <span class="material-symbols-outlined" style="font-size: 1.25rem;">visibility</span>
+                        </button>
+                    </td>
+                `;
+                listTableBody.appendChild(tr);
+            });
+            
+            document.getElementById('zoneDetailsWrapper').classList.add('hidden');
+            const emptyPrompt = document.getElementById('emptyZonePrompt');
+            if (emptyPrompt) emptyPrompt.classList.add('hidden');
+            document.getElementById('zoneListView').classList.remove('hidden');
+        }
+
+        window.selectZone = function(name) {
+            const select = document.getElementById('zoneSelect');
+            select.value = name;
+            select.dispatchEvent(new Event('change'));
+        };
 
         function extractRecords(zoneNode) {
             let records = [];
@@ -694,6 +814,16 @@
             pushRecords(zoneNode.has_caa_record, 'CAA', 'content');
             pushRecords(zoneNode.has_ns_record, 'NS', 'content');
             pushRecords(zoneNode.has_sshfp_record, 'SSHFP', 'content');
+            pushRecords(zoneNode.has_cert_record, 'CERT', 'content');
+            pushRecords(zoneNode.has_dnskey_record, 'DNSKEY', 'content');
+            pushRecords(zoneNode.has_ds_record, 'DS', 'content');
+            pushRecords(zoneNode.has_https_record, 'HTTPS', 'content');
+            pushRecords(zoneNode.has_loc_record, 'LOC', 'content');
+            pushRecords(zoneNode.has_naptr_record, 'NAPTR', 'content');
+            pushRecords(zoneNode.has_smimea_record, 'SMIMEA', 'content');
+            pushRecords(zoneNode.has_svcb_record, 'SVCB', 'content');
+            pushRecords(zoneNode.has_tlsa_record, 'TLSA', 'content');
+            pushRecords(zoneNode.has_uri_record, 'URI', 'content');
 
             return records.sort((a, b) => {
                 if(a.type !== b.type) return a.type.localeCompare(b.type);
@@ -710,13 +840,73 @@
             const artifactsDiv = document.getElementById('zoneArtifacts');
             const wrapper = document.getElementById('zoneDetailsWrapper');
             const emptyPrompt = document.getElementById('emptyZonePrompt');
+            const listView = document.getElementById('zoneListView');
             
             if (!zoneName) {
                 zsBtn.style.display = 'none';
                 artifactsDiv.classList.add('hidden');
                 wrapper.classList.add('hidden');
-                emptyPrompt.classList.remove('hidden');
+                emptyPrompt.classList.add('hidden');
+                renderZoneList();
                 return;
+            }
+
+            if (listView) listView.classList.add('hidden');
+
+            let recordQueryFields = '';
+            try {
+                let fields = [];
+                const introRes = await fetch('/graphql', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: '{ __type(name: "Zone") { fields { name } } }' })
+                });
+                const introData = await introRes.json();
+                
+                if (introData.data && introData.data.__type && introData.data.__type.fields) {
+                    fields = introData.data.__type.fields.map(f => f.name);
+                } else {
+                    const introRes2 = await fetch('/graphql', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ query: '{ __type(name: "zone") { fields { name } } }' })
+                    });
+                    const introData2 = await introRes2.json();
+                    if (introData2.data && introData2.data.__type && introData2.data.__type.fields) {
+                        fields = introData2.data.__type.fields.map(f => f.name);
+                    }
+                }
+
+                const allRecordTypes = {
+                    has_a_record: '{ node { name original_name address ttl disabled } }',
+                    has_aaaa_record: '{ node { name original_name address ttl disabled } }',
+                    has_cname_record: '{ node { name original_name canonical ttl disabled } }',
+                    has_txt_record: '{ node { name original_name text ttl disabled } }',
+                    has_mx_record: '{ node { name original_name mail_exchanger priority ttl disabled } }',
+                    has_srv_record: '{ node { name original_name target port priority weight ttl disabled } }',
+                    has_ptr_record: '{ node { name original_name content ttl disabled } }',
+                    has_caa_record: '{ node { name original_name content ttl disabled } }',
+                    has_ns_record: '{ node { name original_name content ttl disabled } }',
+                    has_sshfp_record: '{ node { name original_name content ttl disabled } }',
+                    has_cert_record: '{ node { name original_name content ttl disabled } }',
+                    has_dnskey_record: '{ node { name original_name content ttl disabled } }',
+                    has_ds_record: '{ node { name original_name content ttl disabled } }',
+                    has_https_record: '{ node { name original_name content ttl disabled } }',
+                    has_loc_record: '{ node { name original_name content ttl disabled } }',
+                    has_naptr_record: '{ node { name original_name content ttl disabled } }',
+                    has_smimea_record: '{ node { name original_name content ttl disabled } }',
+                    has_svcb_record: '{ node { name original_name content ttl disabled } }',
+                    has_tlsa_record: '{ node { name original_name content ttl disabled } }',
+                    has_uri_record: '{ node { name original_name content ttl disabled } }'
+                };
+
+                for (const [key, val] of Object.entries(allRecordTypes)) {
+                    if (fields.length === 0 || fields.includes(key)) {
+                        recordQueryFields += `\n                        ${key} ${val}`;
+                    }
+                }
+            } catch (err) {
+                console.warn('Failed to introspect schema', err);
             }
 
             const query = `
@@ -725,6 +915,7 @@
                         name
                         multi_provider
                         vanity_name_server
+                        cf_vanity_name_server
                         view
                         zone_format
                         disabled
@@ -739,16 +930,7 @@
                                 ... on tfvars { name filename }
                             }
                         }
-                        has_a_record { node { name original_name address ttl disabled } }
-                        has_aaaa_record { node { name original_name address ttl disabled } }
-                        has_cname_record { node { name original_name canonical ttl disabled } }
-                        has_txt_record { node { name original_name text ttl disabled } }
-                        has_mx_record { node { name original_name mail_exchanger priority ttl disabled } }
-                        has_srv_record { node { name original_name target port priority weight ttl disabled } }
-                        has_ptr_record { node { name original_name content ttl disabled } }
-                        has_caa_record { node { name original_name content ttl disabled } }
-                        has_ns_record { node { name original_name content ttl disabled } }
-                        has_sshfp_record { node { name original_name content ttl disabled } }
+                        ${recordQueryFields}
                     }
                 }
             `;
@@ -768,6 +950,7 @@
                     name: z.name,
                     multi_provider: z.multi_provider,
                     vanity_name_server: z.vanity_name_server,
+                    cf_vanity_name_server: z.cf_vanity_name_server,
                     view: z.view,
                     zone_format: z.zone_format,
                     disabled: z.disabled,
@@ -792,7 +975,7 @@
             document.getElementById('declaredDetails').innerHTML = `
                 <div class="detail-item"><span class="detail-label">Zone Format</span><span class="detail-value">${zone.zone_format || 'FORWARD'}</span></div>
                 <div class="detail-item"><span class="detail-label">DNSSEC</span><span class="detail-value">${isDnssec ? '<span class="badge badge-true">Enabled</span>' : '<span class="badge badge-false">Disabled</span>'}</span></div>
-                <div class="detail-item"><span class="detail-label">Vanity NS</span><span class="detail-value">${zone.vanity_name_server || 'None'}</span></div>
+                <div class="detail-item"><span class="detail-label">Vanity NS</span><span class="detail-value">${Array.isArray(zone.vanity_name_server) ? zone.vanity_name_server.join(', ') : (zone.vanity_name_server || 'None')}</span></div>
                 <div class="detail-item"><span class="detail-label">Status</span><span class="detail-value">${isActive ? '<span class="badge badge-true">Active</span>' : '<span class="badge badge-false">Disabled</span>'}</span></div>
             `;
 
@@ -963,7 +1146,7 @@
             const zoneName = document.getElementById('zoneSelect').value;
             const z = zonesData[zoneName];
             document.getElementById('zsDnssec').checked = z.dnssec === 'True' || z.dnssec === 'true' || z.dnssec === true;
-            document.getElementById('zsVanity').value = z.vanity_name_server || '';
+            document.getElementById('zsVanity').value = Array.isArray(z.vanity_name_server) ? z.vanity_name_server.join(', ') : (z.vanity_name_server || '');
             document.getElementById('zoneSettingsModal').classList.add('active');
         }
 
