@@ -69,6 +69,7 @@ bootstrap = '''
     }
   },
   "ns3.ixcloud.ch": {
+    "role": "secondary",
     "target": {
       "ipv4": "185.178.60.130"
     }
@@ -77,6 +78,7 @@ bootstrap = '''
 '''
 [inputs."vanity_ns.json".fields]
 provider = { type = "string", required = false }
+role = { type = "string", required = false }
 target = { type = "object", required = true }
 
 # a

@@ -65,7 +65,7 @@ local parse_caa(c) =
 
 local caa_recs = [ buildRec(r, "CAA") + { data: parse_caa(r.content) } for r in std.get(origin, "has_caa_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
 
-local ns_recs = [ buildRec(r, "NS") + { content: strip(r.content) } for r in std.get(origin, "has_ns_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
+local ns_recs = [ buildRec(r, "NS") + { content: strip(r.content) } for r in std.get(origin, "has_apex_ns_record", []) + std.get(origin, "has_subdomain_ns_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
 
 local parse_sshfp(c) = 
   local spaces = std.findSubstr(" ", c);
@@ -99,6 +99,7 @@ local cf_vns = [
 
 local output = {
   records: all_records,
+  dns_topology: std.get(origin, "dns_topology", "unknown"),
   zones: [
     {
       vanity_name_servers: cf_vns,

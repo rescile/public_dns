@@ -5,1396 +5,324 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DNS Zone Administration</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <style>
-      :root, :root[data-theme="light"] {
-        --bg: #f3f4f6; --fg: #111827; --card: #ffffff; --border: #e5e7eb;
-        --hover-bg: #f9fafb; --primary: #2563eb; --primary-hover: #1d4ed8;
-        --link: #2563eb; --overlay-bg: rgba(17, 24, 39, 0.5); --info: #3b82f6;
-        --text-strong: #111827; --text-light: #6b7280; --sidebar-bg: #1e293b; --sidebar-fg: #f8fafc;
-        --sidebar-hover: #334155; --sidebar-active: #2563eb;
-        --danger: #ef4444; --danger-bg: rgba(239, 68, 68, 0.1);
-    }
-    :root[data-theme="dark"] {
-        --bg: #0f172a; --fg: #f8fafc; --card: #1e293b; --border: #334155;
-        --hover-bg: #334155; --primary: #3b82f6; --primary-hover: #60a5fa;
-        --link: #60a5fa; --overlay-bg: rgba(15, 23, 42, 0.8); --info: #0ea5e9;
-        --text-strong: #f8fafc; --text-light: #94a3b8; --sidebar-bg: #0f172a; --sidebar-fg: #f8fafc;
-        --sidebar-hover: #1e293b; --sidebar-active: #3b82f6;
-        --danger: #f87171; --danger-bg: rgba(239, 68, 68, 0.1);
-    }
-    body { font-family: "Inter", system-ui, sans-serif; background: var(--bg); color: var(--fg); margin: 0; padding: 0; display: flex; height: 100vh; overflow: hidden; }
-    .app-layout { display: flex; width: 100%; height: 100vh; }
-    .sidebar { width: 260px; background: var(--sidebar-bg); color: var(--sidebar-fg); display: flex; flex-direction: column; border-right: 1px solid var(--border); flex-shrink: 0; }
-    .sidebar-header { height: 64px; display: flex; align-items: center; padding: 0 1.5rem; border-bottom: 1px solid var(--sidebar-hover); font-size: 1.1rem; font-weight: 600; color: #fff; gap: 0.5rem; }
-    .sidebar-nav { padding: 1rem 0.75rem; display: flex; flex-direction: column; gap: 0.25rem; }
-    .sidebar-nav a { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; color: var(--sidebar-fg); text-decoration: none; font-weight: 500; transition: all 0.2s; cursor: pointer; }
-    .sidebar-nav a:hover { background: var(--sidebar-hover); }
-    .sidebar-nav a.active { background: var(--sidebar-active); color: #fff; }
-    .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-    .topbar { height: 64px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; flex-shrink: 0; }
-    .topbar-left { display: flex; align-items: center; gap: 1rem; }
-    .topbar-right { display: flex; align-items: center; gap: 1rem; }
-    .context-select { padding: 0.5rem 2rem 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--border); background-color: var(--bg); color: var(--fg); font-size: 0.95rem; font-weight: 500; appearance: none; cursor: pointer; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236b7280%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 0.75rem top 50%; background-size: 0.65rem auto; }
-    .context-select:hover { border-color: var(--primary); }
-    .select-wrapper { display: flex; align-items: center; gap: 0.5rem; }
-    .main-content { flex: 1; overflow-y: auto; padding: 2rem; }
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); padding: 1.5rem; margin-bottom: 1.5rem; }
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
-    .card-header h2, .card-header h3 { margin: 0; font-weight: 600; }
-    .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
-    @media (min-width: 1024px) { .dashboard-grid { grid-template-columns: 1fr 1fr; } }
-    .details-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.25rem; }
-    .detail-item { display: flex; flex-direction: column; gap: 0.25rem; }
-    .detail-label { font-size: 0.75rem; color: var(--text-light); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
-    .detail-value { font-size: 0.95rem; color: var(--text-strong); font-weight: 500; word-break: break-all; }
-    .badge { padding: 0.25rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; display: inline-flex; align-items: center; width: max-content; }
-    .badge-true { background-color: rgba(16, 185, 129, 0.1); color: #10b981; }
-    .badge-false { background-color: var(--hover-bg); color: var(--text-light); }
-    .badge-type { background-color: var(--hover-bg); color: var(--text-strong); border: 1px solid var(--border); }
-    .btn { padding: 0.5rem 1rem; border-radius: 8px; border: none; cursor: pointer; font-weight: 500; font-size: 0.9rem; font-family: inherit; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; }
-    .btn-primary { background: var(--primary); color: #fff; }
-    .btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
-    .btn-secondary { background: var(--card); color: var(--text-strong); border: 1px solid var(--border); }
-    .btn-secondary:hover:not(:disabled) { background: var(--hover-bg); }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .action-btn { background: none; border: none; cursor: pointer; color: var(--text-light); transition: 0.2s; padding: 4px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; }
-    .action-btn:hover:not(:disabled) { color: var(--primary); background: var(--hover-bg); }
-    .action-btn.delete:hover:not(:disabled) { color: var(--danger); background: var(--danger-bg); }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 0.875rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
-    th { background: var(--hover-bg); font-weight: 600; color: var(--text-light); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; position: sticky; top: 0; z-index: 2; }
-    tr:hover td { background-color: var(--hover-bg); }
-    .modal { display: none; position: fixed; inset: 0; background: var(--overlay-bg); backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 1000; }
-    .modal.active { display: flex; }
-    .modal-content { background: var(--card); padding: 2rem; border-radius: 16px; border: 1px solid var(--border); width: 100%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-height: 90vh; overflow-y: auto; }
-    .form-group { margin-bottom: 1.25rem; }
-    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; color: var(--text-strong); }
-    .form-group input, .form-group select { width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--fg); box-sizing: border-box; font-family: inherit; transition: border-color 0.2s; }
-    .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); }
-    .btn-group { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 2rem; }
-    .hidden { display: none !important; }
-    a { color: var(--link); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .notice-box { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; font-weight: 500; }
-    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4rem 2rem; text-align: center; color: var(--text-light); border: 2px dashed var(--border); border-radius: 12px; margin-top: 1rem; }
-    .empty-state h3 { margin: 1rem 0 0.5rem; color: var(--text-strong); }
-    .download-links { display: flex; gap: 0.5rem; }
-    .download-links a { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 8px; background-color: var(--card); color: var(--text-strong); font-size: 0.875rem; font-weight: 500; transition: all 0.2s; text-decoration: none; }
-    .download-links a:hover { background-color: var(--hover-bg); border-color: var(--primary); color: var(--primary); }
-    .notification-toast { position: fixed; bottom: 24px; right: 24px; background: var(--primary); color: #ffffff; padding: 1rem 1.5rem; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); z-index: 9999; transition: opacity 0.3s ease; font-weight: 500; font-size: 0.9rem; }
-    .theme-toggle { background: transparent; border: 1px solid var(--border); width: 40px; height: 40px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-light); transition: all 0.2s ease; padding: 0; }
-    .theme-toggle:hover { color: var(--primary); background: var(--hover-bg); border-color: var(--primary); }
-    .table-container { width: 100%; overflow-x: auto; background: var(--card); border: 1px solid var(--border); border-radius: 12px; }
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-    </style>
+    <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <div class="app-layout">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <span class="material-symbols-outlined">dns</span>
-                Hybrid DNS
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="material-symbols-outlined">dns</span>
+        Hybrid DNS
+      </div>
+      <nav class="sidebar-nav">
+        <a id="nav-overview" class="active">
+          <span class="material-symbols-outlined">dashboard</span> Overview
+        </a>
+        <a id="nav-sync">
+          <span class="material-symbols-outlined">sync</span> Sync Changes
+        </a>
+        <a id="nav-nsoverview">
+          <span class="material-symbols-outlined">dns</span> NS Overview
+        </a>
+        <a id="nav-architecture">
+          <span class="material-symbols-outlined">account_tree</span> Architecture
+        </a>
+      </nav>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left" id="context-selectors">
+          <div class="select-wrapper">
+            <select id="zoneSelect" class="context-select">
+              <option value="">-- Choose a DNS zone --</option>
+            </select>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div id="zoneArtifacts" class="download-links hidden"></div>
+          <button class="btn btn-secondary" id="zoneSettingsBtn" style="display: none;">
+            <span class="material-symbols-outlined">settings</span> Zone Settings
+          </button>
+          <button class="btn btn-primary" id="addZoneBtn">
+            <span class="material-symbols-outlined">add</span> Add Zone
+          </button>
+          <button class="theme-toggle" id="theme-btn" title="Toggle Appearance">
+            <span class="material-symbols-outlined" id="theme-icon">light_mode</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <div id="readOnlyNotice" class="hidden notice-box">
+          <span class="material-symbols-outlined">info</span>
+          This application is currently in read only mode because of missing enterprise features.
+        </div>
+
+        <!-- Overview View -->
+        <div id="overviewView" class="view-section">
+          <div id="zoneDetailsWrapper" class="hidden">
+            <div class="dashboard-grid">
+              <div class="card">
+                <h3><span class="material-symbols-outlined" style="color: var(--primary); vertical-align: bottom;">description</span> Declared Configuration</h3>
+                <div class="details-grid" id="declaredDetails"></div>
+              </div>
+              <div class="card">
+                <h3><span class="material-symbols-outlined" style="color: #f59e0b; vertical-align: bottom;">cloud_circle</span> Provider Live State</h3>
+                <div class="details-grid" id="liveDetails"></div>
+              </div>
             </div>
-            <nav class="sidebar-nav">
-                <a onclick="switchView('overview')" id="nav-overview" class="active">
-                    <span class="material-symbols-outlined">dashboard</span> Overview
-                </a>
-                <a onclick="switchView('sync')" id="nav-sync">
-                    <span class="material-symbols-outlined">sync</span> Sync Changes
-                </a>
-            </nav>
-        </aside>
-
-        <div class="main-wrapper">
-            <header class="topbar">
-                <div class="topbar-left" id="context-selectors">
-                    <div class="select-wrapper">
-                        <select id="zoneSelect" class="context-select">
-                        <option value="">-- Choose a DNS zone --</option>
-                    </select>
-                </div>
-                </div>
-                <div class="topbar-right">
-                    <div id="zoneArtifacts" class="download-links hidden"></div>
-                    <button class="btn btn-secondary" id="zoneSettingsBtn" onclick="openZoneSettingsModal()" style="display: none;"><span class="material-symbols-outlined">settings</span> Zone Settings</button>
-                    <button class="btn btn-primary" id="addZoneBtn" onclick="openAddZoneModal()"><span class="material-symbols-outlined">add</span> Add Zone</button>
-                    <button onclick="toggleTheme()" class="theme-toggle" id="theme-btn" title="Toggle Appearance">
-                        <span class="material-symbols-outlined" id="theme-icon">light_mode</span>
-                    </button>
-                </div>
-            </header>
-
-            <main class="main-content">
-                <div id="readOnlyNotice" class="hidden notice-box">
-                    <span class="material-symbols-outlined">info</span>
-                    This application is currently in read only mode because of missing enterprise features.
-                </div>
-
-                <div id="overviewView" class="view-section">
-                    <div id="zoneDetailsWrapper" class="hidden">
-                        <div class="dashboard-grid">
-                            <div class="card">
-                                <h3><span class="material-symbols-outlined" style="color: var(--primary); vertical-align: bottom;">description</span> Declared Configuration</h3>
-                                <div class="details-grid" id="declaredDetails"></div>
-                            </div>
-                            <div class="card">
-                                <h3><span class="material-symbols-outlined" style="color: #f59e0b; vertical-align: bottom;">cloud_circle</span> Cloudflare Live State</h3>
-                                <div class="details-grid" id="liveDetails"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="card" style="padding: 0; overflow: hidden;">
-                            <div class="card-header" style="margin: 1.5rem 1.5rem 0; padding-bottom: 1rem;">
-                                <h2>DNS Records</h2>
-                                <button class="btn btn-primary" id="addRecordBtn" onclick="openModal()"><span class="material-symbols-outlined">add</span> Add Record</button>
-                            </div>
-                            <div class="table-container" style="border: none; border-radius: 0;">
-                                <table id="recordsTable">
-                                    <thead>
-                                        <tr><th style="width: 80px;">Type</th><th style="width: 25%;">Name</th><th>Content / Value</th><th style="width: 80px;">TTL</th><th style="width: 100px;">Status</th><th style="width: 100px; text-align: right;">Actions</th></tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="emptyZonePrompt" class="empty-state hidden">
-                        <span class="material-symbols-outlined" style="font-size: 48px; color: var(--border);">dns</span>
-                        <h3>No Zone Selected</h3>
-                        <p>Select a DNS zone from the top bar to view details.</p>
-                    </div>
-
-                    <div id="zoneListView" class="hidden">
-                        <div class="card" style="padding: 0; overflow: hidden;">
-                            <div class="card-header" style="margin: 1.5rem 1.5rem 0; padding-bottom: 1rem;">
-                                <h2>Zones</h2>
-                            </div>
-                            <div class="table-container" style="border: none; border-radius: 0;">
-                                <table id="zonesListTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th><th>Format</th><th>DNSSEC</th><th>Status</th><th style="width: 100px; text-align: right;">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="syncView" class="view-section hidden">
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Pending Cloudflare Changes</h2>
-                            <div style="display: flex; gap: 0.5rem;">
-                                <button class="btn btn-secondary" onclick="calculateDiff()" id="calcDiffBtn"><span class="material-symbols-outlined">calculate</span> Calculate Diff</button>
-                                <button class="btn btn-secondary" onclick="pullSync()" id="pullChangesBtn" disabled><span class="material-symbols-outlined">cloud_download</span> Pull Changes</button>
-                                <button class="btn btn-primary" onclick="performSync()" id="applyChangesBtn" disabled><span class="material-symbols-outlined">cloud_upload</span> Push Changes</button>
-                            </div>
-                        </div>
-                        <div id="syncStatus" style="margin-bottom: 1rem; font-weight: 500;">Click "Calculate Diff" to analyze pending changes.</div>
-                        <div id="diffResults" class="table-container hidden">
-                            <table id="diffTable">
-                                <thead><tr><th style="width: 80px;">Type</th><th style="width: 30%;">Name</th><th>Declared State</th><th>Live State</th></tr></thead>
-                                <tbody id="diffTableBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </div>
-    </div>
-
-    <div id="recordModal" class="modal">
-        <div class="modal-content">
-            <h3 id="modalTitle" style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.5rem;">Add DNS Record</h3>
-            <form id="recordForm" onsubmit="saveRecord(event)">
-                <input type="hidden" id="recOriginalValue">
-                <input type="hidden" id="recOriginalName">
-                
-                <div class="form-group">
-                    <label>Record Type</label>
-                    <select id="recType" onchange="handleTypeChange()" required>
-                        <option value="a">A</option>
-                        <option value="aaaa">AAAA</option>
-                        <option value="cname">CNAME</option>
-                        <option value="txt">TXT</option>
-                        <option value="mx">MX</option>
-                        <option value="srv">SRV</option>
-                        <option value="ptr">PTR</option>
-                        <option value="caa">CAA</option>
-                        <option value="cert">CERT</option>
-                        <option value="cname">CNAME</option>
-                        <option value="dnskey">DNSKEY</option>
-                        <option value="ds">DS</option>
-                        <option value="https">HTTPS</option>
-                        <option value="loc">LOC</option>
-                        <option value="ns">NS</option>
-                        <option value="naptr">NAPTR</option>
-                        <option value="smimea">SMIMEA</option>
-                        <option value="sshfp">SSHFP</option>
-                        <option value="svcb">SVCB</option>
-                        <option value="tlsa">TLSA</option>
-                        <option value="uri">URI</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Name</label>
-                    <input type="text" id="recName" class="input" required placeholder="www">
-                </div>
-                
-                <div id="mxFields" class="hidden">
-                    <div class="form-group">
-                        <label>Priority</label>
-                        <input type="number" id="recPriority" class="input" value="10">
-                    </div>
-                </div>
-
-                <div id="srvFields" class="hidden" style="display: flex; gap: 1rem;">
-                    <div class="form-group" style="flex: 1;">
-                        <label>Weight</label>
-                        <input type="number" id="recWeight" class="input" value="10">
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label>Port</label>
-                        <input type="number" id="recPort" class="input">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label id="valueLabel">Value / Target</label>
-                    <input type="text" id="recValue" class="input" required>
-                </div>
-
-                <div class="form-group">
-                    <label>TTL</label>
-                    <input type="number" id="recTtl" class="input" value="3600" required>
-                </div>
-
-                <div class="form-group" style="display:flex; align-items:center; gap:0.75rem; margin-top: 1.5rem; padding: 1rem; background: var(--hover-bg); border-radius: 8px; border: 1px solid var(--border);">
-                    <input type="checkbox" id="recDisabled" style="width:1.25rem; height:1.25rem; cursor:pointer; accent-color: var(--primary);">
-                    <label for="recDisabled" style="margin:0; cursor:pointer; font-weight: 500;">Record Disabled</label>
-                </div>
-
-                <div class="btn-group">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Record</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="addZoneModal" class="modal">
-        <div class="modal-content">
-            <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.5rem;">Add New Zone</h3>
-            <form id="addZoneForm" onsubmit="saveNewZone(event)">
-                <div class="form-group">
-                    <label>Zone Name</label>
-                    <input type="text" id="azName" class="input" required placeholder="example.com">
-                </div>
-                <div class="form-group" style="display:flex; align-items:center; gap:0.75rem; padding: 1rem; background: var(--hover-bg); border-radius: 8px; border: 1px solid var(--border);">
-                    <input type="checkbox" id="azDnssec" style="width:1.25rem; height:1.25rem; cursor:pointer; accent-color: var(--primary);">
-                    <label for="azDnssec" style="margin:0; cursor:pointer; font-weight: 500;">DNSSEC</label>
-                </div>
-                <div class="form-group" style="margin-top: 1rem;">
-                    <label>Vanity Name Servers (comma-separated)</label>
-                    <input type="text" id="azVanity" class="input" placeholder="ns1.example.com, ns2.example.com">
-                </div>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-secondary" onclick="closeAddZoneModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Add Zone</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="zoneSettingsModal" class="modal">
-        <div class="modal-content">
-            <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.5rem;">Zone Settings</h3>
-            <form id="zoneSettingsForm" onsubmit="saveZoneSettings(event)">
-                <div class="form-group" style="display:flex; align-items:center; gap:0.75rem; padding: 1rem; background: var(--hover-bg); border-radius: 8px; border: 1px solid var(--border);">
-                    <input type="checkbox" id="zsDnssec" style="width:1.25rem; height:1.25rem; cursor:pointer; accent-color: var(--primary);">
-                    <label for="zsDnssec" style="margin:0; cursor:pointer; font-weight: 500;">DNSSEC</label>
-                </div>
-                <div class="form-group" style="margin-top: 1rem;">
-                    <label>Vanity Name Servers (comma-separated)</label>
-                    <input type="text" id="zsVanity" class="input" placeholder="ns1.example.com, ns2.example.com">
-                </div>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-secondary" onclick="closeZoneSettingsModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Settings</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="buildProgressModal" class="modal">
-        <div class="modal-content" style="max-width: 1200px;">
-            <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.5rem;">Building Graph...</h3>
-            <div id="buildLogs" style="background: var(--bg); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem; height: 300px; overflow-y: auto; white-space: pre-wrap; color: var(--fg);"></div>
-            <div class="btn-group">
-                <button type="button" class="btn btn-primary" id="buildCloseBtn" onclick="closeBuildProgress()" disabled>Building...</button>
+            <div class="card" style="padding: 0; overflow: hidden;">
+              <div class="card-header" style="margin: 1.5rem 1.5rem 0; padding-bottom: 1rem;">
+                <h2>DNS Records</h2>
+                <button class="btn btn-primary" id="addRecordBtn">
+                  <span class="material-symbols-outlined">add</span> Add Record
+                </button>
+              </div>
+              <div class="table-container" style="border: none; border-radius: 0;">
+                <table id="recordsTable">
+                  <thead>
+                    <tr>
+                      <th style="width: 80px;">Type</th>
+                      <th style="width: 25%;">Name</th>
+                      <th>Content / Value</th>
+                      <th style="width: 80px;">TTL</th>
+                      <th style="width: 100px;">Status</th>
+                      <th style="width: 100px; text-align: right;">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
             </div>
+          </div>
+
+          <div id="emptyZonePrompt" class="empty-state hidden">
+            <span class="material-symbols-outlined" style="font-size: 48px; color: var(--border);">dns</span>
+            <h3>No Zone Selected</h3>
+            <p>Select a DNS zone from the top bar to view details.</p>
+          </div>
+
+          <div id="zoneListView" class="hidden">
+            <div class="card" style="padding: 0; overflow: hidden;">
+              <div class="card-header" style="margin: 1.5rem 1.5rem 0; padding-bottom: 1rem;">
+                <h2>Zones</h2>
+              </div>
+              <div class="table-container" style="border: none; border-radius: 0;">
+                <table id="zonesListTable">
+                  <thead>
+                    <tr>
+                      <th>Name</th><th>Format</th><th>DNSSEC</th><th>Topology</th><th>Status</th>
+                      <th style="width: 100px; text-align: right;">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Sync View -->
+        <div id="syncView" class="view-section hidden">
+          <div class="card">
+            <div class="card-header">
+              <h2>Pending Provider Changes</h2>
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-secondary" id="calcDiffBtn">
+                  <span class="material-symbols-outlined">calculate</span> Calculate Diff
+                </button>
+                <button class="btn btn-secondary" id="pullChangesBtn" disabled>
+                  <span class="material-symbols-outlined">cloud_download</span> Pull Changes
+                </button>
+                <button class="btn btn-primary" id="applyChangesBtn" disabled>
+                  <span class="material-symbols-outlined">cloud_upload</span> Push Changes
+                </button>
+              </div>
+            </div>
+            <div id="syncStatus" style="margin-bottom: 1rem; font-weight: 500;">Click "Calculate Diff" to analyze pending changes.</div>
+            <div id="diffResults" class="table-container hidden">
+              <table id="diffTable">
+                <thead>
+                  <tr>
+                    <th style="width: 80px;">Type</th>
+                    <th style="width: 30%;">Name</th>
+                    <th>Declared State</th>
+                    <th>Live State</th>
+                  </tr>
+                </thead>
+                <tbody id="diffTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- NS Overview View -->
+        <div id="nsOverviewView" class="view-section hidden">
+          <div class="card">
+            <div class="card-header">
+              <h2><span class="material-symbols-outlined" style="color: var(--primary); vertical-align: bottom;">account_tree</span> Domain Groups by Name Server Provider</h2>
+            </div>
+            <div id="nsOverviewContent">
+              <div class="ns-overview-loading">
+                <span class="material-symbols-outlined" style="animation: spin 1s linear infinite;">sync</span> Loading...
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Architecture View -->
+        <div id="architectureView" class="view-section hidden">
+          <div class="card">
+            <div class="card-header">
+              <h2><span class="material-symbols-outlined" style="color: var(--primary); vertical-align: bottom;">schema</span> DNS Architecture Topology</h2>
+            </div>
+            <div id="architectureContent">
+              <div class="ns-overview-loading">
+                <span class="material-symbols-outlined" style="animation: spin 1s linear infinite;">sync</span> Loading...
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
-
-    <script>
-        let zonesData = {};
-        let isReadOnly = false;
-
-        function switchView(view) {
-            document.getElementById('overviewView').classList.add('hidden');
-            document.getElementById('syncView').classList.add('hidden');
-            document.getElementById('nav-overview').classList.remove('active');
-            document.getElementById('nav-sync').classList.remove('active');
-            
-            if (view === 'overview') {
-                document.getElementById('overviewView').classList.remove('hidden');
-                document.getElementById('nav-overview').classList.add('active');
-                if (!document.getElementById('zoneSelect').value) {
-                    renderZoneList();
-                }
-            } else if (view === 'sync') {
-                document.getElementById('syncView').classList.remove('hidden');
-                document.getElementById('nav-sync').classList.add('active');
-                if (document.getElementById('zoneSelect').value) {
-                    calculateDiff();
-                } else {
-                    document.getElementById('syncStatus').textContent = 'Please select a zone first.';
-                }
-            }
-        }
-        
-        async function getCfAccountId() {
-            try {
-                let res = await fetch('/__portal/api/apps' + window.location.search).catch(() => null);
-                if (!res || !res.ok) {
-                    res = await fetch('/api/apps');
-                }
-                const apps = await res.json();
-                for (const app of apps) {
-                    const proxy = app.proxies.find(p => p.path.startsWith('/api/cloudflare/account/'));
-                    if (proxy) {
-                        return proxy.path.split('/').pop();
-                    }
-                }
-            } catch (err) {
-                console.error('Failed to fetch account ID from proxy config:', err);
-            }
-            return "";
-        }
-
-        async function calculateDiff() {
-            const zoneName = document.getElementById('zoneSelect').value;
-            if (!zoneName) return;
-            const zone = zonesData[zoneName];
-            const diffStatus = document.getElementById('syncStatus');
-            const tbody = document.getElementById('diffTableBody');
-            const applyBtn = document.getElementById('applyChangesBtn');
-            const pullBtn = document.getElementById('pullChangesBtn');
-            const calcBtn = document.getElementById('calcDiffBtn');
-            tbody.innerHTML = '';
-            document.getElementById('diffResults').classList.add('hidden');
-            applyBtn.disabled = true;
-            pullBtn.disabled = true;
-            calcBtn.disabled = true;
-            
-            diffStatus.textContent = 'Fetching live state from Cloudflare...';
-            try {
-                const accountId = await getCfAccountId();
-                const zoneRes = await fetch(`api/cloudflare/zones?name=${zoneName}`);
-                const zoneData = await zoneRes.json();
-                let zoneId = null;
-                let cfRecords = [];
-                let cfVanity = [];
-                
-                if (zoneData.success && zoneData.result.length > 0) {
-                    const cfZone = zoneData.result[0];
-                    zoneId = cfZone.id;
-                    cfVanity = (cfZone.vanity_name_servers && cfZone.vanity_name_servers.length > 0) ? cfZone.vanity_name_servers : (cfZone.name_servers || []);
-                    diffStatus.textContent = 'Fetching existing records...';
-                    let page = 1;
-                    while (true) {
-                        const recRes = await fetch(`api/cloudflare/zones/${zoneId}/dns_records?per_page=100&page=${page}`);
-                        const recData = await recRes.json();
-                        if (recData.success) cfRecords.push(...recData.result);
-                        if (!recData.result_info || recData.result_info.page >= recData.result_info.total_pages) break;
-                        page++;
-                    }
-                }
-                
-                const declared = zone.records.filter(r => !r.disabled).map(r => {
-                    let name = r.name;
-                    if (!name.includes(zoneName) && name !== '@') name = name + '.' + zoneName;
-                    if (name === '@') name = zoneName;
-                    
-                    let content = r.value;
-                    if (r.type === 'TXT' && content.startsWith('"') && content.endsWith('"')) content = content.slice(1, -1);
-                    
-                    let data = undefined;
-                    let priority = undefined;
-                    if (r.type === 'MX') {
-                        priority = parseInt(r.priority);
-                    } else if (r.type === 'SRV') {
-                        data = { priority: parseInt(r.priority), weight: parseInt(r.weight), port: parseInt(r.port), target: r.value.replace(/\.$/, '') };
-                        content = `${data.priority} ${data.weight} ${data.port} ${data.target}`;
-                    } else if (r.type === 'CNAME') {
-                        content = content.replace(/\.$/, '');
-                    }
-                    
-                    return { type: r.type, name: name, content: content, ttl: parseInt(r.ttl), priority: priority, data: data, _original: r };
-                });
-                
-                const exMap = new Map();
-                cfRecords.forEach(r => {
-                    let val = r.content;
-                    if (r.type === 'TXT' && val.startsWith('"') && val.endsWith('"')) { val = val.slice(1, -1); }
-                    if (r.type === 'SRV' && r.data) { val = `${r.data.priority} ${r.data.weight} ${r.data.port} ${r.data.target}`; }
-                    const key = `${r.name}|${r.type}|${val.toLowerCase()}`;
-                    exMap.set(key, r);
-                });
-                
-                const decMap = new Map();
-                declared.forEach(r => {
-                    let val = r.content;
-                    if (r.type === 'SRV' && r.data) { val = `${r.data.priority} ${r.data.weight} ${r.data.port} ${r.data.target}`; }
-                    const key = `${r.name}|${r.type}|${val.toLowerCase()}`;
-                    decMap.set(key, r);
-                });
-                
-                const toAdd = [], toUpdate = [], toRemove = [];
-                
-                decMap.forEach((dRec, key) => {
-                    if (!exMap.has(key)) { toAdd.push(dRec); } else {
-                        const eRec = exMap.get(key);
-                        if (eRec.ttl !== dRec.ttl) { toUpdate.push({ id: eRec.id, cfRecord: eRec, ...dRec }); }
-                    }
-                });
-                
-                exMap.forEach((eRec, key) => {
-                    if (!decMap.has(key) && eRec.type !== 'SOA' && eRec.type !== 'NS') { toRemove.push(eRec); }
-                });
-                
-                let decVanity = zone.cf_vanity_name_server ? (Array.isArray(zone.cf_vanity_name_server) ? zone.cf_vanity_name_server : String(zone.cf_vanity_name_server).split(',')).map(s => s.trim()).filter(s => s) : [];
-                let cfVanityStr = cfVanity.slice().sort().join(', ');
-                let decVanityStr = decVanity.slice().sort().join(', ');
-                
-                let updateVanity = false;
-                let toUpdateVanity = decVanity;
-                if (zone.vanity_name_server && cfVanityStr !== decVanityStr) { updateVanity = true; }
-                
-                window.pendingSync = { zoneName, zoneId, accountId, toAdd, toUpdate, toRemove, updateVanity, toUpdateVanity, cfVanityStr };
-                
-                document.getElementById('diffResults').classList.remove('hidden');
-                if (!zoneId) {
-                    tbody.innerHTML += `<tr><td><span class="badge badge-type">ZONE</span></td><td>${zoneName}</td><td style="color: #10b981; font-weight: 500;">Exists</td><td><span class="badge badge-false">Missing</span></td></tr>`;
-                }
-                if (updateVanity) {
-                    tbody.innerHTML += `<tr><td><span class="badge badge-type">VANITY NS</span></td><td>@</td><td style="color: var(--info); font-weight: 500;">${decVanityStr || 'None'}</td><td>${zoneId ? `<span style="color: var(--text-light);">${cfVanityStr || 'None'}</span>` : '<span class="badge badge-false">Missing</span>'}</td></tr>`;
-                }
-                toAdd.forEach(r => {
-                    tbody.innerHTML += `<tr><td><span class="badge badge-type">${r.type}</span></td><td>${r.name}</td><td style="color: #10b981; font-weight: 500;">${r.content} <span style="font-size: 0.85em; color: var(--text-light);">(TTL: ${r.ttl})</span></td><td><span class="badge badge-false">Missing</span></td></tr>`;
-                });
-                toUpdate.forEach(r => {
-                    tbody.innerHTML += `<tr><td><span class="badge badge-type">${r.type}</span></td><td>${r.name}</td><td style="color: var(--info); font-weight: 500;">${r.content} <span style="font-size: 0.85em; color: var(--text-light);">(TTL: ${r.ttl})</span></td><td style="color: var(--text-light);">${r.cfRecord.content} <span style="font-size: 0.85em;">(TTL: ${r.cfRecord.ttl})</span></td></tr>`;
-                });
-                toRemove.forEach(r => {
-                    let val = r.content;
-                    if (r.type === 'SRV' && r.data) { val = `${r.data.priority} ${r.data.weight} ${r.data.port} ${r.data.target}`; }
-                    tbody.innerHTML += `<tr><td><span class="badge badge-type">${r.type}</span></td><td>${r.name}</td><td><span class="badge badge-false">Missing</span></td><td style="color: #ef4444; font-weight: 500;">${val} <span style="font-size: 0.85em; color: var(--text-light);">(TTL: ${r.ttl})</span></td></tr>`;
-                });
-                
-                if (!zoneId && toAdd.length === 0 && toUpdate.length === 0 && toRemove.length === 0 && !updateVanity) {
-                    diffStatus.textContent = 'Zone will be created, no records to sync.'; applyBtn.disabled = false; pullBtn.disabled = false;
-                } else if (toAdd.length === 0 && toUpdate.length === 0 && toRemove.length === 0 && !updateVanity) {
-                    diffStatus.textContent = 'No changes to apply. Cloudflare is fully synced.';
-                } else {
-                    diffStatus.textContent = 'Review changes below and choose to Push or Pull.'; applyBtn.disabled = false; pullBtn.disabled = false;
-                }
-            } catch (err) { console.error(err); diffStatus.textContent = 'Error calculating diff: ' + err.message; }
-            finally { calcBtn.disabled = false; }
-        }
-
-        async function performSync() {
-            if (!window.pendingSync) return;
-            const { zoneName, accountId, toAdd, toUpdate, toRemove } = window.pendingSync;
-            let zoneId = window.pendingSync.zoneId;
-            const applyBtn = document.getElementById('applyChangesBtn');
-            const pullBtn = document.getElementById('pullChangesBtn');
-            applyBtn.disabled = true;
-            pullBtn.disabled = true;
-            const diffStatus = document.getElementById('syncStatus');
-            diffStatus.textContent = 'Applying changes...';
-            
-            try {
-                if (!zoneId) {
-                    diffStatus.textContent = `Creating zone ${zoneName}...`;
-                    const res = await fetch('api/cloudflare/zones', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: zoneName, account: { id: accountId } }) });
-                    const data = await res.json();
-                    if (!data.success) throw new Error(data.errors[0].message);
-                    zoneId = data.result.id;
-                    window.pendingSync.zoneId = zoneId;
-                }
-
-                if (window.pendingSync.updateVanity) {
-                    diffStatus.textContent = `Updating Vanity Name Servers...`;
-                    await fetch(`api/cloudflare/zones/${zoneId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ vanity_name_servers: window.pendingSync.toUpdateVanity }) });
-                }
-
-                for (const r of toRemove) { diffStatus.textContent = `Removing ${r.name}...`; await fetch(`api/cloudflare/zones/${zoneId}/dns_records/${r.id}`, { method: 'DELETE' }); }
-                for (const r of toAdd) {
-                    diffStatus.textContent = `Adding ${r.name}...`;
-                    const payload = { type: r.type, name: r.name, content: r.content, ttl: r.ttl };
-                    if (r.priority !== undefined) payload.priority = r.priority; if (r.data !== undefined) payload.data = r.data;
-                    await fetch(`api/cloudflare/zones/${zoneId}/dns_records`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                }
-                for (const r of toUpdate) {
-                    diffStatus.textContent = `Updating ${r.name}...`;
-                    const payload = { type: r.type, name: r.name, content: r.content, ttl: r.ttl };
-                    if (r.priority !== undefined) payload.priority = r.priority; if (r.data !== undefined) payload.data = r.data;
-                    await fetch(`api/cloudflare/zones/${zoneId}/dns_records/${r.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                }
-                showNotification('Sync complete!'); window.pendingSync = null; calculateDiff();
-            } catch (err) { console.error(err); diffStatus.textContent = 'Error during sync: ' + err.message; applyBtn.disabled = false; pullBtn.disabled = false; }
-        }
-
-        async function pullSync() {
-            if (!window.pendingSync) return;
-            const { zoneName, toAdd, toUpdate, toRemove } = window.pendingSync;
-            const applyBtn = document.getElementById('applyChangesBtn');
-            const pullBtn = document.getElementById('pullChangesBtn');
-            applyBtn.disabled = true;
-            pullBtn.disabled = true;
-            const diffStatus = document.getElementById('syncStatus');
-            diffStatus.textContent = 'Pulling changes to CSV...';
-            
-            try {
-                const groupedUpdates = {};
-                const groupedRemoves = {};
-
-                for (const r of toAdd) {
-                    const rec = r._original;
-                    const type = rec.type.toLowerCase();
-                    const csvData = getRemoveCsvRow(rec.type, rec.name, zoneName, rec.value);
-                    const splitIdx = csvData.indexOf('\n');
-                    if (!groupedRemoves[type]) groupedRemoves[type] = { header: csvData.slice(0, splitIdx), rows: [] };
-                    groupedRemoves[type].rows.push(csvData.slice(splitIdx + 1));
-                }
-                
-                for (const r of toRemove) {
-                    let value = r.content;
-                    let priority = r.priority || '';
-                    let weight = '';
-                    let port = '';
-                    if (r.type === 'SRV' && r.data) {
-                        priority = r.data.priority || '';
-                        weight = r.data.weight || '';
-                        port = r.data.port || '';
-                        value = r.data.target || r.content;
-                    } else if (r.type === 'MX') {
-                        priority = r.priority || '';
-                    }
-                    
-                    let shortName = r.name;
-                    if (shortName === zoneName) shortName = '@';
-                    else if (shortName.endsWith('.' + zoneName)) shortName = shortName.slice(0, -(zoneName.length + 1));
-                    
-                    const type = r.type.toLowerCase();
-                    const csvData = buildCsvRow(r.type, shortName, value, r.ttl, false, zoneName, priority, weight, port);
-                    const splitIdx = csvData.indexOf('\n');
-                    if (!groupedUpdates[type]) groupedUpdates[type] = { header: csvData.slice(0, splitIdx), rows: [] };
-                    groupedUpdates[type].rows.push(csvData.slice(splitIdx + 1));
-                }
-                
-                for (const r of toUpdate) {
-                    const rec = r._original;
-                    const cfRec = r.cfRecord;
-                    let shortName = rec.name;
-                    const type = rec.type.toLowerCase();
-
-                    const removeCsv = getRemoveCsvRow(rec.type, shortName, zoneName, rec.value);
-                    const remSplit = removeCsv.indexOf('\n');
-                    if (!groupedRemoves[type]) groupedRemoves[type] = { header: removeCsv.slice(0, remSplit), rows: [] };
-                    groupedRemoves[type].rows.push(removeCsv.slice(remSplit + 1));
-
-                    const csvData = buildCsvRow(rec.type, shortName, rec.value, cfRec.ttl, rec.disabled, zoneName, rec.priority, rec.weight, rec.port);
-                    const splitIdx = csvData.indexOf('\n');
-                    if (!groupedUpdates[type]) groupedUpdates[type] = { header: csvData.slice(0, splitIdx), rows: [] };
-                    groupedUpdates[type].rows.push(csvData.slice(splitIdx + 1));
-                }
-                
-                const types = new Set([...Object.keys(groupedUpdates), ...Object.keys(groupedRemoves)]);
-                
-                for (const type of types) {
-                    diffStatus.textContent = `Syncing ${type.toUpperCase()} records in bulk...`;
-                    const formData = new FormData();
-                    if (groupedRemoves[type]) formData.append('remove', `${groupedRemoves[type].header}\n${groupedRemoves[type].rows.join('\n')}`);
-                    if (groupedUpdates[type]) formData.append('update', `${groupedUpdates[type].header}\n${groupedUpdates[type].rows.join('\n')}`);
-                    await fetch(`/api/assets/${type}.csv`, { method: 'POST', body: formData });
-                }
-
-                if (window.pendingSync.updateVanity) {
-                    diffStatus.textContent = 'Syncing Vanity Name Servers...';
-                    const zone = zonesData[zoneName];
-                    const view = zone.view || 'default';
-                    const zone_format = zone.zone_format || 'FORWARD';
-                    const disabled = zone.disabled || 'False';
-                    const dnssec = zone.dnssec || 'False';
-
-                    let allNs = new Set(zone.vanity_name_server ? String(zone.vanity_name_server).split(',').map(s=>s.trim()).filter(s=>s) : []);
-                    if (zone.cf_vanity_name_server) {
-                        String(zone.cf_vanity_name_server).split(',').map(s=>s.trim()).filter(s=>s).forEach(ns => allNs.delete(ns));
-                    }
-                    if (window.pendingSync.cfVanityStr) {
-                        window.pendingSync.cfVanityStr.split(',').map(s=>s.trim()).filter(s=>s).forEach(ns => allNs.add(ns));
-                    }
-                    
-                    const vanity = Array.from(allNs).join(',').replace(/"/g, '""');
-                    const csvData = `type,name,view,zone_format,disabled,dnssec,vanity_name_server\nauth,${zoneName},${view},${zone_format},${disabled},${dnssec},"${vanity}"`;
-                    const formData = new FormData();
-                    formData.append('update', csvData);
-                    await fetch(`/api/assets/auth.csv`, { method: 'POST', body: formData });
-                }
-                
-                showNotification('Pull complete!');
-                window.pendingSync = null;
-                showBuildProgress();
-            } catch (err) { 
-                console.error(err); 
-                diffStatus.textContent = 'Error during pull: ' + err.message; 
-                applyBtn.disabled = false;
-                pullBtn.disabled = false;
-            }
-        }
-
-        async function init() {
-            try {
-                const featRes = await fetch('/api/features');
-                const features = await featRes.json();
-                if (!features.includes('admin_assets')) {
-                    isReadOnly = true;
-                    document.getElementById('addZoneBtn').style.display = 'none';
-                    document.getElementById('readOnlyNotice').classList.remove('hidden');
-                    document.getElementById('addRecordBtn').disabled = true;
-                    document.querySelector('#zoneSettingsForm button[type="submit"]').disabled = true;
-                }
-            } catch (err) {
-                console.error('Failed to fetch features:', err);
-            }
-
-            const query = `
-                query {
-                    zone {
-                        name
-                        zone_format
-                        dnssec
-                        disabled
-                    }
-                }
-            `;
-
-            try {
-                const response = await fetch('/graphql', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query })
-                });
-                
-                const { data } = await response.json();
-                if (!data || !data.zone) return;
-                
-                zonesData = {};
-                const select = document.getElementById('zoneSelect');
-                
-                // Clear existing options except the first
-                while (select.options.length > 1) select.remove(1);
-
-                data.zone.sort((a, b) => a.name.localeCompare(b.name)).forEach(z => {
-                    zonesData[z.name] = {
-                        name: z.name,
-                        zone_format: z.zone_format,
-                        dnssec: z.dnssec,
-                        disabled: z.disabled
-                    };
-                    const option = document.createElement('option');
-                    option.value = z.name;
-                    option.textContent = z.name;
-                    select.appendChild(option);
-                });
-                
-                const savedZone = sessionStorage.getItem('selectedZone');
-                if (savedZone && zonesData[savedZone]) {
-                    select.value = savedZone;
-                }
-                
-                select.addEventListener('change', handleZoneSelection);
-                
-                if (select.value) {
-                    select.dispatchEvent(new Event('change'));
-                } else {
-                    renderZoneList();
-                }
-            } catch (err) {
-                console.error('Failed to fetch DNS zones:', err);
-            }
-        }
-
-        function renderZoneList() {
-            const listTableBody = document.querySelector('#zonesListTable tbody');
-            if (!listTableBody) return;
-            
-            listTableBody.innerHTML = '';
-            Object.values(zonesData).forEach(zone => {
-                const tr = document.createElement('tr');
-                const isDnssec = zone.dnssec === 'True' || zone.dnssec === true || zone.dnssec === 'true';
-                const isActive = !(zone.disabled === 'True' || zone.disabled === true || zone.disabled === 'true');
-                
-                tr.innerHTML = `
-                    <td><strong>${zone.name}</strong></td>
-                    <td>${zone.zone_format || 'FORWARD'}</td>
-                    <td>${isDnssec ? '<span class="badge badge-true">Enabled</span>' : '<span class="badge badge-false">Disabled</span>'}</td>
-                    <td>${isActive ? '<span class="badge badge-true">Active</span>' : '<span class="badge badge-false">Disabled</span>'}</td>
-                    <td style="text-align: right;">
-                        <button class="action-btn" title="View" onclick="selectZone('${zone.name}')">
-                            <span class="material-symbols-outlined" style="font-size: 1.25rem;">visibility</span>
-                        </button>
-                    </td>
-                `;
-                listTableBody.appendChild(tr);
-            });
-            
-            document.getElementById('zoneDetailsWrapper').classList.add('hidden');
-            const emptyPrompt = document.getElementById('emptyZonePrompt');
-            if (emptyPrompt) emptyPrompt.classList.add('hidden');
-            document.getElementById('zoneListView').classList.remove('hidden');
-        }
-
-        window.selectZone = function(name) {
-            const select = document.getElementById('zoneSelect');
-            select.value = name;
-            select.dispatchEvent(new Event('change'));
-        };
-
-        function extractRecords(zoneNode) {
-            let records = [];
-
-            const pushRecords = (nodes, type, valField) => {
-                if (!nodes) return;
-                nodes.forEach(edge => {
-                    const n = edge.node;
-                    let value = n[valField] || '';
-                    if (type === 'MX') value = n.mail_exchanger;
-                    if (type === 'SRV') value = n.target;
-                    
-                    const disabled = n.disabled === 'True' || n.disabled === true || n.disabled === 'true';
-
-                    records.push({
-                        type: type,
-                        name: n.original_name || n.name,
-                        value: value,
-                        ttl: n.ttl || '3600',
-                        disabled: disabled,
-                        priority: n.priority || '',
-                        weight: n.weight || '',
-                        port: n.port || '',
-                        raw: n
-                    });
-                });
-            };
-
-            pushRecords(zoneNode.has_a_record, 'A', 'address');
-            pushRecords(zoneNode.has_aaaa_record, 'AAAA', 'address');
-            pushRecords(zoneNode.has_cname_record, 'CNAME', 'canonical');
-            pushRecords(zoneNode.has_txt_record, 'TXT', 'text');
-            pushRecords(zoneNode.has_mx_record, 'MX', 'mail_exchanger');
-            pushRecords(zoneNode.has_srv_record, 'SRV', 'target');
-            pushRecords(zoneNode.has_ptr_record, 'PTR', 'content');
-            pushRecords(zoneNode.has_caa_record, 'CAA', 'content');
-            pushRecords(zoneNode.has_ns_record, 'NS', 'content');
-            pushRecords(zoneNode.has_sshfp_record, 'SSHFP', 'content');
-            pushRecords(zoneNode.has_cert_record, 'CERT', 'content');
-            pushRecords(zoneNode.has_dnskey_record, 'DNSKEY', 'content');
-            pushRecords(zoneNode.has_ds_record, 'DS', 'content');
-            pushRecords(zoneNode.has_https_record, 'HTTPS', 'content');
-            pushRecords(zoneNode.has_loc_record, 'LOC', 'content');
-            pushRecords(zoneNode.has_naptr_record, 'NAPTR', 'content');
-            pushRecords(zoneNode.has_smimea_record, 'SMIMEA', 'content');
-            pushRecords(zoneNode.has_svcb_record, 'SVCB', 'content');
-            pushRecords(zoneNode.has_tlsa_record, 'TLSA', 'content');
-            pushRecords(zoneNode.has_uri_record, 'URI', 'content');
-
-            return records.sort((a, b) => {
-                if(a.type !== b.type) return a.type.localeCompare(b.type);
-                return a.name.localeCompare(b.name);
-            });
-        }
-
-        async function handleZoneSelection(e) {
-            const zoneName = e.target.value;
-            sessionStorage.setItem('selectedZone', zoneName);
-            
-            const tbody = document.querySelector('#recordsTable tbody');
-            const zsBtn = document.getElementById('zoneSettingsBtn');
-            const artifactsDiv = document.getElementById('zoneArtifacts');
-            const wrapper = document.getElementById('zoneDetailsWrapper');
-            const emptyPrompt = document.getElementById('emptyZonePrompt');
-            const listView = document.getElementById('zoneListView');
-            
-            if (!zoneName) {
-                zsBtn.style.display = 'none';
-                artifactsDiv.classList.add('hidden');
-                wrapper.classList.add('hidden');
-                emptyPrompt.classList.add('hidden');
-                renderZoneList();
-                return;
-            }
-
-            if (listView) listView.classList.add('hidden');
-
-            let recordQueryFields = '';
-            try {
-                let fields = [];
-                const introRes = await fetch('/graphql', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query: '{ __type(name: "Zone") { fields { name } } }' })
-                });
-                const introData = await introRes.json();
-                
-                if (introData.data && introData.data.__type && introData.data.__type.fields) {
-                    fields = introData.data.__type.fields.map(f => f.name);
-                } else {
-                    const introRes2 = await fetch('/graphql', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ query: '{ __type(name: "zone") { fields { name } } }' })
-                    });
-                    const introData2 = await introRes2.json();
-                    if (introData2.data && introData2.data.__type && introData2.data.__type.fields) {
-                        fields = introData2.data.__type.fields.map(f => f.name);
-                    }
-                }
-
-                const allRecordTypes = {
-                    has_a_record: '{ node { name original_name address ttl disabled } }',
-                    has_aaaa_record: '{ node { name original_name address ttl disabled } }',
-                    has_cname_record: '{ node { name original_name canonical ttl disabled } }',
-                    has_txt_record: '{ node { name original_name text ttl disabled } }',
-                    has_mx_record: '{ node { name original_name mail_exchanger priority ttl disabled } }',
-                    has_srv_record: '{ node { name original_name target port priority weight ttl disabled } }',
-                    has_ptr_record: '{ node { name original_name content ttl disabled } }',
-                    has_caa_record: '{ node { name original_name content ttl disabled } }',
-                    has_ns_record: '{ node { name original_name content ttl disabled } }',
-                    has_sshfp_record: '{ node { name original_name content ttl disabled } }',
-                    has_cert_record: '{ node { name original_name content ttl disabled } }',
-                    has_dnskey_record: '{ node { name original_name content ttl disabled } }',
-                    has_ds_record: '{ node { name original_name content ttl disabled } }',
-                    has_https_record: '{ node { name original_name content ttl disabled } }',
-                    has_loc_record: '{ node { name original_name content ttl disabled } }',
-                    has_naptr_record: '{ node { name original_name content ttl disabled } }',
-                    has_smimea_record: '{ node { name original_name content ttl disabled } }',
-                    has_svcb_record: '{ node { name original_name content ttl disabled } }',
-                    has_tlsa_record: '{ node { name original_name content ttl disabled } }',
-                    has_uri_record: '{ node { name original_name content ttl disabled } }'
-                };
-
-                for (const [key, val] of Object.entries(allRecordTypes)) {
-                    if (fields.length === 0 || fields.includes(key)) {
-                        recordQueryFields += `\n                        ${key} ${val}`;
-                    }
-                }
-            } catch (err) {
-                console.warn('Failed to introspect schema', err);
-            }
-
-            const query = `
-                query {
-                    zone (filter:  { name:  { eq: "${zoneName}" }}) {
-                        name
-                        multi_provider
-                        vanity_name_server
-                        cf_vanity_name_server
-                        view
-                        zone_format
-                        disabled
-                        dnssec
-                        DESCRIBED_BY {
-                            node {
-                                __typename
-                                ... on cloudflare_py { name filename }
-                                ... on zone_file { name filename }
-                                ... on knot_conf { name filename }
-                                ... on knot_docker { name filename }
-                                ... on tfvars { name filename }
-                            }
-                        }
-                        ${recordQueryFields}
-                    }
-                }
-            `;
-
-            try {
-                const response = await fetch('/graphql', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query })
-                });
-                
-                const { data } = await response.json();
-                if (!data || !data.zone || data.zone.length === 0) return;
-                
-                const z = data.zone[0];
-                zonesData[zoneName] = {
-                    name: z.name,
-                    multi_provider: z.multi_provider,
-                    vanity_name_server: z.vanity_name_server,
-                    cf_vanity_name_server: z.cf_vanity_name_server,
-                    view: z.view,
-                    zone_format: z.zone_format,
-                    disabled: z.disabled,
-                    dnssec: z.dnssec,
-                    artifacts: z.DESCRIBED_BY || [],
-                    records: extractRecords(z)
-                };
-            } catch (err) {
-                console.error('Failed to fetch zone details:', err);
-                return;
-            }
-            
-            const zone = zonesData[zoneName];
-            wrapper.classList.remove('hidden');
-            emptyPrompt.classList.add('hidden');
-            zsBtn.style.display = 'inline-flex';
-            tbody.innerHTML = '';
-
-            // Render declared config
-            const isDnssec = zone.dnssec === 'True' || zone.dnssec === true;
-            const isActive = !(zone.disabled === 'True' || zone.disabled === true);
-            document.getElementById('declaredDetails').innerHTML = `
-                <div class="detail-item"><span class="detail-label">Zone Format</span><span class="detail-value">${zone.zone_format || 'FORWARD'}</span></div>
-                <div class="detail-item"><span class="detail-label">DNSSEC</span><span class="detail-value">${isDnssec ? '<span class="badge badge-true">Enabled</span>' : '<span class="badge badge-false">Disabled</span>'}</span></div>
-                <div class="detail-item"><span class="detail-label">Vanity NS</span><span class="detail-value">${Array.isArray(zone.vanity_name_server) ? zone.vanity_name_server.join(', ') : (zone.vanity_name_server || 'None')}</span></div>
-                <div class="detail-item"><span class="detail-label">Status</span><span class="detail-value">${isActive ? '<span class="badge badge-true">Active</span>' : '<span class="badge badge-false">Disabled</span>'}</span></div>
-            `;
-
-            fetchLiveState(zoneName);
-            
-            // Render Artifacts
-            artifactsDiv.innerHTML = '';
-            if (zone.artifacts.length > 0) {
-                artifactsDiv.classList.remove('hidden');
-                zone.artifacts.forEach(edge => {
-                    const out = edge.node;
-                    if (out.name && out.filename) {
-                        let icon = 'download';
-                        if(out.__typename === 'cloudflare_py') icon = 'code';
-                        if(out.__typename === 'zone_file') icon = 'description';
-                        if(out.__typename === 'knot_conf') icon = 'settings';
-                        if(out.__typename === 'knot_docker') icon = 'rocket_launch';
-                        if(out.__typename === 'tfvars') icon = 'data_object';
-
-                        const url = `/api/outputs/${out.__typename}/${out.name}/${out.filename}/download`;
-                        artifactsDiv.innerHTML += `
-                            <a href="${url}" title="Download ${out.filename}" target="_blank">
-                                <span class="material-symbols-outlined" style="font-size: 1.1rem;">${icon}</span>
-                            </a>
-                        `;
-                    }
-                });
-            } else {
-                artifactsDiv.classList.add('hidden');
-            }
-
-            // Render Records
-            zone.records.forEach((rec, idx) => {
-                const tr = document.createElement('tr');
-                
-                const statusBadge = rec.disabled 
-                    ? '<span class="badge badge-false">Disabled</span>' 
-                    : '<span class="badge badge-true">Active</span>';
-                
-                let displayValue = rec.value;
-                if (rec.type === 'MX') displayValue = `[${rec.priority}] ${rec.value}`;
-                if (rec.type === 'SRV') displayValue = `[${rec.priority} ${rec.weight} ${rec.port}] ${rec.value}`;
-                if (rec.type === 'TXT') displayValue = `<span style="opacity:0.8; font-family:monospace;">${rec.value}</span>`;
-
-                const actionCell = `
-                    <td style="text-align: right; white-space: nowrap;">
-                        <button class="action-btn" title="Edit" onclick="editRecord('${zoneName}', ${idx})" ${isReadOnly ? 'disabled' : ''}>
-                            <span class="material-symbols-outlined" style="font-size: 1.25rem;">edit</span>
-                        </button>
-                        <button class="action-btn delete" title="Delete" onclick="deleteRecord('${zoneName}', ${idx})" ${isReadOnly ? 'disabled' : ''}>
-                            <span class="material-symbols-outlined" style="font-size: 1.25rem;">delete</span>
-                        </button>
-                    </td>
-                `;
-
-                tr.innerHTML = `
-                    <td><span class="badge badge-type">${rec.type}</span></td>
-                    <td><strong>${rec.name}</strong></td>
-                    <td>${displayValue}</td>
-                    <td><span style="color: var(--text-light); font-variant-numeric: tabular-nums;">${rec.ttl}</span></td>
-                    <td>${statusBadge}</td>
-                    ${actionCell}
-                `;
-                tbody.appendChild(tr);
-            });
-
-            if (document.getElementById('nav-sync').classList.contains('active')) {
-                calculateDiff();
-            }
-        }
-
-        async function fetchLiveState(zoneName) {
-            const liveDetails = document.getElementById('liveDetails');
-            liveDetails.innerHTML = '<div style="color: var(--text-light); grid-column: 1 / -1;"><span class="material-symbols-outlined" style="animation: spin 1s linear infinite; vertical-align: middle; margin-right: 4px;">sync</span> Fetching from Cloudflare...</div>';
-            
-            try {
-                const res = await fetch(`api/cloudflare/zones?name=${zoneName}`);
-                if (!res.ok) throw new Error('API Error');
-                const data = await res.json();
-                
-                if (data.success && data.result.length > 0) {
-                    const cfZone = data.result[0];
-                    const statusBadge = cfZone.status === 'active' ? '<span class="badge badge-true">Active</span>' : `<span class="badge badge-false" style="text-transform: capitalize;">${cfZone.status}</span>`;
-                    const nsList = (cfZone.name_servers || []).join(', ') || 'N/A';
-                    
-                    liveDetails.innerHTML = `
-                        <div class="detail-item"><span class="detail-label">Status</span><span class="detail-value">${statusBadge}</span></div>
-                        <div class="detail-item"><span class="detail-label">Zone ID</span><span class="detail-value" style="font-family: monospace; font-size: 0.8rem;">${cfZone.id}</span></div>
-                        <div class="detail-item" style="grid-column: 1 / -1;"><span class="detail-label">Assigned Nameservers</span><span class="detail-value" style="font-family: monospace; font-size: 0.85rem;">${nsList}</span></div>
-                    `;
-                } else {
-                    liveDetails.innerHTML = `<div style="color: var(--text-light); grid-column: 1 / -1;">Zone not found in Cloudflare (or insufficient permissions).</div>`;
-                }
-            } catch (err) {
-                console.error(err);
-                liveDetails.innerHTML = `<div style="color: var(--danger); grid-column: 1 / -1;">Failed to load live state. Check API Token / Proxy Config.</div>`;
-            }
-        }
-
-        function handleTypeChange() {
-            const type = document.getElementById('recType').value;
-            const mxFields = document.getElementById('mxFields');
-            const srvFields = document.getElementById('srvFields');
-            const valLabel = document.getElementById('valueLabel');
-
-            mxFields.classList.add('hidden');
-            srvFields.classList.add('hidden');
-            document.getElementById('recPriority').required = false;
-            document.getElementById('recWeight').required = false;
-            document.getElementById('recPort').required = false;
-
-            if (type === 'mx') {
-                mxFields.classList.remove('hidden');
-                document.getElementById('recPriority').required = true;
-                valLabel.textContent = 'Mail Exchanger';
-            } else if (type === 'srv') {
-                mxFields.classList.remove('hidden');
-                srvFields.classList.remove('hidden');
-                document.getElementById('recPriority').required = true;
-                document.getElementById('recWeight').required = true;
-                document.getElementById('recPort').required = true;
-                valLabel.textContent = 'Target';
-            } else if (type === 'a' || type === 'aaaa') {
-                valLabel.textContent = 'IP Address';
-            } else if (type === 'cname') {
-                valLabel.textContent = 'Canonical Name';
-            } else if (type === 'txt') {
-                valLabel.textContent = 'Text Content';
-            } else {
-                valLabel.textContent = 'Content / Value';
-            }
-        }
-
-        function toggleTheme() {
-            const html = document.documentElement;
-            const icon = document.getElementById("theme-icon");
-            const isDark = html.getAttribute("data-theme") === "dark";
-
-            const next = isDark ? "light" : "dark";
-            html.setAttribute("data-theme", next);
-            icon.innerText = next === "dark" ? "light_mode" : "dark_mode";
-        }
-
-        function openModal() {
-            document.getElementById('modalTitle').textContent = 'Add DNS Record';
-            document.getElementById('recordForm').reset();
-            document.getElementById('recOriginalValue').value = '';
-            document.getElementById('recOriginalName').value = '';
-            document.getElementById('recType').disabled = false;
-            handleTypeChange();
-            document.getElementById('recordModal').classList.add('active');
-        }
-
-        function closeModal() {
-            document.getElementById('recordModal').classList.remove('active');
-        }
-
-        function openAddZoneModal() {
-            document.getElementById('addZoneForm').reset();
-            document.getElementById('addZoneModal').classList.add('active');
-        }
-
-        function closeAddZoneModal() {
-            document.getElementById('addZoneModal').classList.remove('active');
-        }
-
-        function openZoneSettingsModal() {
-            const zoneName = document.getElementById('zoneSelect').value;
-            const z = zonesData[zoneName];
-            document.getElementById('zsDnssec').checked = z.dnssec === 'True' || z.dnssec === 'true' || z.dnssec === true;
-            document.getElementById('zsVanity').value = Array.isArray(z.vanity_name_server) ? z.vanity_name_server.join(', ') : (z.vanity_name_server || '');
-            document.getElementById('zoneSettingsModal').classList.add('active');
-        }
-
-        function closeZoneSettingsModal() {
-            document.getElementById('zoneSettingsModal').classList.remove('active');
-        }
-
-        function showNotification(msg) {
-            const toast = document.createElement('div');
-            toast.className = 'notification-toast';
-            toast.textContent = msg;
-            document.body.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 300);
-            }, 5000);
-        }
-
-        let buildEventSource = null;
-
-        function showBuildProgress() {
-            const logsEl = document.getElementById('buildLogs');
-            logsEl.innerHTML = '';
-            document.getElementById('buildCloseBtn').disabled = true;
-            document.getElementById('buildCloseBtn').textContent = 'Building...';
-            document.getElementById('buildProgressModal').classList.add('active');
-
-            if (buildEventSource) buildEventSource.close();
-            buildEventSource = new EventSource('/api/build/stream');
-            buildEventSource.onmessage = async function(event) {
-                const msg = event.data;
-                if (msg === 'BUILD_COMPLETE') {
-                    buildEventSource.close();
-                    document.getElementById('buildCloseBtn').disabled = false;
-                    document.getElementById('buildCloseBtn').textContent = 'Close';
-                    showNotification('New graph is available!');
-                    await init();
-                } else {
-                    logsEl.appendChild(document.createTextNode(msg + '\n'));
-                    logsEl.scrollTop = logsEl.scrollHeight;
-                }
-            };
-            buildEventSource.onerror = function() {
-                buildEventSource.close();
-                document.getElementById('buildCloseBtn').disabled = false;
-                document.getElementById('buildCloseBtn').textContent = 'Close (Error)';
-            };
-        }
-
-        function closeBuildProgress() {
-            document.getElementById('buildProgressModal').classList.remove('active');
-        }
-
-        async function saveNewZone(e) {
-            e.preventDefault();
-            const submitBtn = e.target.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Saving...';
-            submitBtn.disabled = true;
-
-            const zoneName = document.getElementById('azName').value.trim();
-            const dnssec = document.getElementById('azDnssec').checked ? 'True' : 'False';
-            const vanity = document.getElementById('azVanity').value.replace(/"/g, '""');
-
-            const view = 'default';
-            const zone_format = 'FORWARD';
-            const disabled = 'False';
-            const csvData = `type,name,view,zone_format,disabled,dnssec,vanity_name_server\nauth,${zoneName},${view},${zone_format},${disabled},${dnssec},"${vanity}"`;
-
-            const formData = new FormData();
-            formData.append('update', csvData);
-
-            try {
-                await fetch(`/api/assets/auth.csv`, { method: 'POST', body: formData });
-                closeAddZoneModal();
-                sessionStorage.setItem('selectedZone', zoneName);
-                showBuildProgress();
-            } catch (err) {
-                console.error(err);
-                alert('Failed to add new zone');
-            } finally {
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-            }
-        }
-
-        async function saveZoneSettings(e) {
-            e.preventDefault();
-            const submitBtn = e.target.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Saving...';
-            submitBtn.disabled = true;
-
-            const zoneName = document.getElementById('zoneSelect').value;
-            const z = zonesData[zoneName];
-            const dnssec = document.getElementById('zsDnssec').checked ? 'True' : 'False';
-            const vanity = document.getElementById('zsVanity').value.replace(/"/g, '""');
-            
-            const view = z.view || 'default';
-            const zone_format = z.zone_format || 'FORWARD';
-            const disabled = z.disabled || 'False';
-            const csvData = `type,name,view,zone_format,disabled,dnssec,vanity_name_server\nauth,${zoneName},${view},${zone_format},${disabled},${dnssec},"${vanity}"`;
-            
-            const formData = new FormData();
-            formData.append('update', csvData);
-
-            try {
-                await fetch(`/api/assets/auth.csv`, { method: 'POST', body: formData });
-                closeZoneSettingsModal();
-                showBuildProgress();
-            } catch (err) {
-                console.error(err);
-                alert('Failed to save Zone Settings');
-            } finally {
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-            }
-        }
-
-        function editRecord(zoneName, idx) {
-            const rec = zonesData[zoneName].records[idx];
-            if (!rec) return;
-
-            document.getElementById('modalTitle').textContent = 'Edit DNS Record';
-            
-            const typeSelect = document.getElementById('recType');
-            typeSelect.value = rec.type.toLowerCase();
-            typeSelect.disabled = true; // Don't allow changing type on edit
-            
-            document.getElementById('recName').value = rec.name;
-            document.getElementById('recOriginalName').value = rec.name;
-            document.getElementById('recValue').value = rec.value.replace(/^"|"$/g, ''); // strip quotes for UI
-            document.getElementById('recOriginalValue').value = rec.value;
-            document.getElementById('recTtl').value = rec.ttl;
-            document.getElementById('recDisabled').checked = rec.disabled;
-            
-            if (rec.type === 'MX' || rec.type === 'SRV') {
-                document.getElementById('recPriority').value = rec.priority;
-            }
-            if (rec.type === 'SRV') {
-                document.getElementById('recWeight').value = rec.weight;
-                document.getElementById('recPort').value = rec.port;
-            }
-
-            handleTypeChange();
-            document.getElementById('recordModal').classList.add('active');
-        }
-
-        function buildCsvRow(type, name, value, ttl, disabled, zone, priority, weight, port) {
-            const t = type.toLowerCase();
-            const d = disabled ? 'True' : 'False';
-            let v = value;
-            if (t === 'txt') {
-                let txtVal = value;
-                if (!txtVal.startsWith('"')) txtVal = '"' + txtVal;
-                if (!txtVal.endsWith('"')) txtVal = txtVal + '"';
-                v = `"${txtVal.replace(/"/g, '""')}"`;
-            }
-            
-            if (t === 'a' || t === 'aaaa') return `type,name,address,ttl,comment,disabled,zone\n${t},${name},${v},${ttl},,${d},${zone}`;
-            if (t === 'cname') return `type,name,canonical,ttl,comment,disabled,zone\n${t},${name},${v},${ttl},,${d},${zone}`;
-            if (t === 'txt') return `type,name,text,ttl,comment,disabled,zone\n${t},${name},${v},${ttl},,${d},${zone}`;
-            if (t === 'mx') return `type,zone,name,mail_exchanger,priority,ttl,disabled\n${t},${zone},${name},${v},${priority},${ttl},${d}`;
-            if (t === 'srv') return `type,name,target,port,priority,weight,ttl,disabled,zone\n${t},${name},${v},${port},${priority},${weight},${ttl},${d},${zone}`;
-            
-            // ns, ptr, caa, etc.
-            return `type,name,content,ttl,disabled,zone\n${t},${name},${v},${ttl},${d},${zone}`;
-        }
-
-        function getRemoveCsvRow(type, name, zone, originalValue) {
-            const t = type.toLowerCase();
-            let v = originalValue || '';
-            if (t === 'txt') {
-                let txtVal = v;
-                if (!txtVal.startsWith('"')) txtVal = '"' + txtVal;
-                if (!txtVal.endsWith('"')) txtVal = txtVal + '"';
-                v = `"${txtVal.replace(/"/g, '""')}"`;
-            }
-            if (t === 'a' || t === 'aaaa') return `type,name,address,zone\n${t},${name},${v},${zone}`;
-            if (t === 'cname') return `type,name,canonical,zone\n${t},${name},${v},${zone}`;
-            if (t === 'txt') return `type,name,text,zone\n${t},${name},${v},${zone}`;
-            if (t === 'mx') return `type,zone,name,mail_exchanger\n${t},${zone},${name},${v}`;
-            if (t === 'srv') return `type,name,target,zone\n${t},${name},${v},${zone}`;
-            return `type,name,content,zone\n${t},${name},${v},${zone}`;
-        }
-
-        async function saveRecord(e) {
-            e.preventDefault();
-
-            const submitBtn = e.target.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Saving...';
-            submitBtn.disabled = true;
-
-            const zone = document.getElementById('zoneSelect').value;
-            const type = document.getElementById('recType').value;
-            const name = document.getElementById('recName').value;
-            const value = document.getElementById('recValue').value;
-            const originalValue = document.getElementById('recOriginalValue').value;
-            const originalName = document.getElementById('recOriginalName').value;
-            const ttl = document.getElementById('recTtl').value;
-            const disabled = document.getElementById('recDisabled').checked;
-            
-            const priority = document.getElementById('recPriority').value || '';
-            const weight = document.getElementById('recWeight').value || '';
-            const port = document.getElementById('recPort').value || '';
-
-            const formData = new FormData();
-
-            if (originalValue) {
-                const removeCsv = getRemoveCsvRow(type, originalName || name, zone, originalValue);
-                formData.append('remove', removeCsv);
-            }
-
-            const csvData = buildCsvRow(type, name, value, ttl, disabled, zone, priority, weight, port);
-            formData.append('update', csvData);
-
-            try {
-                await fetch(`/api/assets/${type}.csv`, { method: 'POST', body: formData });
-                closeModal();
-                showBuildProgress();
-            } catch (err) {
-                console.error(err);
-                alert('Failed to save DNS record');
-            } finally {
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-            }
-        }
-
-        async function deleteRecord(zoneName, idx) {
-            const rec = zonesData[zoneName].records[idx];
-            if (!confirm(`Are you sure you want to delete the ${rec.type} record for ${rec.name}?`)) return;
-
-            const csvData = getRemoveCsvRow(rec.type, rec.name, zoneName, rec.value);
-            const formData = new FormData();
-            formData.append('remove', csvData);
-
-            try {
-                await fetch(`/api/assets/${rec.type.toLowerCase()}.csv`, { method: 'POST', body: formData });
-                showBuildProgress();
-            } catch (err) {
-                console.error(err);
-                alert('Failed to delete DNS record');
-            }
-        }
-        
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
+  </div>
+
+  <!-- Record Modal -->
+  <div id="recordModal" class="modal">
+    <div class="modal-content">
+      <h3 id="modalTitle" style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.5rem;">Add DNS Record</h3>
+      <form id="recordForm">
+        <input type="hidden" id="recOriginalValue">
+        <input type="hidden" id="recOriginalName">
+        <div class="form-group">
+          <label>Record Type</label>
+          <select id="recType" required>
+            <option value="a">A</option>
+            <option value="aaaa">AAAA</option>
+            <option value="cname">CNAME</option>
+            <option value="txt">TXT</option>
+            <option value="mx">MX</option>
+            <option value="srv">SRV</option>
+            <option value="ptr">PTR</option>
+            <option value="caa">CAA</option>
+            <option value="cert">CERT</option>
+            <option value="dnskey">DNSKEY</option>
+            <option value="ds">DS</option>
+            <option value="https">HTTPS</option>
+            <option value="loc">LOC</option>
+            <option value="ns">NS</option>
+            <option value="naptr">NAPTR</option>
+            <option value="smimea">SMIMEA</option>
+            <option value="sshfp">SSHFP</option>
+            <option value="svcb">SVCB</option>
+            <option value="tlsa">TLSA</option>
+            <option value="uri">URI</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" id="recName" class="input" required placeholder="www">
+        </div>
+        <div id="mxFields" class="hidden">
+          <div class="form-group">
+            <label>Priority</label>
+            <input type="number" id="recPriority" class="input" value="10">
+          </div>
+        </div>
+        <div id="srvFields" class="hidden" style="display: flex; gap: 1rem;">
+          <div class="form-group" style="flex: 1;">
+            <label>Weight</label>
+            <input type="number" id="recWeight" class="input" value="10">
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label>Port</label>
+            <input type="number" id="recPort" class="input">
+          </div>
+        </div>
+        <div class="form-group">
+          <label id="valueLabel">Value / Target</label>
+          <input type="text" id="recValue" class="input" required>
+        </div>
+        <div class="form-group">
+          <label>TTL</label>
+          <input type="number" id="recTtl" class="input" value="3600" required>
+        </div>
+        <div class="form-group" style="display:flex; align-items:center; gap:0.75rem; margin-top: 1.5rem; padding: 1rem; background: var(--hover-bg); border-radius: 8px; border: 1px solid var(--border);">
+          <input type="checkbox" id="recDisabled" style="width:1.25rem; height:1.25rem; cursor:pointer; accent-color: var(--primary);">
+          <label for="recDisabled" style="margin:0; cursor:pointer; font-weight: 500;">Record Disabled</label>
+        </div>
+        <div class="btn-group">
+          <button type="button" class="btn btn-secondary" id="recordCancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Zone Modal -->
+  <div id="addZoneModal" class="modal">
+    <div class="modal-content">
+      <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.5rem;">Add New Zone</h3>
+      <form id="addZoneForm">
+        <div class="form-group">
+          <label>Zone Name</label>
+          <input type="text" id="azName" class="input" required placeholder="example.com">
+        </div>
+        <div class="form-group" style="display:flex; align-items:center; gap:0.75rem; padding: 1rem; background: var(--hover-bg); border-radius: 8px; border: 1px solid var(--border);">
+          <input type="checkbox" id="azDnssec" style="width:1.25rem; height:1.25rem; cursor:pointer; accent-color: var(--primary);">
+          <label for="azDnssec" style="margin:0; cursor:pointer; font-weight: 500;">DNSSEC</label>
+        </div>
+        <div class="form-group" style="margin-top: 1rem;" id="azVanityGroup">
+          <label>Vanity Name Servers</label>
+          <select id="azVanity" class="input" style="width:100%;padding:0.6rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--fg);font-family:inherit;">
+            <option value="">-- Loading vanity NS groups... --</option>
+          </select>
+          <div id="azVanityDetail" style="margin-top:0.5rem;font-size:0.82rem;color:var(--text-light);"></div>
+        </div>
+        <div class="btn-group">
+          <button type="button" class="btn btn-secondary" id="addZoneCancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Zone</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Zone Settings Modal -->
+  <div id="zoneSettingsModal" class="modal">
+    <div class="modal-content">
+      <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.5rem;">Zone Settings</h3>
+      <form id="zoneSettingsForm">
+        <div class="form-group" style="display:flex; align-items:center; gap:0.75rem; padding: 1rem; background: var(--hover-bg); border-radius: 8px; border: 1px solid var(--border);">
+          <input type="checkbox" id="zsDnssec" style="width:1.25rem; height:1.25rem; cursor:pointer; accent-color: var(--primary);">
+          <label for="zsDnssec" style="margin:0; cursor:pointer; font-weight: 500;">DNSSEC</label>
+        </div>
+        <div class="form-group" style="margin-top: 1rem;" id="zsVanityGroup">
+          <label>Vanity Name Servers</label>
+          <select id="zsVanity" class="input" style="width:100%;padding:0.6rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--fg);font-family:inherit;">
+            <option value="">-- Loading vanity NS groups... --</option>
+          </select>
+          <div id="zsVanityDetail" style="margin-top:0.5rem;font-size:0.82rem;color:var(--text-light);"></div>
+        </div>
+        <div class="btn-group">
+          <button type="button" class="btn btn-secondary" id="zoneSettingsCancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Settings</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Build Progress Modal -->
+  <div id="buildProgressModal" class="modal">
+    <div class="modal-content" style="max-width: 1200px;">
+      <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.5rem;">Building Graph...</h3>
+      <div id="buildLogs" style="background: var(--bg); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem; height: 300px; overflow-y: auto; white-space: pre-wrap; color: var(--fg);"></div>
+      <div class="btn-group">
+        <button type="button" class="btn btn-primary" id="buildCloseBtn" disabled>Building...</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>

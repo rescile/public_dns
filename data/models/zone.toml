@@ -2,7 +2,33 @@
 # Specify the source type
 origin_resource = "auth"
 vanity_ns = { "json!" = "vanity_ns.json" }
-is_multi_provider = '''
+
+_vns_providers = { "template!" = '''
+{%- set vns = origin_resource.vanity_name_server | default(value=[]) -%}
+{%- if vns is string -%}
+  {%- set vns_list = vns | split(pat=',') -%}
+{%- else -%}
+  {%- set vns_list = vns -%}
+{%- endif -%}
+{%- set_global unique_providers = [] -%}
+{%- for ns in vns_list -%}
+  {%- set ns_clean = ns | trim -%}
+  {%- if ns_clean != '' and vanity_ns[ns_clean] is defined -%}
+    {%- set p = vanity_ns[ns_clean].provider | default(value='self-hosted') -%}
+    {%- if p not in unique_providers -%}
+      {%- set_global unique_providers = unique_providers | concat(with=p) -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+{{ unique_providers | json_encode() }}
+'''}
+
+is_multi_provider = { "template!" = '''
+{%- set providers = _vns_providers | jmespath(query='length(@) > `1`') -%}
+{%- if providers -%}True{%- else -%}False{%- endif -%}
+'''}
+
+dns_topology = { "template!" = '''
 {%- set_global unique_providers = [] -%}
 {%- set vns = origin_resource.vanity_name_server | default(value=[]) -%}
 {%- if vns is string -%}
@@ -10,34 +36,81 @@ is_multi_provider = '''
 {%- else -%}
   {%- set vns_list = vns -%}
 {%- endif -%}
+{%- set_global has_any_ns = false -%}
+{%- set_global has_primary = false -%}
+{%- set_global has_secondary = false -%}
+{%- set_global all_ns_known = true -%}
+{%- set_global provider_roles = [] -%}
 {%- for ns in vns_list -%}
   {%- set ns_clean = ns | trim -%}
-  {%- if ns_clean != '' and vanity_ns[ns_clean] is defined and vanity_ns[ns_clean].provider is defined -%}
-    {%- set p = vanity_ns[ns_clean].provider -%}
-    {%- if p not in unique_providers -%}
-      {%- set_global unique_providers = unique_providers | concat(with=p) -%}
+  {%- if ns_clean != '' and vanity_ns[ns_clean] is defined -%}
+    {%- if vanity_ns[ns_clean].role is defined -%}
+      {%- set role = vanity_ns[ns_clean].role -%}
+    {%- else -%}
+      {%- set role = 'primary' -%}
     {%- endif -%}
+    {%- set_global has_any_ns = true -%}
+    {%- if vanity_ns[ns_clean].provider is defined -%}
+      {%- set provider = vanity_ns[ns_clean].provider -%}
+    {%- else -%}
+      {%- set provider = 'self-hosted' -%}
+    {%- endif -%}
+    {%- if provider not in unique_providers -%}
+      {%- set_global unique_providers = unique_providers | concat(with=provider) -%}
+    {%- endif -%}
+    {%- set entry = provider ~ ":" ~ role -%}
+    {%- if entry not in provider_roles -%}
+      {%- set_global provider_roles = provider_roles | concat(with=entry) -%}
+    {%- endif -%}
+    {%- if role == 'primary' -%}
+      {%- set_global has_primary = true -%}
+    {%- endif -%}
+    {%- if role == 'secondary' -%}
+      {%- set_global has_secondary = true -%}
+    {%- endif -%}
+  {%- elif ns_clean != '' -%}
+    {%- set_global has_any_ns = true -%}
+    {%- set_global all_ns_known = false -%}
   {%- endif -%}
 {%- endfor -%}
-{%- if unique_providers | length > 1 -%}True{%- else -%}False{%- endif -%}
-'''
+{%- set_global is_multi = unique_providers | length > 1 -%}
+{%- if not all_ns_known -%}default{%- elif has_primary and has_secondary -%}active-secondary{%- elif has_primary and is_multi -%}active-active{%- elif has_primary -%}active{%- elif not has_any_ns -%}default{%- else -%}default{%- endif -%}
+'''}
 
-cf_vanity_name_server = '''
-{%- set_global cf_ns = [] -%}
+provider_roles_json = { "template!" = '''
 {%- set vns = origin_resource.vanity_name_server | default(value=[]) -%}
 {%- if vns is string -%}
   {%- set vns_list = vns | split(pat=',') -%}
 {%- else -%}
   {%- set vns_list = vns -%}
 {%- endif -%}
+{%- set_global seen = [] -%}
+{%- set_global entries = [] -%}
 {%- for ns in vns_list -%}
   {%- set ns_clean = ns | trim -%}
-  {%- if ns_clean != '' and vanity_ns[ns_clean] is defined and vanity_ns[ns_clean].provider | default(value='') == 'cloudflare' -%}
-    {%- set_global cf_ns = cf_ns | concat(with=ns_clean) -%}
+  {%- if ns_clean != '' and vanity_ns[ns_clean] is defined -%}
+    {%- set role = vanity_ns[ns_clean].role | default(value='primary') -%}
+    {%- set provider = vanity_ns[ns_clean].provider | default(value='self-hosted') -%}
+    {%- set key = provider ~ ":" ~ role -%}
+    {%- if key not in seen -%}
+      {%- set_global seen = seen | concat(with=key) -%}
+      {%- set_global entries = entries | concat(with='{"provider":"' ~ provider ~ '","role":"' ~ role ~ '","nameservers":["' ~ ns_clean ~ '"]}') -%}
+    {%- else -%}
+      {%- set_global new_entries = [] -%}
+      {%- for e in entries -%}
+        {%- if e is containing(provider ~ '","role":"' ~ role) -%}
+          {%- set trimmed = e | split(pat=']}') | first -%}
+          {%- set_global new_entries = new_entries | concat(with=trimmed ~ ',"' ~ ns_clean ~ '"]}') -%}
+        {%- else -%}
+          {%- set_global new_entries = new_entries | concat(with=e) -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {%- set_global entries = new_entries -%}
+    {%- endif -%}
   {%- endif -%}
 {%- endfor -%}
-{{ cf_ns | join(sep=',') }}
-'''
+[{{ entries | join(sep=',') }}]
+'''}
 
 [[create_resource]]
 resource_type = "zone"
@@ -51,6 +124,7 @@ dnssec = "{{- origin_resource.dnssec | default(value='False') -}}"
 multi_provider = "{{- is_multi_provider -}}"
 multisigner = "{% if origin_resource.dnssec | default(value='False') | as_str | lower == 'true' and is_multi_provider == 'True' %}True{% else %}False{% endif %}"
 vanity_name_server = "{{- origin_resource.vanity_name_server | default(value='') -}}"
-cf_vanity_name_server = "{{- cf_vanity_name_server -}}"
+dns_topology = "{{- dns_topology -}}"
+provider_roles = "{{- provider_roles_json -}}"
 description = "The {{ origin_resource.name | lower }} DNS zone is a distinct administrative portion of the domain name space that is managed by a specific organization or administrator. It acts as a container for all the DNS records (like A, MX, or CNAME) belonging to a domain and its subdomains, allowing for granular control over how that specific traffic is routed."
 created = "{{- now(utc=true) | date(format='%Y-%m-%dT%H:%M:%SZ') -}}"

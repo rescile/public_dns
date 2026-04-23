@@ -1,6 +1,7 @@
 {
   "ns1.ixcloud.ch": {
     "provider": "cloudflare",
+    "role": "primary",
     "target": {
       "ipv4": "162.159.6.226",
       "ipv6": "2400:cb00:2049:1::a29f:6e2"
@@ -8,17 +9,20 @@
   },
   "ns2.ixcloud.ch": {
     "provider": "cloudflare",
+    "role": "primary",
     "target": {
       "ipv4": "162.159.7.241",
       "ipv6": "2400:cb00:2049:1::a29f:7f1"
     }
   },
   "ns3.ixcloud.ch": {
+    "role": "primary",
     "target": {
       "ipv4": "185.178.60.130"
     }
   },
   "ns4.ixcloud.ch": {
+    "role": "primary",
     "target": {
       "ipv4": "185.178.60.131"
     }

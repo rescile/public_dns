@@ -62,7 +62,7 @@ local parse_caa(c) =
 
 local caa_recs = [ buildRec(r, "CAA") + { data: parse_caa(r.content) } for r in std.get(origin, "has_caa_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
 
-local ns_recs = [ buildRec(r, "NS") + { content: strip(r.content) } for r in std.get(origin, "has_ns_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
+local ns_recs = [ buildRec(r, "NS") + { content: strip(r.content) } for r in std.get(origin, "has_apex_ns_record", []) + std.get(origin, "has_subdomain_ns_record", []) if std.toString(std.get(r, "disabled", false)) != "true" ];
 
 local parse_sshfp(c) = 
   local spaces = std.findSubstr(" ", c);
@@ -97,12 +97,14 @@ local cf_vns = [
 
 local plan = "enterprise";
 local multisigner = std.get(origin, "multisigner", "False");
+local dns_topology = std.get(origin, "dns_topology", "unknown");
 
 local py_template = |||
   import os
   import sys
   import requests
   import json
+  import re
   
   # --- Configuration ---
   API_TOKEN = os.getenv("CLOUDFLARE_API_TOKEN")
@@ -112,6 +114,7 @@ local py_template = |||
   ZONE_NAME = "%s"
   PLAN = "%s"
   MULTISIGNER = "%s".lower() == "true"
+  DNS_TOPOLOGY = "%s"
   VANITY_NAME_SERVERS = %s
   
   def normalize_record(r):
@@ -217,6 +220,14 @@ local py_template = |||
               update_plan = False
               
           current_vns = zone_info.get('vanity_name_servers') or []
+          
+          # Fetch custom_ns to see if it's Account Custom NS
+          custom_ns_resp = requests.get(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/custom_ns", headers=headers).json()
+          ns_data = custom_ns_resp.get('result') or custom_ns_resp if custom_ns_resp.get('success') else {}
+          
+          if ns_data.get('enabled'):
+              current_vns = [f"Account Custom NS (Set {ns_data.get('set', ns_data.get('ns_set'))})"]
+          
           if vns_list and set(current_vns) == set(vns_list):
               update_vns = False
   
@@ -262,17 +273,23 @@ local py_template = |||
           print(f"Created zone {zone_name} with ID {zone_id}")
 
       print("6. Configuring Zone Settings...")
-      if update_plan or update_vns:
-          payload = {}
-          if update_plan:
-              payload["plan"] = {"id": PLAN}
-          if update_vns:
-              payload["vanity_name_servers"] = vns_list
-          requests.patch(f"https://api.cloudflare.com/client/v4/zones/{zone_id}", headers=headers, json=payload)
-          if update_plan:
-              print(f"Set Zone Plan to {PLAN}")
-          if update_vns:
-              print(f"Set Vanity Name Servers to {vns_list}")
+      if update_plan:
+          requests.patch(f"https://api.cloudflare.com/client/v4/zones/{zone_id}", headers=headers, json={"plan": {"id": PLAN}})
+          print(f"Set Zone Plan to {PLAN}")
+          
+      if update_vns:
+          vns_str = ", ".join(vns_list)
+          if "Account Custom NS" in vns_str:
+              m = re.search(r"Set (\d+)", vns_str)
+              if m:
+                  requests.put(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/custom_ns", headers=headers, json={"enabled": True, "ns_set": int(m.group(1))})
+                  print(f"Set Account Custom NS to Set {m.group(1)}")
+          else:
+              requests.put(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/custom_ns", headers=headers, json={"enabled": False})
+              new_vns = [] if vns_str.lower() == 'none' or not vns_str else vns_list
+              requests.patch(f"https://api.cloudflare.com/client/v4/zones/{zone_id}", headers=headers, json={"vanity_name_servers": new_vns})
+              print(f"Set Vanity Name Servers to {new_vns}")
+              
       if MULTISIGNER:
           requests.patch(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dnssec", headers=headers, json={"status": "active"})
           requests.patch(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dnssec", headers=headers, json={"dnssec_multi_signer": True})
@@ -294,5 +311,5 @@ local py_template = |||
       sync_records(ZONE_NAME, ACCOUNT_ID, API_TOKEN, defined_records)
 |||;
 
-std.format(py_template, [domain, plan, multisigner, std.manifestJsonEx(cf_vns, ""), records_json])
+std.format(py_template, [domain, plan, multisigner, dns_topology, std.manifestJsonEx(cf_vns, ""), records_json])
 '''

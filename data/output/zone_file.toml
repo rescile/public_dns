@@ -2,7 +2,8 @@ origin_resource = "zone"
 
 [[output]]
 resource_type = "zone_file"
-filename = "db.{{ origin_resource.name }}.txt"
+filename = "db.{{ origin_resource.name }}"
+match_on = [{ property = "dns_topology", not = "active-secondary" }]
 mimetype = "text/plain"
 name = "zone_file_{{ origin_resource.name }}"
 jsonnet = '''
@@ -41,7 +42,7 @@ local mx_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "t
 local srv_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "SRV", std.toString(r.priority) + " " + std.toString(r.weight) + " " + std.toString(r.port) + " " + rel_value(r.target)) for r in std.get(origin, "has_srv_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
 local ptr_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "PTR", rel_value(r.content)) for r in std.get(origin, "has_ptr_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
 local caa_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "CAA", r.content) for r in std.get(origin, "has_caa_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
-local ns_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "NS", rel_value(r.content)) for r in std.get(origin, "has_ns_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
+local ns_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "NS", rel_value(r.content)) for r in std.get(origin, "has_apex_ns_record", []) + std.get(origin, "has_subdomain_ns_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
 local sshfp_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "SSHFP", r.content) for r in std.get(origin, "has_sshfp_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
 
 local cert_recs = [formatRecord(std.get(r, "original_name", r.name), std.get(r, "ttl", "3600"), "CERT", r.content) for r in std.get(origin, "has_cert_record", []) if std.toString(std.get(r, "disabled", false)) != "true"];
