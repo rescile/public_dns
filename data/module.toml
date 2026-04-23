@@ -3,14 +3,14 @@ name = "hybridDNS"
 url = "https://github.com/rescile/public_dns"
 version = "0.0.1"
 description = "A hybrid authoritative DNS architecture combining globally distributed anycast nodes with on-premises authoritative servers under a shared zone authority."
-rescile_version = ">=0.1.139"
+rescile_version = ">=0.1.148"
 
 # dependencies: Optional list of other modules this module depends on.
 # These can be local paths (relative to this module) or Git URLs.
 [dependencies]
 graphviewer = "https://github.com/rescile/graphviewer"
-graml-module =  "https://github.com/rescile/graphml-module"
-module-simple-editor = "https://github.com/rescile/module-simple-editor"
+graphml-module =  "https://github.com/rescile/graphml-module"
+aset-editor = "https://github.com/rescile/asset-editor-module/releases/download/v{version}/asset-editor.zip"
 rescile-graphiql-module = "https://github.com/rescile/rescile-graphiql-module/releases/download/v{version}/graphiql-module-offline.zip"
 
 [params.operator]
