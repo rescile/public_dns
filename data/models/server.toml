@@ -1,0 +1,10 @@
+origin_resource = "zone"
+vanity_ns = { "json!" = "vanity_ns.json" }
+
+[[create_resource]]
+resource_type = "nameserver"
+create_from = { property = "vanity_name_server" }
+relation_type = "SERVES"
+[create_resource.properties]
+provider = "{%- set ns_clean = value | trim -%}{%- if vanity_ns[ns_clean] is defined -%}{{ vanity_ns[ns_clean].provider | default(value='self-hosted') }}{%- else -%}self-hosted{%- endif -%}"
+

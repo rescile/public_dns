@@ -1,0 +1,10 @@
+vanity_ns_data = { "json!" = "vanity_ns.json" }
+
+[[output]]
+resource_type = "vanity_ns_list"
+name = "vanity_ns"
+filename = "vanity_ns.json"
+mimetype = "application/json"
+template = '''
+{ "data": {{ vanity_ns_data | json_encode | safe }} }
+'''

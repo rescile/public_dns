@@ -1,0 +1,11 @@
+[[output]]
+resource_type = "hybriddns_config"
+filename = "config.json"
+name = "config"
+mimetype = "application/json"
+template = '''
+{
+  "auth": "{{ RESOURCE_ALIASES.auth | default(value='auth') }}",
+  "zone": "{{ RESOURCE_ALIASES.zone | default(value='zone') }}"
+}
+'''

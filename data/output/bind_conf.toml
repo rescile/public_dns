@@ -1,0 +1,101 @@
+origin_resource = "nameserver"
+vanity_ns_data = { "json!" = "vanity_ns.json" }
+
+[[output]]
+resource_type = "bind_conf"
+filename = "named-{{ origin_resource.name }}.conf"
+mimetype = "text/plain"
+name = "bind_conf_{{ origin_resource.name }}"
+match_on = [
+  { property = "provider", value = "self-hosted" }
+]
+jsonnet = '''
+local vanity_ns_data = std.extVar("vanity_ns_data");
+local ns = std.extVar("origin_resource");
+local ns_name = ns.name;
+local zones= std.get(ns, "zone", []);
+
+local all_zones = [
+  zone
+  for zone in zones
+];
+
+local header = [
+  "// BIND named.conf - auto-generated configuration",
+  "// for self-hosted nameserver: " + ns_name,
+  "",
+  'options {',
+  '    directory "/var/cache/bind";',
+  '    listen-on { any; };',
+  '    listen-on-v6 { any; };',
+  '    allow-query { any; };',
+  '    allow-transfer { none; };',
+  '    recursion no;',
+  '    dnssec-validation auto;',
+  '    auth-nxdomain no;',
+  '};',
+  '',
+  'logging {',
+  '    channel default_log {',
+  '        file "/var/log/named/named.log" versions 3 size 5m;',
+  '        severity info;',
+  '        print-time yes;',
+  '        print-severity yes;',
+  '        print-category yes;',
+  '    };',
+  '    category default { default_log; };',
+  '    category queries { default_log; };',
+  '};',
+  '',
+];
+
+local zone_blocks = [
+  local domain = zone.name;
+  
+  local raw_provider_roles = std.get(zone, "provider_roles", "[]");
+  local provider_roles = if std.type(raw_provider_roles) == "string" then
+    (if std.length(raw_provider_roles) > 2 then std.parseJson(raw_provider_roles) else [])
+  else raw_provider_roles;
+  local self_hosted_roles = [r for r in provider_roles if std.get(r, "provider", "") == "self-hosted"];
+  local is_secondary = if std.length(self_hosted_roles) > 0 then
+    std.asciiLower(std.get(self_hosted_roles[0], "role", "primary")) == "secondary"
+  else false;
+
+  local raw_vns = std.get(zone, "vanity_name_server", []);
+  local vanity_ns = if std.type(raw_vns) == "string" then
+    (if std.length(raw_vns) > 0 then std.split(raw_vns, ",") else [])
+  else raw_vns;
+
+  local cf_ips = std.prune([
+    if std.objectHas(vanity_ns_data, std.stripChars(ns_v, " ")) &&
+       std.get(vanity_ns_data[std.stripChars(ns_v, " ")], "provider", "") == "cloudflare" then
+      std.get(std.get(vanity_ns_data[std.stripChars(ns_v, " ")], "target", {}), "ipv4", null)
+    for ns_v in vanity_ns
+    if std.stripChars(ns_v, " ") != ""
+  ]);
+  local masters_list = if std.length(cf_ips) > 0 then std.join("; ", cf_ips) + ";" else "10.0.1.1;";
+
+  if is_secondary then
+    '// Zone: ' + domain + ' (secondary - transfer from primary provider)\n' +
+    'zone "' + domain + '" {\n' +
+    '    type slave;\n' +
+    '    masters { ' + masters_list + ' };\n' +
+    '    file "/var/cache/bind/db.' + domain + '";\n' +
+    '    allow-query { any; };\n' +
+    '};\n'
+  else
+    '// Zone: ' + domain + ' (primary - authoritative master)\n' +
+    'zone "' + domain + '" {\n' +
+    '    type master;\n' +
+    '    file "/etc/bind/zones/db.' + domain + '";\n' +
+    '    allow-query { any; };\n' +
+    '};\n'
+  for zone in all_zones
+];
+
+local footer = [
+  "// End of generated configuration",
+];
+
+std.join("\n", header + zone_blocks + footer) + "\n"
+'''
