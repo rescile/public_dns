@@ -45,9 +45,9 @@ with = "ns"
 join = { local = "auth", remote = "zone" }
 match_with = [
   { or = [
-    { expression = "{% if target_resource.original_name == origin_resource.name %}true{% endif %}" },
+    { property = "original_name", value = "{{ origin_resource.name }}" },
     { property = "name", value = "@" },
-    { property = "name", value = "" }
+    { property = "name", empty = true }
   ]}
 ]
 create_relation = { type = "has_apex_ns_record" }
@@ -56,7 +56,9 @@ create_relation = { type = "has_apex_ns_record" }
 with = "ns"
 join = { local = "auth", remote = "zone" }
 match_with = [
-  { expression = "{% if target_resource.original_name != origin_resource.name and target_resource.original_name != '@' and target_resource.name != '' %}true{% endif %}" }
+  { property = "original_name", not = "{{ origin_resource.name }}" },
+  { property = "original_name", not = "@" },
+  { property = "name", empty = false }
 ]
 create_relation = { type = "has_subdomain_ns_record" }
 
